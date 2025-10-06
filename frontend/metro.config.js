@@ -11,13 +11,15 @@ config.cacheStores = [
   new FileStore({ root: path.join(root, 'cache') }),
 ];
 
+// Platform-specific resolver
+const originalResolver = config.resolver.resolverMainFields;
+config.resolver.resolverMainFields = ['react-native', 'browser', 'main'];
 
-// // Exclude unnecessary directories from file watching
-// config.watchFolders = [__dirname];
-// config.resolver.blacklistRE = /(.*)\/(__tests__|android|ios|build|dist|.git|node_modules\/.*\/android|node_modules\/.*\/ios|node_modules\/.*\/windows|node_modules\/.*\/macos)(\/.*)?$/;
+// Exclude react-native-maps on web platform
+config.resolver.platforms = ['web', 'ios', 'android', 'native'];
 
-// // Alternative: use a more aggressive exclusion pattern
-// config.resolver.blacklistRE = /node_modules\/.*\/(android|ios|windows|macos|__tests__|\.git|.*\.android\.js|.*\.ios\.js)$/;
+// Add platform-specific extensions
+config.resolver.sourceExts = [...config.resolver.sourceExts, 'web.js', 'web.ts', 'web.tsx'];
 
 // Reduce the number of workers to decrease resource usage
 config.maxWorkers = 2;
