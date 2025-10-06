@@ -15,9 +15,16 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
-import * as Location from 'expo-location';
-import * as ImagePicker from 'expo-image-picker';
 import { router } from 'expo-router';
+
+// Platform-specific imports
+let Location: any = null;
+let ImagePicker: any = null;
+
+if (Platform.OS !== 'web') {
+  Location = require('expo-location');
+  ImagePicker = require('expo-image-picker');
+}
 
 const EXPO_PUBLIC_BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
