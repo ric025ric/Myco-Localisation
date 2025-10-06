@@ -219,13 +219,13 @@ export default function MapScreen() {
         {Platform.OS === 'web' ? (
           <WebMapFallback spots={spots} onMarkerPress={onMarkerPress} />
         ) : (
-          <NativeMapView
-            spots={spots}
-            initialRegion={getInitialRegion()}
-            onMarkerPress={onMarkerPress}
-            onMapReady={fitAllMarkers}
-            mapRef={mapRef}
-          />
+          <View style={styles.nativeMapPlaceholder}>
+            <Ionicons name="map" size={64} color="#4CAF50" />
+            <Text style={styles.placeholderText}>Native Map</Text>
+            <Text style={styles.placeholderSubtext}>
+              Map functionality is available on native platforms with react-native-maps
+            </Text>
+          </View>
         )}
 
         <View style={styles.mapControls}>
