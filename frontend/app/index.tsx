@@ -20,7 +20,7 @@ if (Platform.OS !== 'web') {
 }
 
 export default function HomeScreen() {
-  const [location, setLocation] = useState<Location.LocationObject | null>(null);
+  const [location, setLocation] = useState<any>(null);
   const [locationPermission, setLocationPermission] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -30,6 +30,23 @@ export default function HomeScreen() {
 
   const checkLocationPermission = async () => {
     try {
+      if (Platform.OS === 'web') {
+        // For web, try to get location using browser geolocation
+        if (navigator.geolocation) {
+          setLocationPermission(true);
+          getCurrentLocation();
+        } else {
+          setLocationPermission(false);
+          setLoading(false);
+        }
+        return;
+      }
+
+      if (!Location) {
+        setLoading(false);
+        return;
+      }
+
       const { status } = await Location.requestForegroundPermissionsAsync();
       
       if (status !== 'granted') {
@@ -52,6 +69,32 @@ export default function HomeScreen() {
 
   const getCurrentLocation = async () => {
     try {
+      if (Platform.OS === 'web') {
+        // Use browser geolocation for web
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            setLocation({
+              coords: {
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude,
+                accuracy: position.coords.accuracy,
+              }
+            });
+            setLoading(false);
+          },
+          (error) => {
+            console.error('Error getting web location:', error);
+            setLoading(false);
+          }
+        );
+        return;
+      }
+
+      if (!Location) {
+        setLoading(false);
+        return;
+      }
+
       const location = await Location.getCurrentPositionAsync({
         accuracy: Location.Accuracy.High,
       });
