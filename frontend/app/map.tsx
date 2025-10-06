@@ -13,6 +13,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import WebMapFallback from '../components/WebMapFallback';
 
 // Platform-specific imports
 let Location: any = null;
