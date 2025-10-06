@@ -385,4 +385,24 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 8,
   },
+  nativeMapPlaceholder: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#2a2a2a',
+    padding: 20,
+  },
+  placeholderText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#fff',
+    marginTop: 16,
+    marginBottom: 8,
+  },
+  placeholderSubtext: {
+    fontSize: 16,
+    color: '#ccc',
+    textAlign: 'center',
+    lineHeight: 22,
+  },
 });
