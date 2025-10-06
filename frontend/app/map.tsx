@@ -220,34 +220,13 @@ export default function MapScreen() {
         {Platform.OS === 'web' ? (
           <WebMapFallback spots={spots} onMarkerPress={onMarkerPress} />
         ) : (
-          <MapView
-            ref={mapRef}
-            style={styles.map}
-            provider={PROVIDER_GOOGLE}
+          <NativeMapView
+            spots={spots}
             initialRegion={getInitialRegion()}
-            showsUserLocation={true}
-            showsMyLocationButton={false}
-            showsCompass={true}
-            showsScale={true}
+            onMarkerPress={onMarkerPress}
             onMapReady={fitAllMarkers}
-          >
-            {spots.map((spot) => (
-              <Marker
-                key={spot.id}
-                coordinate={{
-                  latitude: spot.latitude,
-                  longitude: spot.longitude,
-                }}
-                title={spot.mushroom_type}
-                description={`Found: ${new Date(spot.timestamp).toLocaleDateString()}`}
-                onPress={() => onMarkerPress(spot)}
-              >
-                <View style={styles.markerContainer}>
-                  <Ionicons name="location" size={30} color="#4CAF50" />
-                </View>
-              </Marker>
-            ))}
-          </MapView>
+            mapRef={mapRef}
+          />
         )}
 
         <View style={styles.mapControls}>
