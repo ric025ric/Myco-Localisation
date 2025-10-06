@@ -224,34 +224,7 @@ export default function MapScreen() {
 
       <View style={styles.mapContainer}>
         {Platform.OS === 'web' ? (
-          <View style={styles.webMapFallback}>
-            <Ionicons name="map" size={64} color="#4CAF50" />
-            <Text style={styles.webMapText}>Map View</Text>
-            <Text style={styles.webMapSubtext}>
-              Interactive map is not available on web. Use the mobile app for full map functionality.
-            </Text>
-            <View style={styles.spotsListContainer}>
-              <Text style={styles.spotsListTitle}>Mushroom Spots ({spots.length})</Text>
-              {spots.map((spot) => (
-                <TouchableOpacity
-                  key={spot.id}
-                  style={styles.spotItem}
-                  onPress={() => onMarkerPress(spot)}
-                >
-                  <View style={styles.spotInfo}>
-                    <Text style={styles.spotType}>{spot.mushroom_type}</Text>
-                    <Text style={styles.spotDate}>
-                      {new Date(spot.timestamp).toLocaleDateString()}
-                    </Text>
-                    <Text style={styles.spotLocation}>
-                      {spot.latitude.toFixed(4)}, {spot.longitude.toFixed(4)}
-                    </Text>
-                  </View>
-                  <Ionicons name="chevron-forward" size={20} color="#4CAF50" />
-                </TouchableOpacity>
-              ))}
-            </View>
-          </View>
+          <WebMapFallback spots={spots} onMarkerPress={onMarkerPress} />
         ) : (
           <MapView
             ref={mapRef}
