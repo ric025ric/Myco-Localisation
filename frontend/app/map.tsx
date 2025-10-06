@@ -145,7 +145,7 @@ export default function MapScreen() {
   };
 
   const fitAllMarkers = () => {
-    if (spots.length > 0 && mapRef.current) {
+    if (Platform.OS !== 'web' && spots.length > 0 && mapRef.current) {
       const coordinates = spots.map(spot => ({
         latitude: spot.latitude,
         longitude: spot.longitude,
