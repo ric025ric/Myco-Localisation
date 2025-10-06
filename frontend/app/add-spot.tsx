@@ -110,6 +110,36 @@ export default function AddSpotScreen() {
 
   const takePicture = async () => {
     try {
+      if (Platform.OS === 'web') {
+        // For web, use a file input to simulate camera
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+        input.capture = 'camera';
+        
+        input.onchange = (e: any) => {
+          const file = e.target.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+              const base64 = event.target?.result as string;
+              // Remove data:image/...;base64, prefix
+              const base64Data = base64.split(',')[1];
+              setPhoto(base64Data);
+            };
+            reader.readAsDataURL(file);
+          }
+        };
+        
+        input.click();
+        return;
+      }
+
+      if (!ImagePicker) {
+        Alert.alert('Error', 'Camera not available on this platform.');
+        return;
+      }
+
       const { status } = await ImagePicker.requestCameraPermissionsAsync();
       
       if (status !== 'granted') {
@@ -139,6 +169,35 @@ export default function AddSpotScreen() {
 
   const selectFromGallery = async () => {
     try {
+      if (Platform.OS === 'web') {
+        // For web, use a file input
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+        
+        input.onchange = (e: any) => {
+          const file = e.target.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+              const base64 = event.target?.result as string;
+              // Remove data:image/...;base64, prefix
+              const base64Data = base64.split(',')[1];
+              setPhoto(base64Data);
+            };
+            reader.readAsDataURL(file);
+          }
+        };
+        
+        input.click();
+        return;
+      }
+
+      if (!ImagePicker) {
+        Alert.alert('Error', 'Image picker not available on this platform.');
+        return;
+      }
+
       const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
       
       if (status !== 'granted') {
