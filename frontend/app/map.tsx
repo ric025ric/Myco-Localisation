@@ -14,19 +14,13 @@ import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import WebMapFallback from '../components/WebMapFallback';
+import NativeMapView from '../components/NativeMapView';
 
 // Platform-specific imports
 let Location: any = null;
-let MapView: any = null;
-let Marker: any = null;
-let PROVIDER_GOOGLE: any = null;
 
 if (Platform.OS !== 'web') {
   Location = require('expo-location');
-  const Maps = require('react-native-maps');
-  MapView = Maps.default;
-  Marker = Maps.Marker;
-  PROVIDER_GOOGLE = Maps.PROVIDER_GOOGLE;
 }
 
 const EXPO_PUBLIC_BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
