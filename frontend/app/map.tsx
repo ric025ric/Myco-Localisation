@@ -222,34 +222,65 @@ export default function MapScreen() {
       </View>
 
       <View style={styles.mapContainer}>
-        <MapView
-          ref={mapRef}
-          style={styles.map}
-          provider={PROVIDER_GOOGLE}
-          initialRegion={getInitialRegion()}
-          showsUserLocation={true}
-          showsMyLocationButton={false}
-          showsCompass={true}
-          showsScale={true}
-          onMapReady={fitAllMarkers}
-        >
-          {spots.map((spot) => (
-            <Marker
-              key={spot.id}
-              coordinate={{
-                latitude: spot.latitude,
-                longitude: spot.longitude,
-              }}
-              title={spot.mushroom_type}
-              description={`Found: ${new Date(spot.timestamp).toLocaleDateString()}`}
-              onPress={() => onMarkerPress(spot)}
-            >
-              <View style={styles.markerContainer}>
-                <Ionicons name="location" size={30} color="#4CAF50" />
-              </View>
-            </Marker>
-          ))}
-        </MapView>
+        {Platform.OS === 'web' ? (
+          <View style={styles.webMapFallback}>
+            <Ionicons name="map" size={64} color="#4CAF50" />
+            <Text style={styles.webMapText}>Map View</Text>
+            <Text style={styles.webMapSubtext}>
+              Interactive map is not available on web. Use the mobile app for full map functionality.
+            </Text>
+            <View style={styles.spotsListContainer}>
+              <Text style={styles.spotsListTitle}>Mushroom Spots ({spots.length})</Text>
+              {spots.map((spot) => (
+                <TouchableOpacity
+                  key={spot.id}
+                  style={styles.spotItem}
+                  onPress={() => onMarkerPress(spot)}
+                >
+                  <View style={styles.spotInfo}>
+                    <Text style={styles.spotType}>{spot.mushroom_type}</Text>
+                    <Text style={styles.spotDate}>
+                      {new Date(spot.timestamp).toLocaleDateString()}
+                    </Text>
+                    <Text style={styles.spotLocation}>
+                      {spot.latitude.toFixed(4)}, {spot.longitude.toFixed(4)}
+                    </Text>
+                  </View>
+                  <Ionicons name="chevron-forward" size={20} color="#4CAF50" />
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+        ) : (
+          <MapView
+            ref={mapRef}
+            style={styles.map}
+            provider={PROVIDER_GOOGLE}
+            initialRegion={getInitialRegion()}
+            showsUserLocation={true}
+            showsMyLocationButton={false}
+            showsCompass={true}
+            showsScale={true}
+            onMapReady={fitAllMarkers}
+          >
+            {spots.map((spot) => (
+              <Marker
+                key={spot.id}
+                coordinate={{
+                  latitude: spot.latitude,
+                  longitude: spot.longitude,
+                }}
+                title={spot.mushroom_type}
+                description={`Found: ${new Date(spot.timestamp).toLocaleDateString()}`}
+                onPress={() => onMarkerPress(spot)}
+              >
+                <View style={styles.markerContainer}>
+                  <Ionicons name="location" size={30} color="#4CAF50" />
+                </View>
+              </Marker>
+            ))}
+          </MapView>
+        )}
 
         <View style={styles.mapControls}>
           <TouchableOpacity
