@@ -7,11 +7,17 @@ import {
   Alert,
   ActivityIndicator,
   SafeAreaView,
+  Platform,
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
-import * as Location from 'expo-location';
 import { router } from 'expo-router';
+
+// Platform-specific imports
+let Location: any = null;
+if (Platform.OS !== 'web') {
+  Location = require('expo-location');
+}
 
 export default function HomeScreen() {
   const [location, setLocation] = useState<Location.LocationObject | null>(null);
