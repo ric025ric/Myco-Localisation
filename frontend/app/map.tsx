@@ -134,7 +134,7 @@ export default function MapScreen() {
   };
 
   const centerOnCurrentLocation = () => {
-    if (currentLocation && mapRef.current) {
+    if (Platform.OS !== 'web' && currentLocation && mapRef.current) {
       mapRef.current.animateToRegion({
         latitude: currentLocation.coords.latitude,
         longitude: currentLocation.coords.longitude,
