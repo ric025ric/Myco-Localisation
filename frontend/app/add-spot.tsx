@@ -51,6 +51,40 @@ export default function AddSpotScreen() {
   const getCurrentLocation = async () => {
     try {
       setGettingLocation(true);
+      
+      if (Platform.OS === 'web') {
+        // Use browser geolocation for web
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              setLocation({
+                coords: {
+                  latitude: position.coords.latitude,
+                  longitude: position.coords.longitude,
+                  accuracy: position.coords.accuracy,
+                }
+              });
+              setGettingLocation(false);
+            },
+            (error) => {
+              console.error('Error getting web location:', error);
+              Alert.alert('Error', 'Could not get your location. Please try again.');
+              setGettingLocation(false);
+            }
+          );
+        } else {
+          Alert.alert('Error', 'Geolocation is not supported by this browser.');
+          setGettingLocation(false);
+        }
+        return;
+      }
+
+      if (!Location) {
+        Alert.alert('Error', 'Location service not available.');
+        setGettingLocation(false);
+        return;
+      }
+
       const { status } = await Location.requestForegroundPermissionsAsync();
       
       if (status !== 'granted') {
