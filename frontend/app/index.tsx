@@ -33,7 +33,19 @@ function HomeScreenContent() {
 
   useEffect(() => {
     checkLocationPermission();
+    loadCarLocation();
   }, []);
+
+  const loadCarLocation = async () => {
+    try {
+      const savedCarLocation = await AsyncStorage.getItem(CAR_LOCATION_STORAGE_KEY);
+      if (savedCarLocation) {
+        setCarLocation(JSON.parse(savedCarLocation));
+      }
+    } catch (error) {
+      console.error('Error loading car location:', error);
+    }
+  };
 
   const checkLocationPermission = async () => {
     try {
