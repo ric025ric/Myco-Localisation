@@ -70,24 +70,35 @@ export default function HomeScreen() {
 
   const getCurrentLocation = async () => {
     try {
+      // Set a timeout to prevent infinite loading
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => reject(new Error('Location timeout')), 10000);
+      });
+
       if (Platform.OS === 'web') {
-        // Use browser geolocation for web
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            setLocation({
-              coords: {
-                latitude: position.coords.latitude,
-                longitude: position.coords.longitude,
-                accuracy: position.coords.accuracy,
-              }
-            });
-            setLoading(false);
-          },
-          (error) => {
-            console.error('Error getting web location:', error);
-            setLoading(false);
-          }
-        );
+        // Use browser geolocation for web with timeout
+        const locationPromise = new Promise((resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(resolve, reject, {
+            timeout: 10000,
+            enableHighAccuracy: true,
+            maximumAge: 60000,
+          });
+        });
+        
+        try {
+          const position = await Promise.race([locationPromise, timeoutPromise]);
+          setLocation({
+            coords: {
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude,
+              accuracy: position.coords.accuracy,
+            }
+          });
+        } catch (error) {
+          console.error('Error getting web location:', error);
+          // Continue without location
+        }
+        setLoading(false);
         return;
       }
 
@@ -96,13 +107,20 @@ export default function HomeScreen() {
         return;
       }
 
-      const location = await Location.getCurrentPositionAsync({
-        accuracy: Location.Accuracy.High,
-      });
-      setLocation(location);
+      try {
+        const locationPromise = Location.getCurrentPositionAsync({
+          accuracy: Location.Accuracy.Balanced,
+          timeout: 10000,
+        });
+        
+        const location = await Promise.race([locationPromise, timeoutPromise]);
+        setLocation(location);
+      } catch (error) {
+        console.error('Error getting current location:', error);
+        // Continue without location - app will still work
+      }
     } catch (error) {
-      console.error('Error getting current location:', error);
-      Alert.alert('Error', 'Could not get your current location. Please try again.');
+      console.error('Error in getCurrentLocation:', error);
     } finally {
       setLoading(false);
     }
