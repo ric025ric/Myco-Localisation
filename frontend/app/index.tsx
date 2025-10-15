@@ -225,7 +225,7 @@ export default function HomeScreen() {
 
       <View style={styles.footer}>
         <Text style={styles.footerText}>
-          {locationPermission ? '✅ Location enabled' : '❌ Location disabled'}
+          {locationPermission ? t('home.locationEnabled') : t('home.locationDisabled')}
         </Text>
       </View>
     </SafeAreaView>
