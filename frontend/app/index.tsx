@@ -547,27 +547,12 @@ const styles = StyleSheet.create({
     elevation: 8,
   },
   secondaryButton: {
-    backgroundColor: 'rgba(42, 42, 42, 0.9)',
+    backgroundColor: 'rgba(42, 42, 42, 0.8)',
     borderWidth: 2,
     borderColor: '#4CAF50',
   },
-  buttonText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#fff',
-    marginTop: 8,
-  },
   secondaryButtonText: {
     color: '#4CAF50',
-  },
-  buttonSubtext: {
-    fontSize: 14,
-    color: '#ccc',
-    marginTop: 4,
-    textAlign: 'center',
-  },
-  secondaryButtonSubtext: {
-    color: '#999',
   },
   footer: {
     paddingVertical: 20,
