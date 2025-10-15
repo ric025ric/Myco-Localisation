@@ -147,7 +147,7 @@ function AddSpotScreen() {
       if (status !== 'granted') {
         Alert.alert(
           'Permission Required',
-          'Camera access is required to take photos.'
+          t('error.cameraRequired')
         );
         return;
       }
