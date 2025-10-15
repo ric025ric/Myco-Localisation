@@ -467,6 +467,28 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 8,
   },
+  carSaveButton: {
+    backgroundColor: '#FF9800', // Orange for saving car location
+    shadowColor: '#FF9800',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8,
+  },
+  carNavigateButton: {
+    backgroundColor: '#2196F3', // Blue for navigating to car
+    shadowColor: '#2196F3',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8,
+  },
   secondaryButton: {
     backgroundColor: 'rgba(42, 42, 42, 0.9)',
     borderWidth: 2,
