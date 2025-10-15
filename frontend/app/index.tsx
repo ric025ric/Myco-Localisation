@@ -339,7 +339,7 @@ const styles = StyleSheet.create({
     elevation: 8,
   },
   secondaryButton: {
-    backgroundColor: '#2a2a2a',
+    backgroundColor: 'rgba(42, 42, 42, 0.9)',
     borderWidth: 2,
     borderColor: '#4CAF50',
   },
