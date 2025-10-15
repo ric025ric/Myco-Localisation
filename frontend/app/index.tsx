@@ -165,9 +165,20 @@ export default function HomeScreen() {
       <StatusBar style="light" />
       
       <View style={styles.header}>
-        <Ionicons name="leaf" size={40} color="#4CAF50" />
-        <Text style={styles.title}>Mushroom Finder</Text>
-        <Text style={styles.subtitle}>Track your foraging discoveries</Text>
+        <TouchableOpacity
+          style={styles.settingsButton}
+          onPress={() => router.push('/settings')}
+        >
+          <Ionicons name="settings-outline" size={24} color="#4CAF50" />
+        </TouchableOpacity>
+        
+        <View style={styles.titleContainer}>
+          <Ionicons name="leaf" size={40} color="#4CAF50" />
+          <Text style={styles.title}>{t('app.title')}</Text>
+          <Text style={styles.subtitle}>{t('app.subtitle')}</Text>
+        </View>
+        
+        <View style={styles.placeholder} />
       </View>
 
       {location && (
