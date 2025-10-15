@@ -82,7 +82,7 @@ function AddSpotScreen() {
       }
 
       if (!Location) {
-        Alert.alert('Error', 'Location service not available.');
+        Alert.alert(t('common.error'), 'Location service not available.');
         setGettingLocation(false);
         return;
       }
