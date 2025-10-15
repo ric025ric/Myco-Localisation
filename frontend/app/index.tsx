@@ -164,23 +164,30 @@ function HomeScreenContent() {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="light" />
-      
-      <View style={styles.header}>
-        <TouchableOpacity
-          style={styles.settingsButton}
-          onPress={() => router.push('/settings')}
-        >
-          <Ionicons name="settings-outline" size={24} color="#4CAF50" />
-        </TouchableOpacity>
-        
-        <View style={styles.titleContainer}>
-          <Ionicons name="leaf" size={40} color="#4CAF50" />
-          <Text style={styles.title}>{t('app.title')}</Text>
-          <Text style={styles.subtitle}>{t('app.subtitle')}</Text>
-        </View>
-        
-        <View style={styles.placeholder} />
-      </View>
+      <ImageBackground
+        source={{
+          uri: 'https://images.pexels.com/photos/2637657/pexels-photo-2637657.jpeg'
+        }}
+        style={styles.backgroundImage}
+        imageStyle={styles.backgroundImageStyle}
+      >
+        <View style={styles.overlay}>
+          <View style={styles.header}>
+            <TouchableOpacity
+              style={styles.settingsButton}
+              onPress={() => router.push('/settings')}
+            >
+              <Ionicons name="settings-outline" size={24} color="#4CAF50" />
+            </TouchableOpacity>
+            
+            <View style={styles.titleContainer}>
+              <Ionicons name="leaf" size={40} color="#4CAF50" />
+              <Text style={styles.title}>{t('app.title')}</Text>
+              <Text style={styles.subtitle}>{t('app.subtitle')}</Text>
+            </View>
+            
+            <View style={styles.placeholder} />
+          </View>
 
       {location && (
         <View style={styles.locationInfo}>
