@@ -119,6 +119,9 @@ const translations = {
     'car.notSaved': 'Aucune position de voiture sauvegardée',
     'car.distance': 'Distance',
     'car.saveCurrentLocation': 'Sauvegarder cette position comme emplacement de ma voiture ?',
+    'car.delete': 'Supprimer Position',
+    'car.deleteConfirm': 'Supprimer la position de voiture sauvegardée ?',
+    'car.deleted': 'Position de voiture supprimée.',
   },
   
   en: {
