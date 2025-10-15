@@ -165,7 +165,7 @@ function AddSpotScreen() {
       }
     } catch (error) {
       console.error('Error taking picture:', error);
-      Alert.alert('Error', 'Could not take picture. Please try again.');
+      Alert.alert(t('common.error'), 'Could not take picture. Please try again.');
     }
   };
 
