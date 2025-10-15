@@ -246,7 +246,7 @@ function AddSpotScreen() {
     }
 
     if (!mushroomType.trim()) {
-      Alert.alert('Error', 'Please enter the mushroom type.');
+      Alert.alert(t('common.error'), t('error.mushroomTypeRequired'));
       return;
     }
 
