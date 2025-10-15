@@ -92,7 +92,7 @@ function AddSpotScreen() {
       if (status !== 'granted') {
         Alert.alert(
           'Permission Required',
-          'Location access is required to add mushroom spots.'
+          t('error.locationRequired')
         );
         router.back();
         return;
