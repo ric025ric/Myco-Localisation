@@ -489,14 +489,29 @@ const styles = StyleSheet.create({
   actionsContainer: {
     flex: 1,
     justifyContent: 'center',
+    paddingVertical: 40,
     gap: 20,
   },
-  actionButton: {
-    padding: 24,
-    borderRadius: 16,
+  buttonRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: 16,
+  },
+  gridButton: {
+    flex: 1,
+    aspectRatio: 1.2, // Format rectangulaire élégant
+    padding: 16,
+    borderRadius: 20,
     alignItems: 'center',
     justifyContent: 'center',
-    minHeight: 120,
+    backgroundColor: 'rgba(42, 42, 42, 0.9)',
+  },
+  gridButtonText: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#fff',
+    textAlign: 'center',
+    marginTop: 8,
   },
   primaryButton: {
     backgroundColor: '#4CAF50',
