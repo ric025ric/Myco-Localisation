@@ -332,7 +332,7 @@ function AddSpotScreen() {
                   {location.coords.latitude.toFixed(6)}, {location.coords.longitude.toFixed(6)}
                 </Text>
                 <Text style={styles.locationAccuracy}>
-                  Accuracy: {location.coords.accuracy?.toFixed(0)}m
+                  {t('addSpot.accuracy')}: {location.coords.accuracy?.toFixed(0)}m
                 </Text>
               </View>
             </View>
