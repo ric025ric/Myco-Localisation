@@ -249,8 +249,25 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   header: {
+    flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 40,
+    justifyContent: 'space-between',
+    paddingVertical: 24,
+    paddingHorizontal: 8,
+  },
+  settingsButton: {
+    padding: 12,
+    borderRadius: 12,
+    backgroundColor: 'rgba(76, 175, 80, 0.1)',
+    borderWidth: 1,
+    borderColor: '#4CAF50',
+  },
+  titleContainer: {
+    alignItems: 'center',
+    flex: 1,
+  },
+  placeholder: {
+    width: 48, // Match settingsButton width
   },
   title: {
     fontSize: 28,
