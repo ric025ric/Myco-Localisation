@@ -231,11 +231,13 @@ function HomeScreenContent() {
         </TouchableOpacity>
       </View>
 
-      <View style={styles.footer}>
-        <Text style={styles.footerText}>
-          {locationPermission ? t('home.locationEnabled') : t('home.locationDisabled')}
-        </Text>
-      </View>
+          <View style={styles.footer}>
+            <Text style={styles.footerText}>
+              {locationPermission ? t('home.locationEnabled') : t('home.locationDisabled')}
+            </Text>
+          </View>
+        </View>
+      </ImageBackground>
     </SafeAreaView>
   );
 }
