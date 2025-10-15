@@ -112,7 +112,7 @@ const translations = {
   
   en: {
     // Navigation & Main Screen
-    'app.title': 'Mushroom Finder',
+    'app.title': 'Myco Localisation',
     'app.subtitle': 'Track your foraging discoveries',
     
     // Home Screen
