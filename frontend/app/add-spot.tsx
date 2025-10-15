@@ -413,6 +413,14 @@ function AddSpotScreen() {
   );
 }
 
+export default function AddSpotScreenWithProvider() {
+  return (
+    <LanguageProvider>
+      <AddSpotScreen />
+    </LanguageProvider>
+  );
+}
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
