@@ -385,8 +385,8 @@ function AddSpotScreen() {
                 onPress={showPhotoOptions}
               >
                 <Ionicons name="camera" size={32} color="#4CAF50" />
-                <Text style={styles.photoButtonText}>Add Photo</Text>
-                <Text style={styles.photoButtonSubtext}>Take or select a photo</Text>
+                <Text style={styles.photoButtonText}>{t('addSpot.addPhoto')}</Text>
+                <Text style={styles.photoButtonSubtext}>{t('addSpot.addPhotoSubtext')}</Text>
               </TouchableOpacity>
             )}
           </View>
