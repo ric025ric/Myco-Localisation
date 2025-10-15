@@ -422,7 +422,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   backgroundImageStyle: {
-    opacity: 0.8,
+    opacity: 0.9, // Image plus visible
   },
   overlay: {
     flex: 1,
