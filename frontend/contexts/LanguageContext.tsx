@@ -220,6 +220,14 @@ const translations = {
     'delete.spotTitle': 'Delete Spot',
     'delete.spotMessage': 'Are you sure you want to delete this mushroom spot?',
     'delete.success': 'Mushroom spot deleted successfully.',
+    
+    // Car Location
+    'car.save': 'Save Car Location',
+    'car.saved': 'Car location saved!',
+    'car.navigate': 'Navigate to my Car',
+    'car.notSaved': 'No car location saved',
+    'car.distance': 'Distance',
+    'car.saveCurrentLocation': 'Save this location as my car position?',
   },
 };
 
