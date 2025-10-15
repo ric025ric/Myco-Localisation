@@ -20,7 +20,7 @@ if (Platform.OS !== 'web') {
   Location = require('expo-location');
 }
 
-export default function HomeScreen() {
+function HomeScreenContent() {
   const { t } = useLanguage();
   const [location, setLocation] = useState<any>(null);
   const [locationPermission, setLocationPermission] = useState<boolean>(false);
