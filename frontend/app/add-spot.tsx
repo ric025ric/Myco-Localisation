@@ -138,7 +138,7 @@ function AddSpotScreen() {
       }
 
       if (!ImagePicker) {
-        Alert.alert('Error', 'Camera not available on this platform.');
+        Alert.alert(t('common.error'), 'Camera not available on this platform.');
         return;
       }
 
