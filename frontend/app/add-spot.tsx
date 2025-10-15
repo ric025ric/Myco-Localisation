@@ -403,7 +403,7 @@ function AddSpotScreen() {
             ) : (
               <>
                 <Ionicons name="checkmark-circle" size={24} color="#fff" />
-                <Text style={styles.saveButtonText}>Save Spot</Text>
+                <Text style={styles.saveButtonText}>{t('addSpot.saveSpot')}</Text>
               </>
             )}
           </TouchableOpacity>
