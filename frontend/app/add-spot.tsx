@@ -280,9 +280,9 @@ function AddSpotScreen() {
       console.log('Spot saved:', result);
 
       Alert.alert(
-        'Success!',
-        'Mushroom spot saved successfully.',
-        [{ text: 'OK', onPress: () => router.back() }]
+        t('addSpot.success'),
+        t('addSpot.successMessage'),
+        [{ text: t('common.ok'), onPress: () => router.back() }]
       );
     } catch (error) {
       console.error('Error saving spot:', error);
