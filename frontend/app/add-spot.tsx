@@ -37,7 +37,8 @@ interface MushroomSpot {
   photo_base64?: string;
 }
 
-export default function AddSpotScreen() {
+function AddSpotScreen() {
+  const { t } = useLanguage();
   const [location, setLocation] = useState<Location.LocationObject | null>(null);
   const [mushroomType, setMushroomType] = useState('');
   const [notes, setNotes] = useState('');
