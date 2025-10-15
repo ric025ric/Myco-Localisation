@@ -9,6 +9,7 @@ import {
   SafeAreaView,
   Platform,
   ImageBackground,
+  Linking,
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
