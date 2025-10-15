@@ -110,6 +110,14 @@ const translations = {
     'delete.spotTitle': 'Supprimer le Spot',
     'delete.spotMessage': 'Êtes-vous sûr de vouloir supprimer ce spot de champignon ?',
     'delete.success': 'Spot de champignon supprimé avec succès.',
+    
+    // Car Location
+    'car.save': 'Sauvegarder Position Voiture',
+    'car.saved': 'Position de voiture sauvegardée !',
+    'car.navigate': 'Naviguer vers ma Voiture',
+    'car.notSaved': 'Aucune position de voiture sauvegardée',
+    'car.distance': 'Distance',
+    'car.saveCurrentLocation': 'Sauvegarder cette position comme emplacement de ma voiture ?',
   },
   
   en: {
