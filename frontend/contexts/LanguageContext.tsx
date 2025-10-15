@@ -120,6 +120,8 @@ const translations = {
     // Home Screen
     'home.addSpot': 'Add Mushroom Spot',
     'home.addSpotSubtext': 'Mark your current location',
+    'home.carLocation': 'Locate my Car',
+    'home.carLocationSubtext': 'Save and find your vehicle',
     'home.viewMap': 'View Map',
     'home.viewMapSubtext': 'See all your spots',
     'home.spotsList': 'Spots List',
