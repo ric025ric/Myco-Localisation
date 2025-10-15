@@ -350,12 +350,12 @@ function AddSpotScreen() {
           </View>
 
           <View style={styles.inputContainer}>
-            <Text style={styles.label}>Notes</Text>
+            <Text style={styles.label}>{t('addSpot.notes')}</Text>
             <TextInput
               style={[styles.input, styles.notesInput]}
               value={notes}
               onChangeText={setNotes}
-              placeholder="Add details about size, habitat, condition..."
+              placeholder={t('addSpot.notesPlaceholder')}
               placeholderTextColor="#666"
               multiline
               numberOfLines={4}
