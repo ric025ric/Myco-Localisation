@@ -241,7 +241,7 @@ function AddSpotScreen() {
 
   const saveSpot = async () => {
     if (!location) {
-      Alert.alert('Error', 'Location not available. Please try again.');
+      Alert.alert(t('common.error'), t('error.location'));
       return;
     }
 
