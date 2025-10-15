@@ -22,11 +22,14 @@ if (Platform.OS !== 'web') {
   Location = require('expo-location');
 }
 
+const CAR_LOCATION_STORAGE_KEY = 'myco_car_location';
+
 function HomeScreenContent() {
   const { t } = useLanguage();
   const [location, setLocation] = useState<any>(null);
   const [locationPermission, setLocationPermission] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
+  const [carLocation, setCarLocation] = useState<any>(null);
 
   useEffect(() => {
     checkLocationPermission();
