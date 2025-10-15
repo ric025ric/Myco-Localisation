@@ -256,6 +256,40 @@ function HomeScreenContent() {
             }
           },
         },
+        {
+          text: t('car.delete'),
+          style: 'destructive',
+          onPress: () => deleteCarLocation(),
+        },
+      ]
+    );
+  };
+
+  const deleteCarLocation = () => {
+    Alert.alert(
+      t('car.delete'),
+      t('car.deleteConfirm'),
+      [
+        { text: t('common.cancel'), style: 'cancel' },
+        {
+          text: t('car.delete'),
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await AsyncStorage.removeItem(CAR_LOCATION_STORAGE_KEY);
+              setCarLocation(null);
+              
+              Alert.alert(
+                t('common.success'),
+                t('car.deleted'),
+                [{ text: t('common.ok') }]
+              );
+            } catch (error) {
+              console.error('Error deleting car location:', error);
+              Alert.alert(t('common.error'), 'Impossible de supprimer la position.');
+            }
+          },
+        },
       ]
     );
   };
