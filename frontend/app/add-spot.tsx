@@ -327,7 +327,7 @@ function AddSpotScreen() {
             <View style={styles.locationCard}>
               <Ionicons name="location" size={20} color="#4CAF50" />
               <View style={styles.locationInfo}>
-                <Text style={styles.locationTitle}>Current Location</Text>
+                <Text style={styles.locationTitle}>{t('addSpot.currentLocation')}</Text>
                 <Text style={styles.locationText}>
                   {location.coords.latitude.toFixed(6)}, {location.coords.longitude.toFixed(6)}
                 </Text>
