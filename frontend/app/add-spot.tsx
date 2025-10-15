@@ -286,7 +286,7 @@ function AddSpotScreen() {
       );
     } catch (error) {
       console.error('Error saving spot:', error);
-      Alert.alert('Error', 'Could not save mushroom spot. Please try again.');
+      Alert.alert(t('common.error'), t('error.saveSpot'));
     } finally {
       setLoading(false);
     }
