@@ -359,51 +359,47 @@ function HomeScreenContent() {
       )}
 
       <View style={styles.actionsContainer}>
-        <TouchableOpacity
-          style={[styles.actionButton, carLocation ? styles.carNavigateButton : styles.carSaveButton]}
-          onPress={handleCarLocation}
-        >
-          <Ionicons 
-            name={carLocation ? "car-sport" : "car-sport-outline"} 
-            size={32} 
-            color="#fff" 
-          />
-          <Text style={styles.buttonText}>{t('home.carLocation')}</Text>
-          <Text style={styles.buttonSubtext}>
-            {carLocation ? t('car.navigate') : t('home.carLocationSubtext')}
-          </Text>
-        </TouchableOpacity>
+        {/* Première rangée */}
+        <View style={styles.buttonRow}>
+          <TouchableOpacity
+            style={[styles.gridButton, carLocation ? styles.carNavigateButton : styles.carSaveButton]}
+            onPress={handleCarLocation}
+          >
+            <Ionicons 
+              name={carLocation ? "car-sport" : "car-sport-outline"} 
+              size={24} 
+              color="#fff" 
+            />
+            <Text style={styles.gridButtonText}>{t('home.carLocation')}</Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity
-          style={[styles.actionButton, styles.primaryButton]}
-          onPress={navigateToAddSpot}
-        >
-          <Ionicons name="add-circle" size={32} color="#fff" />
-          <Text style={styles.buttonText}>{t('home.addSpot')}</Text>
-          <Text style={styles.buttonSubtext}>{t('home.addSpotSubtext')}</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.gridButton, styles.primaryButton]}
+            onPress={navigateToAddSpot}
+          >
+            <Ionicons name="add-circle" size={24} color="#fff" />
+            <Text style={styles.gridButtonText}>{t('home.addSpot')}</Text>
+          </TouchableOpacity>
+        </View>
 
-        <TouchableOpacity
-          style={[styles.actionButton, styles.secondaryButton]}
-          onPress={navigateToMap}
-        >
-          <Ionicons name="map" size={32} color="#4CAF50" />
-          <Text style={[styles.buttonText, styles.secondaryButtonText]}>{t('home.viewMap')}</Text>
-          <Text style={[styles.buttonSubtext, styles.secondaryButtonSubtext]}>
-            {t('home.viewMapSubtext')}
-          </Text>
-        </TouchableOpacity>
+        {/* Deuxième rangée */}
+        <View style={styles.buttonRow}>
+          <TouchableOpacity
+            style={[styles.gridButton, styles.secondaryButton]}
+            onPress={navigateToMap}
+          >
+            <Ionicons name="map" size={24} color="#4CAF50" />
+            <Text style={[styles.gridButtonText, styles.secondaryButtonText]}>{t('home.viewMap')}</Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity
-          style={[styles.actionButton, styles.secondaryButton]}
-          onPress={navigateToSpotsList}
-        >
-          <Ionicons name="list" size={32} color="#4CAF50" />
-          <Text style={[styles.buttonText, styles.secondaryButtonText]}>{t('home.spotsList')}</Text>
-          <Text style={[styles.buttonSubtext, styles.secondaryButtonSubtext]}>
-            {t('home.spotsListSubtext')}
-          </Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.gridButton, styles.secondaryButton]}
+            onPress={navigateToSpotsList}
+          >
+            <Ionicons name="list" size={24} color="#4CAF50" />
+            <Text style={[styles.gridButtonText, styles.secondaryButtonText]}>{t('home.spotsList')}</Text>
+          </TouchableOpacity>
+        </View>
       </View>
 
           <View style={styles.footer}>
