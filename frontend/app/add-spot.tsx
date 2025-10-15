@@ -339,12 +339,12 @@ function AddSpotScreen() {
           )}
 
           <View style={styles.inputContainer}>
-            <Text style={styles.label}>Mushroom Type *</Text>
+            <Text style={styles.label}>{t('addSpot.mushroomType')}</Text>
             <TextInput
               style={styles.input}
               value={mushroomType}
               onChangeText={setMushroomType}
-              placeholder="e.g., Chanterelle, Porcini, Unknown"
+              placeholder={t('addSpot.mushroomTypePlaceholder')}
               placeholderTextColor="#666"
             />
           </View>
