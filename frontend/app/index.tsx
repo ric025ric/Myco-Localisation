@@ -148,9 +148,9 @@ function HomeScreenContent() {
   const navigateToAddSpot = () => {
     if (!locationPermission) {
       Alert.alert(
-        'Location Required',
-        'Please enable location services to add mushroom spots.',
-        [{ text: 'OK' }]
+        t('common.error'),
+        t('error.locationRequired'),
+        [{ text: t('common.ok') }]
       );
       return;
     }
@@ -163,6 +163,104 @@ function HomeScreenContent() {
 
   const navigateToSpotsList = () => {
     router.push('/spots-list');
+  };
+
+  const handleCarLocation = () => {
+    if (!locationPermission || !location) {
+      Alert.alert(
+        t('common.error'),
+        t('error.locationRequired'),
+        [{ text: t('common.ok') }]
+      );
+      return;
+    }
+
+    if (carLocation) {
+      // Navigate to car
+      navigateToCarLocation();
+    } else {
+      // Save current location as car location
+      saveCarLocation();
+    }
+  };
+
+  const saveCarLocation = async () => {
+    if (!location) return;
+
+    Alert.alert(
+      t('car.save'),
+      t('car.saveCurrentLocation'),
+      [
+        { text: t('common.cancel'), style: 'cancel' },
+        {
+          text: t('car.save'),
+          onPress: async () => {
+            try {
+              const carLocationData = {
+                latitude: location.coords.latitude,
+                longitude: location.coords.longitude,
+                timestamp: new Date().toISOString(),
+              };
+              
+              await AsyncStorage.setItem(CAR_LOCATION_STORAGE_KEY, JSON.stringify(carLocationData));
+              setCarLocation(carLocationData);
+              
+              Alert.alert(
+                t('common.success'),
+                t('car.saved'),
+                [{ text: t('common.ok') }]
+              );
+            } catch (error) {
+              console.error('Error saving car location:', error);
+              Alert.alert(t('common.error'), 'Could not save car location.');
+            }
+          },
+        },
+      ]
+    );
+  };
+
+  const navigateToCarLocation = () => {
+    if (!carLocation) return;
+
+    const distance = calculateDistance(
+      location.coords.latitude,
+      location.coords.longitude,
+      carLocation.latitude,
+      carLocation.longitude
+    );
+
+    Alert.alert(
+      t('car.navigate'),
+      `${t('car.distance')}: ${distance.toFixed(0)}m\n\nCoordinates: ${carLocation.latitude.toFixed(6)}, ${carLocation.longitude.toFixed(6)}`,
+      [
+        { text: t('common.cancel'), style: 'cancel' },
+        {
+          text: 'Ouvrir Maps',
+          onPress: () => {
+            const url = `https://maps.google.com/?q=${carLocation.latitude},${carLocation.longitude}`;
+            if (typeof window !== 'undefined') {
+              window.open(url, '_blank');
+            }
+          },
+        },
+      ]
+    );
+  };
+
+  const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
+    const R = 6371e3; // Earth's radius in meters
+    const φ1 = lat1 * Math.PI/180;
+    const φ2 = lat2 * Math.PI/180;
+    const Δφ = (lat2-lat1) * Math.PI/180;
+    const Δλ = (lon1-lon2) * Math.PI/180;
+
+    const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+              Math.cos(φ1) * Math.cos(φ2) *
+              Math.sin(Δλ/2) * Math.sin(Δλ/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+    return R * c; // Distance in meters
   };
 
   if (loading) {
