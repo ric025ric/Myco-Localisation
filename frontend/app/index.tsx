@@ -238,10 +238,21 @@ function HomeScreenContent() {
         { text: t('common.cancel'), style: 'cancel' },
         {
           text: 'Ouvrir Maps',
-          onPress: () => {
-            const url = `https://maps.google.com/?q=${carLocation.latitude},${carLocation.longitude}`;
-            if (typeof window !== 'undefined') {
-              window.open(url, '_blank');
+          onPress: async () => {
+            try {
+              const url = `https://maps.google.com/?q=${carLocation.latitude},${carLocation.longitude}`;
+              
+              // Check if Linking can open the URL
+              const supported = await Linking.canOpenURL(url);
+              
+              if (supported) {
+                await Linking.openURL(url);
+              } else {
+                Alert.alert(t('common.error'), 'Impossible d\'ouvrir Maps sur cet appareil.');
+              }
+            } catch (error) {
+              console.error('Error opening maps:', error);
+              Alert.alert(t('common.error'), 'Erreur lors de l\'ouverture de Maps.');
             }
           },
         },
