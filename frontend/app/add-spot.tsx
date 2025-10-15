@@ -70,7 +70,7 @@ function AddSpotScreen() {
             },
             (error) => {
               console.error('Error getting web location:', error);
-              Alert.alert('Error', 'Could not get your location. Please try again.');
+              Alert.alert(t('common.error'), t('error.location'));
               setGettingLocation(false);
             }
           );
