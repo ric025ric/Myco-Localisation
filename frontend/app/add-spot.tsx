@@ -104,7 +104,7 @@ function AddSpotScreen() {
       setLocation(location);
     } catch (error) {
       console.error('Error getting location:', error);
-      Alert.alert('Error', 'Could not get your location. Please try again.');
+      Alert.alert(t('common.error'), t('error.location'));
     } finally {
       setGettingLocation(false);
     }
