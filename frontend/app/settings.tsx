@@ -203,3 +203,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
+
+export default function SettingsScreen() {
+  return (
+    <LanguageProvider>
+      <SettingsContent />
+    </LanguageProvider>
+  );
+}
