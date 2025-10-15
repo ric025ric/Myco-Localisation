@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router';
 import { LanguageProvider, useLanguage } from '../contexts/LanguageContext';
 
