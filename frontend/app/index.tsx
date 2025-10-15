@@ -43,6 +43,8 @@ export default function HomeScreen() {
       }
 
       if (!Location) {
+        // Skip location for mobile if not available - app will still work
+        setLocationPermission(false);
         setLoading(false);
         return;
       }
@@ -50,11 +52,9 @@ export default function HomeScreen() {
       const { status } = await Location.requestForegroundPermissionsAsync();
       
       if (status !== 'granted') {
-        Alert.alert(
-          'Permission Required',
-          'This app needs location access to mark mushroom spots. Please enable location services.',
-          [{ text: 'OK' }]
-        );
+        // Don't show alert that blocks user - just continue without location
+        console.log('Location permission denied');
+        setLocationPermission(false);
         setLoading(false);
         return;
       }
@@ -63,6 +63,7 @@ export default function HomeScreen() {
       getCurrentLocation();
     } catch (error) {
       console.error('Error requesting location permission:', error);
+      setLocationPermission(false);
       setLoading(false);
     }
   };
