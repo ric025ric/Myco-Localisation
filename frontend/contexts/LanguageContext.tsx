@@ -12,7 +12,7 @@ interface LanguageContextType {
 const translations = {
   fr: {
     // Navigation & Main Screen
-    'app.title': 'Mushroom Finder',
+    'app.title': 'Myco Localisation',
     'app.subtitle': 'Suivez vos découvertes de cueillette',
     
     // Home Screen
