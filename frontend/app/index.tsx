@@ -350,3 +350,11 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
 });
+
+export default function HomeScreen() {
+  return (
+    <LanguageProvider>
+      <HomeScreenContent />
+    </LanguageProvider>
+  );
+}
