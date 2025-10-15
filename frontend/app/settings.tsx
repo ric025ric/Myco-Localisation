@@ -7,12 +7,12 @@ import {
   ScrollView,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { StatusBar } from 'expo-status-bar';
+import { StatusBar } from 'expo-status-r';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
-import { useLanguage } from '../contexts/LanguageContext';
+import { LanguageProvider, useLanguage } from '../contexts/LanguageContext';
 
-export default function SettingsScreen() {
+function SettingsContent() {
   const { language, setLanguage, t } = useLanguage();
 
   const languageOptions = [
