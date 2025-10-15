@@ -94,6 +94,7 @@ const translations = {
     'common.back': 'Retour',
     'common.loading': 'Chargement...',
     'common.error': 'Erreur',
+    'common.success': 'Succès',
     
     // Errors & Permissions
     'error.location': 'Impossible d\'obtenir votre localisation. Veuillez réessayer.',
