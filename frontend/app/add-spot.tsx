@@ -223,7 +223,7 @@ function AddSpotScreen() {
       }
     } catch (error) {
       console.error('Error selecting from gallery:', error);
-      Alert.alert('Error', 'Could not select photo. Please try again.');
+      Alert.alert(t('common.error'), 'Could not select photo. Please try again.');
     }
   };
 
