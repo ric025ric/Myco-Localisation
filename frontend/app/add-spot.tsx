@@ -318,7 +318,7 @@ function AddSpotScreen() {
           >
             <Ionicons name="arrow-back" size={24} color="#4CAF50" />
           </TouchableOpacity>
-          <Text style={styles.title}>Add Mushroom Spot</Text>
+          <Text style={styles.title}>{t('addSpot.title')}</Text>
           <View style={styles.placeholder} />
         </View>
 
