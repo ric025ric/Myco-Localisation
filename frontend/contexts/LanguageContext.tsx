@@ -232,6 +232,9 @@ const translations = {
     'car.notSaved': 'No car location saved',
     'car.distance': 'Distance',
     'car.saveCurrentLocation': 'Save this location as my car position?',
+    'car.delete': 'Delete Position',
+    'car.deleteConfirm': 'Delete saved car position?',
+    'car.deleted': 'Car position deleted.',
   },
 };
 
