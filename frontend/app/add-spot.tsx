@@ -205,7 +205,7 @@ function AddSpotScreen() {
       if (status !== 'granted') {
         Alert.alert(
           'Permission Required',
-          'Gallery access is required to select photos.'
+          t('error.galleryRequired')
         );
         return;
       }
