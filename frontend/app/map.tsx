@@ -22,11 +22,15 @@ let Marker: any = null;
 let PROVIDER_GOOGLE: any = null;
 
 if (Platform.OS !== 'web') {
-  Location = require('expo-location');
-  const Maps = require('react-native-maps');
-  MapView = Maps.default;
-  Marker = Maps.Marker;
-  PROVIDER_GOOGLE = Maps.PROVIDER_GOOGLE;
+  try {
+    Location = require('expo-location');
+    const Maps = require('react-native-maps');
+    MapView = Maps.default;
+    Marker = Maps.Marker;
+    PROVIDER_GOOGLE = Maps.PROVIDER_GOOGLE;
+  } catch (error) {
+    console.warn('Maps not available:', error);
+  }
 }
 
 const EXPO_PUBLIC_BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
