@@ -18,6 +18,8 @@ const translations = {
     // Home Screen
     'home.addSpot': 'Ajouter un Spot de Champignon',
     'home.addSpotSubtext': 'Marquer votre localisation actuelle',
+    'home.carLocation': 'Localiser ma Voiture',
+    'home.carLocationSubtext': 'Sauvegarder et retrouver votre véhicule',
     'home.viewMap': 'Voir la Carte',
     'home.viewMapSubtext': 'Voir tous vos spots',
     'home.spotsList': 'Liste des Spots',
