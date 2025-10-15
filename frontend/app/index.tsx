@@ -21,6 +21,7 @@ if (Platform.OS !== 'web') {
 }
 
 export default function HomeScreen() {
+  const { t } = useLanguage();
   const [location, setLocation] = useState<any>(null);
   const [locationPermission, setLocationPermission] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
