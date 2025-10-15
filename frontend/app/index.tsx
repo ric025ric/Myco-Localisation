@@ -196,8 +196,8 @@ export default function HomeScreen() {
           onPress={navigateToAddSpot}
         >
           <Ionicons name="add-circle" size={32} color="#fff" />
-          <Text style={styles.buttonText}>Add Mushroom Spot</Text>
-          <Text style={styles.buttonSubtext}>Mark your current location</Text>
+          <Text style={styles.buttonText}>{t('home.addSpot')}</Text>
+          <Text style={styles.buttonSubtext}>{t('home.addSpotSubtext')}</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -205,9 +205,9 @@ export default function HomeScreen() {
           onPress={navigateToMap}
         >
           <Ionicons name="map" size={32} color="#4CAF50" />
-          <Text style={[styles.buttonText, styles.secondaryButtonText]}>View Map</Text>
+          <Text style={[styles.buttonText, styles.secondaryButtonText]}>{t('home.viewMap')}</Text>
           <Text style={[styles.buttonSubtext, styles.secondaryButtonSubtext]}>
-            See all your spots
+            {t('home.viewMapSubtext')}
           </Text>
         </TouchableOpacity>
 
@@ -216,9 +216,9 @@ export default function HomeScreen() {
           onPress={navigateToSpotsList}
         >
           <Ionicons name="list" size={32} color="#4CAF50" />
-          <Text style={[styles.buttonText, styles.secondaryButtonText]}>Spots List</Text>
+          <Text style={[styles.buttonText, styles.secondaryButtonText]}>{t('home.spotsList')}</Text>
           <Text style={[styles.buttonSubtext, styles.secondaryButtonSubtext]}>
-            Browse your finds
+            {t('home.spotsListSubtext')}
           </Text>
         </TouchableOpacity>
       </View>
