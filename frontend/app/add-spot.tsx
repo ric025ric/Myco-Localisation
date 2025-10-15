@@ -75,7 +75,7 @@ function AddSpotScreen() {
             }
           );
         } else {
-          Alert.alert('Error', 'Geolocation is not supported by this browser.');
+          Alert.alert(t('common.error'), 'Geolocation is not supported by this browser.');
           setGettingLocation(false);
         }
         return;
