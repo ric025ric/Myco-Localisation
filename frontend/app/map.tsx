@@ -13,13 +13,20 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
-import WebMapFallback from '../components/WebMapFallback';
+import { LanguageProvider, useLanguage } from '../contexts/LanguageContext';
 
 // Platform-specific imports
 let Location: any = null;
+let MapView: any = null;
+let Marker: any = null;
+let PROVIDER_GOOGLE: any = null;
 
 if (Platform.OS !== 'web') {
   Location = require('expo-location');
+  const Maps = require('react-native-maps');
+  MapView = Maps.default;
+  Marker = Maps.Marker;
+  PROVIDER_GOOGLE = Maps.PROVIDER_GOOGLE;
 }
 
 const EXPO_PUBLIC_BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
@@ -35,12 +42,13 @@ interface MushroomSpot {
   timestamp: string;
 }
 
-export default function MapScreen() {
+function MapContent() {
+  const { t } = useLanguage();
   const [spots, setSpots] = useState<MushroomSpot[]>([]);
-  const [currentLocation, setCurrentLocation] = useState<Location.LocationObject | null>(null);
+  const [currentLocation, setCurrentLocation] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const mapRef = useRef<MapView>(null);
+  const mapRef = useRef<any>(null);
 
   useEffect(() => {
     loadData();
@@ -82,7 +90,7 @@ export default function MapScreen() {
       await fetchSpots();
     } catch (error) {
       console.error('Error loading data:', error);
-      Alert.alert('Error', 'Could not load map data. Please try again.');
+      Alert.alert(t('common.error'), t('error.loadMap'));
     } finally {
       setLoading(false);
     }
@@ -110,7 +118,7 @@ export default function MapScreen() {
       await fetchSpots();
     } catch (error) {
       console.error('Error refreshing data:', error);
-      Alert.alert('Error', 'Could not refresh data. Please try again.');
+      Alert.alert(t('common.error'), t('error.loadMap'));
     } finally {
       setRefreshing(false);
     }
@@ -119,16 +127,16 @@ export default function MapScreen() {
   const onMarkerPress = (spot: MushroomSpot) => {
     Alert.alert(
       spot.mushroom_type,
-      `Found: ${new Date(spot.timestamp).toLocaleDateString()}\nNotes: ${spot.notes || 'No notes'}`,
+      `${t('spotsList.found')}: ${new Date(spot.timestamp).toLocaleDateString()}\n${t('addSpot.notes')}: ${spot.notes || t('spotsList.noSpots')}`,
       [
-        { text: 'View Details', onPress: () => router.push(`/spot-details/${spot.id}`) },
-        { text: 'Close', style: 'cancel' },
+        { text: t('spotsList.view'), onPress: () => router.push(`/spot-details/${spot.id}`) },
+        { text: t('common.close'), style: 'cancel' },
       ]
     );
   };
 
   const centerOnCurrentLocation = () => {
-    if (Platform.OS !== 'web' && currentLocation && mapRef.current) {
+    if (currentLocation && mapRef.current && Platform.OS !== 'web') {
       mapRef.current.animateToRegion({
         latitude: currentLocation.coords.latitude,
         longitude: currentLocation.coords.longitude,
@@ -139,7 +147,7 @@ export default function MapScreen() {
   };
 
   const fitAllMarkers = () => {
-    if (Platform.OS !== 'web' && spots.length > 0 && mapRef.current) {
+    if (spots.length > 0 && mapRef.current && Platform.OS !== 'web') {
       const coordinates = spots.map(spot => ({
         latitude: spot.latitude,
         longitude: spot.longitude,
@@ -169,10 +177,10 @@ export default function MapScreen() {
       };
     }
     
-    // Default region (you can change this to your preferred area)
+    // Default region
     return {
-      latitude: 37.7749,
-      longitude: -122.4194,
+      latitude: 47.6062,
+      longitude: -122.3321,
       latitudeDelta: 0.1,
       longitudeDelta: 0.1,
     };
@@ -184,7 +192,52 @@ export default function MapScreen() {
         <StatusBar style="light" />
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#4CAF50" />
-          <Text style={styles.loadingText}>Loading map...</Text>
+          <Text style={styles.loadingText}>{t('map.loadingMap')}</Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  // Web fallback when maps are not available
+  if (Platform.OS === 'web') {
+    return (
+      <SafeAreaView style={styles.container}>
+        <StatusBar style="light" />
+        
+        <View style={styles.header}>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => router.back()}
+          >
+            <Ionicons name="arrow-back" size={24} color="#4CAF50" />
+          </TouchableOpacity>
+          <Text style={styles.title}>{t('map.title')}</Text>
+          <TouchableOpacity
+            style={styles.refreshButton}
+            onPress={refreshData}
+            disabled={refreshing}
+          >
+            <Ionicons 
+              name="refresh" 
+              size={24} 
+              color={refreshing ? "#666" : "#4CAF50"} 
+            />
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.webFallback}>
+          <Ionicons name="map-outline" size={64} color="#4CAF50" />
+          <Text style={styles.webFallbackTitle}>Carte non disponible sur web</Text>
+          <Text style={styles.webFallbackText}>
+            Utilisez l'application mobile pour voir la carte interactive
+          </Text>
+          <TouchableOpacity
+            style={styles.addButton}
+            onPress={() => router.push('/add-spot')}
+          >
+            <Ionicons name="add" size={24} color="#fff" />
+            <Text style={styles.addButtonText}>Ajouter un Spot</Text>
+          </TouchableOpacity>
         </View>
       </SafeAreaView>
     );
@@ -201,7 +254,7 @@ export default function MapScreen() {
         >
           <Ionicons name="arrow-back" size={24} color="#4CAF50" />
         </TouchableOpacity>
-        <Text style={styles.title}>Mushroom Map</Text>
+        <Text style={styles.title}>{t('map.title')}</Text>
         <TouchableOpacity
           style={styles.refreshButton}
           onPress={refreshData}
@@ -216,17 +269,34 @@ export default function MapScreen() {
       </View>
 
       <View style={styles.mapContainer}>
-        {Platform.OS === 'web' ? (
-          <WebMapFallback spots={spots} onMarkerPress={onMarkerPress} />
-        ) : (
-          <View style={styles.nativeMapPlaceholder}>
-            <Ionicons name="map" size={64} color="#4CAF50" />
-            <Text style={styles.placeholderText}>Native Map</Text>
-            <Text style={styles.placeholderSubtext}>
-              Map functionality is available on native platforms with react-native-maps
-            </Text>
-          </View>
-        )}
+        <MapView
+          ref={mapRef}
+          style={styles.map}
+          provider={PROVIDER_GOOGLE}
+          initialRegion={getInitialRegion()}
+          showsUserLocation={true}
+          showsMyLocationButton={false}
+          showsCompass={true}
+          showsScale={true}
+          onMapReady={fitAllMarkers}
+        >
+          {spots.map((spot) => (
+            <Marker
+              key={spot.id}
+              coordinate={{
+                latitude: spot.latitude,
+                longitude: spot.longitude,
+              }}
+              title={spot.mushroom_type}
+              description={`${t('spotsList.found')}: ${new Date(spot.timestamp).toLocaleDateString()}`}
+              onPress={() => onMarkerPress(spot)}
+            >
+              <View style={styles.markerContainer}>
+                <Ionicons name="location" size={30} color="#4CAF50" />
+              </View>
+            </Marker>
+          ))}
+        </MapView>
 
         <View style={styles.mapControls}>
           <TouchableOpacity
@@ -249,12 +319,12 @@ export default function MapScreen() {
         <View style={styles.statsContainer}>
           <View style={styles.stat}>
             <Ionicons name="location" size={20} color="#4CAF50" />
-            <Text style={styles.statText}>{spots.length} spots</Text>
+            <Text style={styles.statText}>{spots.length} {spots.length === 1 ? t('map.spot') : t('map.spotsCount')}</Text>
           </View>
           {currentLocation && (
             <View style={styles.stat}>
               <Ionicons name="navigate" size={20} color="#4CAF50" />
-              <Text style={styles.statText}>GPS active</Text>
+              <Text style={styles.statText}>{t('map.gpsActive')}</Text>
             </View>
           )}
         </View>
@@ -267,6 +337,14 @@ export default function MapScreen() {
         </TouchableOpacity>
       </View>
     </SafeAreaView>
+  );
+}
+
+export default function MapScreen() {
+  return (
+    <LanguageProvider>
+      <MapContent />
+    </LanguageProvider>
   );
 }
 
@@ -304,6 +382,27 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     color: '#fff',
+  },
+  webFallback: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 40,
+  },
+  webFallbackTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#fff',
+    marginTop: 24,
+    marginBottom: 12,
+    textAlign: 'center',
+  },
+  webFallbackText: {
+    fontSize: 16,
+    color: '#666',
+    textAlign: 'center',
+    marginBottom: 32,
+    lineHeight: 24,
   },
   mapContainer: {
     flex: 1,
@@ -376,6 +475,8 @@ const styles = StyleSheet.create({
     padding: 12,
     alignItems: 'center',
     justifyContent: 'center',
+    flexDirection: 'row',
+    gap: 8,
     shadowColor: '#4CAF50',
     shadowOffset: {
       width: 0,
@@ -385,24 +486,9 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 8,
   },
-  nativeMapPlaceholder: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#2a2a2a',
-    padding: 20,
-  },
-  placeholderText: {
-    fontSize: 24,
-    fontWeight: 'bold',
+  addButtonText: {
     color: '#fff',
-    marginTop: 16,
-    marginBottom: 8,
-  },
-  placeholderSubtext: {
     fontSize: 16,
-    color: '#ccc',
-    textAlign: 'center',
-    lineHeight: 22,
+    fontWeight: 'bold',
   },
 });

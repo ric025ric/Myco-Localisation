@@ -28,7 +28,8 @@ interface MushroomSpot {
   timestamp: string;
 }
 
-export default function SpotsListScreen() {
+function SpotsListContent() {
+  const { t } = useLanguage();
   const [spots, setSpots] = useState<MushroomSpot[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -49,7 +50,7 @@ export default function SpotsListScreen() {
       setSpots(spots);
     } catch (error) {
       console.error('Error fetching spots:', error);
-      Alert.alert('Error', 'Could not load mushroom spots. Please try again.');
+      Alert.alert(t('common.error'), t('error.loadSpots'));
     } finally {
       setLoading(false);
     }
@@ -68,12 +69,12 @@ export default function SpotsListScreen() {
 
   const deleteSpot = async (spotId: string) => {
     Alert.alert(
-      'Delete Spot',
-      'Are you sure you want to delete this mushroom spot?',
+      t('delete.spotTitle'),
+      t('delete.spotMessage'),
       [
-        { text: 'Cancel', style: 'cancel' },
+        { text: t('common.cancel'), style: 'cancel' },
         {
-          text: 'Delete',
+          text: t('common.delete'),
           style: 'destructive',
           onPress: async () => {
             try {
@@ -88,10 +89,10 @@ export default function SpotsListScreen() {
 
               // Remove from local state
               setSpots(spots.filter(spot => spot.id !== spotId));
-              Alert.alert('Success', 'Mushroom spot deleted successfully.');
+              Alert.alert(t('common.success'), t('delete.success'));
             } catch (error) {
               console.error('Error deleting spot:', error);
-              Alert.alert('Error', 'Could not delete spot. Please try again.');
+              Alert.alert(t('common.error'), t('error.deleteSpot'));
             }
           },
         },
@@ -148,7 +149,7 @@ export default function SpotsListScreen() {
           onPress={() => router.push(`/spot-details/${item.id}`)}
         >
           <Ionicons name="eye-outline" size={16} color="#4CAF50" />
-          <Text style={styles.actionText}>View</Text>
+          <Text style={styles.actionText}>{t('spotsList.view')}</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -156,7 +157,7 @@ export default function SpotsListScreen() {
           onPress={() => deleteSpot(item.id)}
         >
           <Ionicons name="trash-outline" size={16} color="#f44336" />
-          <Text style={[styles.actionText, { color: '#f44336' }]}>Delete</Text>
+          <Text style={[styles.actionText, { color: '#f44336' }]}>{t('spotsList.delete')}</Text>
         </TouchableOpacity>
       </View>
     </TouchableOpacity>
@@ -165,16 +166,16 @@ export default function SpotsListScreen() {
   const renderEmptyState = () => (
     <View style={styles.emptyContainer}>
       <Ionicons name="leaf-outline" size={64} color="#666" />
-      <Text style={styles.emptyTitle}>No mushroom spots yet</Text>
+      <Text style={styles.emptyTitle}>{t('spotsList.noSpots')}</Text>
       <Text style={styles.emptyText}>
-        Start exploring and add your first mushroom find!
+        {t('spotsList.noSpotsText')}
       </Text>
       <TouchableOpacity
         style={styles.emptyButton}
         onPress={() => router.push('/add-spot')}
       >
         <Ionicons name="add-circle" size={24} color="#fff" />
-        <Text style={styles.emptyButtonText}>Add First Spot</Text>
+        <Text style={styles.emptyButtonText}>{t('spotsList.addFirstSpot')}</Text>
       </TouchableOpacity>
     </View>
   );
@@ -185,7 +186,7 @@ export default function SpotsListScreen() {
         <StatusBar style="light" />
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#4CAF50" />
-          <Text style={styles.loadingText}>Loading your spots...</Text>
+          <Text style={styles.loadingText}>{t('spotsList.loadingSpots')}</Text>
         </View>
       </SafeAreaView>
     );
@@ -202,7 +203,7 @@ export default function SpotsListScreen() {
         >
           <Ionicons name="arrow-back" size={24} color="#4CAF50" />
         </TouchableOpacity>
-        <Text style={styles.title}>My Spots</Text>
+        <Text style={styles.title}>{t('spotsList.title')}</Text>
         <TouchableOpacity
           style={styles.addButton}
           onPress={() => router.push('/add-spot')}
@@ -215,7 +216,7 @@ export default function SpotsListScreen() {
         <View style={styles.stat}>
           <Ionicons name="location" size={16} color="#4CAF50" />
           <Text style={styles.statText}>
-            {spots.length} {spots.length === 1 ? 'spot' : 'spots'} found
+            {spots.length} {spots.length === 1 ? t('spotsList.spotFound') : t('spotsList.spotsFound')}
           </Text>
         </View>
       </View>
@@ -236,6 +237,14 @@ export default function SpotsListScreen() {
         contentContainerStyle={spots.length === 0 ? styles.emptyList : styles.list}
       />
     </SafeAreaView>
+  );
+}
+
+export default function SpotsListScreen() {
+  return (
+    <LanguageProvider>
+      <SpotsListContent />
+    </LanguageProvider>
   );
 }
 
