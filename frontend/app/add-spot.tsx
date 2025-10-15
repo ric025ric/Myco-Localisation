@@ -298,7 +298,7 @@ function AddSpotScreen() {
         <StatusBar style="light" />
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#4CAF50" />
-          <Text style={styles.loadingText}>Getting your location...</Text>
+          <Text style={styles.loadingText}>{t('home.gettingLocation')}</Text>
         </View>
       </SafeAreaView>
     );
