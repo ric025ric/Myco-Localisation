@@ -196,7 +196,7 @@ function AddSpotScreen() {
       }
 
       if (!ImagePicker) {
-        Alert.alert('Error', 'Image picker not available on this platform.');
+        Alert.alert(t('common.error'), 'Image picker not available on this platform.');
         return;
       }
 
