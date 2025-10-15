@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
   SafeAreaView,
   Platform,
+  ImageBackground,
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
