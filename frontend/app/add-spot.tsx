@@ -364,7 +364,7 @@ function AddSpotScreen() {
           </View>
 
           <View style={styles.photoContainer}>
-            <Text style={styles.label}>Photo</Text>
+            <Text style={styles.label}>{t('addSpot.photo')}</Text>
             {photo ? (
               <View style={styles.photoWrapper}>
                 <Image
