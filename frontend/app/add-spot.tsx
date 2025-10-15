@@ -229,12 +229,12 @@ function AddSpotScreen() {
 
   const showPhotoOptions = () => {
     Alert.alert(
-      'Add Photo',
+      t('addSpot.addPhoto'),
       'Choose how to add a photo of the mushroom',
       [
         { text: 'Take Photo', onPress: takePicture },
         { text: 'Choose from Gallery', onPress: selectFromGallery },
-        { text: 'Cancel', style: 'cancel' },
+        { text: t('common.cancel'), style: 'cancel' },
       ]
     );
   };
