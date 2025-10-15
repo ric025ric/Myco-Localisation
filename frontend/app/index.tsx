@@ -314,6 +314,21 @@ function HomeScreenContent() {
 
       <View style={styles.actionsContainer}>
         <TouchableOpacity
+          style={[styles.actionButton, carLocation ? styles.carNavigateButton : styles.carSaveButton]}
+          onPress={handleCarLocation}
+        >
+          <Ionicons 
+            name={carLocation ? "car-sport" : "car-sport-outline"} 
+            size={32} 
+            color="#fff" 
+          />
+          <Text style={styles.buttonText}>{t('home.carLocation')}</Text>
+          <Text style={styles.buttonSubtext}>
+            {carLocation ? t('car.navigate') : t('home.carLocationSubtext')}
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
           style={[styles.actionButton, styles.primaryButton]}
           onPress={navigateToAddSpot}
         >
