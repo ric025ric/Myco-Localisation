@@ -115,22 +115,30 @@ export default function SpotDetailsScreen() {
     }
   };
 
-  const openInMaps = () => {
+  const openInMaps = async () => {
     if (!spot) return;
     
     const googleMapsUrl = `https://maps.google.com/?q=${spot.latitude},${spot.longitude}`;
     
     Alert.alert(
-      'Open in Maps',
-      'This will open your default maps app to navigate to this location.',
+      'Ouvrir dans Maps',
+      'Ceci va ouvrir votre application Maps par défaut pour naviguer vers cet emplacement.',
       [
-        { text: 'Cancel', style: 'cancel' },
+        { text: 'Annuler', style: 'cancel' },
         { 
-          text: 'Open Maps', 
-          onPress: () => {
-            // For web, we'll just show the URL
-            if (typeof window !== 'undefined') {
-              window.open(googleMapsUrl, '_blank');
+          text: 'Ouvrir Maps', 
+          onPress: async () => {
+            try {
+              const supported = await Linking.canOpenURL(googleMapsUrl);
+              
+              if (supported) {
+                await Linking.openURL(googleMapsUrl);
+              } else {
+                Alert.alert('Erreur', 'Impossible d\'ouvrir Maps sur cet appareil.');
+              }
+            } catch (error) {
+              console.error('Error opening maps:', error);
+              Alert.alert('Erreur', 'Erreur lors de l\'ouverture de Maps.');
             }
           }
         },
