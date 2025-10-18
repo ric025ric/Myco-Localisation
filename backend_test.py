@@ -10,7 +10,7 @@ import sys
 from datetime import datetime
 
 # Use the production URL from frontend/.env
-BASE_URL = "https://shroomspot.preview.emergentagent.com/api"
+BASE_URL = "https://shroomtracker.preview.emergentagent.com/api"
 
 # Test data as specified in the review request
 TEST_MUSHROOM_DATA = [
