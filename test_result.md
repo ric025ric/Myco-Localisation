@@ -120,6 +120,18 @@ backend:
         agent: "testing"
         comment: "COMPREHENSIVE BACKEND TESTING COMPLETED - ALL 13 TESTS PASSED (100% success rate). Tested: API health check, CRUD operations (POST/GET/PUT/DELETE mushroom spots), nearby spots search, error handling for non-existent resources, base64 photo storage, data persistence in MongoDB. All endpoints return correct HTTP status codes, proper JSON responses matching Pydantic models, and handle errors appropriately. Created backend_test.py for future testing."
 
+  - task: "Render Deployment Testing"
+    implemented: true
+    working: false
+    file: "render_api_test.py"
+    stuck_count: 1
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: false
+        agent: "testing"
+        comment: "RENDER DEPLOYMENT TESTING FAILED - SERVICE UNAVAILABLE. Tested Myco Localisation backend at https://myco-localisation-backend.onrender.com. All endpoints (GET /api/, GET /api/mushroom-spots, POST /api/mushroom-spots) consistently return 502 Bad Gateway errors. Service appears to be in cold start or has deployment issues. Multiple attempts over several minutes failed to bring service online. Local backend works correctly, but Render deployment needs investigation."
+
 frontend:
   - task: "Home Screen with Location Services"
     implemented: true
