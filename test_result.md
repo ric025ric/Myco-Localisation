@@ -124,13 +124,16 @@ backend:
     implemented: true
     working: false
     file: "render_api_test.py"
-    stuck_count: 1
+    stuck_count: 2
     priority: "high"
     needs_retesting: false
     status_history:
       - working: false
         agent: "testing"
         comment: "RENDER DEPLOYMENT TESTING FAILED - SERVICE UNAVAILABLE. Tested Myco Localisation backend at https://myco-localisation-backend.onrender.com. All endpoints (GET /api/, GET /api/mushroom-spots, POST /api/mushroom-spots) consistently return 502 Bad Gateway errors. Service appears to be in cold start or has deployment issues. Multiple attempts over several minutes failed to bring service online. Local backend works correctly, but Render deployment needs investigation."
+      - working: false
+        agent: "testing"
+        comment: "RENDER DEPLOYMENT TESTING - MONGODB AUTHENTICATION FAILURE IDENTIFIED. Comprehensive testing revealed: ✅ Root endpoint (/api/) working correctly (200 OK), ❌ All database operations failing with MongoDB Atlas error 'bad auth: authentication failed, code 8000, AtlasError'. Service is running but cannot connect to MongoDB due to authentication issues. Tested endpoints: GET /api/ (✅), GET /api/mushroom-spots (❌ 500), POST /api/mushroom-spots (❌ 400), all database operations return authentication errors. Root cause: MongoDB Atlas credentials/connection string issues in Render environment variables."
 
 frontend:
   - task: "Home Screen with Location Services"
