@@ -9,8 +9,8 @@ import json
 import sys
 from datetime import datetime
 
-# Use the production URL from frontend/.env
-BASE_URL = "https://shroomtracker.preview.emergentagent.com/api"
+# Use the Render deployment URL as specified in the review request
+BASE_URL = "https://myco-localisation-backend.onrender.com/api"
 
 # Test data as specified in the review request
 TEST_MUSHROOM_DATA = [
