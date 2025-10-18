@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: myco-localisation-backend
+    env: python
+    buildCommand: "pip install -r backend/requirements.txt"
+    startCommand: "cd backend && uvicorn server:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: MONGO_URL
+        value: mongodb+srv://myco:myco123@cluster0.mongodb.net/myco_localisation?retryWrites=true&w=majority
+      - key: DB_NAME
+        value: myco_localisation
+    autoDeploy: false
