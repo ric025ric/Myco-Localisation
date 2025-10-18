@@ -15,11 +15,11 @@ BASE_URL = "https://myco-localisation-backend.onrender.com/api"
 # Test data as specified in the review request
 TEST_MUSHROOM_DATA = [
     {
-        "latitude": 47.6062,
-        "longitude": -122.3321,
-        "mushroom_type": "Chanterelle",
-        "notes": "Found under oak trees",
-        "photo_base64": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="
+        "latitude": 48.8566,
+        "longitude": 2.3522,
+        "mushroom_type": "Test Champignon",
+        "notes": "Test depuis Render",
+        "photo_base64": None
     },
     {
         "latitude": 47.6100,
