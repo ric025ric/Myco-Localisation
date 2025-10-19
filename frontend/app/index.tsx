@@ -153,13 +153,15 @@ function HomeScreenContent() {
         
         try {
           const position = await Promise.race([locationPromise, timeoutPromise]);
-          setLocation({
+          const loc = {
             coords: {
               latitude: position.coords.latitude,
               longitude: position.coords.longitude,
               accuracy: position.coords.accuracy,
             }
-          });
+          };
+          setLocation(loc);
+          await saveLocationToStorage(loc);
         } catch (error) {
           console.error('Error getting web location:', error);
           // Continue without location
