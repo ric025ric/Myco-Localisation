@@ -39,15 +39,41 @@ function HomeScreenContent() {
   const [locationPermission, setLocationPermission] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
   const [carLocation, setCarLocation] = useState<any>(null);
+  const [showWelcomeModal, setShowWelcomeModal] = useState<boolean>(false);
+  const [username, setUsername] = useState<string>('');
 
   useEffect(() => {
     initializeApp();
   }, []);
 
   const initializeApp = async () => {
+    await checkFirstLaunch();
     await loadCarLocation();
     await loadLastKnownLocation();
     await checkLocationPermission();
+  };
+
+  const checkFirstLaunch = async () => {
+    try {
+      const savedUsername = await AsyncStorage.getItem(USERNAME_STORAGE_KEY);
+      if (savedUsername) {
+        setUsername(savedUsername);
+      } else {
+        setShowWelcomeModal(true);
+      }
+    } catch (error) {
+      console.error('Error checking first launch:', error);
+    }
+  };
+
+  const handleWelcomeComplete = async (name: string) => {
+    try {
+      await AsyncStorage.setItem(USERNAME_STORAGE_KEY, name);
+      setUsername(name);
+      setShowWelcomeModal(false);
+    } catch (error) {
+      console.error('Error saving username:', error);
+    }
   };
 
   const loadLastKnownLocation = async () => {
