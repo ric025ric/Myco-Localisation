@@ -422,16 +422,12 @@ function HomeScreenContent() {
               <Text style={styles.settingsText}>{t('home.settings')}</Text>
             </TouchableOpacity>
             
-            <View style={styles.titleContainer}>
-              <Image
-                source={require('../assets/images/icon.png')}
-                style={styles.mushroomIcon}
-              />
-              <Text style={styles.title}>{t('app.title')}</Text>
-              <Text style={styles.subtitle}>{t('app.subtitle')}</Text>
-            </View>
-            
             <SOSButton location={location} />
+          </View>
+          
+          <View style={styles.titleContainer}>
+            <Text style={styles.title}>{t('app.title')}</Text>
+            <Text style={styles.subtitle}>{t('app.subtitle')}</Text>
           </View>
 
       {location && (
