@@ -286,6 +286,14 @@ export default function SpotDetailsScreen() {
   );
 }
 
+export default function SpotDetailsScreenWrapper() {
+  return (
+    <LanguageProvider>
+      <SpotDetailsScreen />
+    </LanguageProvider>
+  );
+}
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
