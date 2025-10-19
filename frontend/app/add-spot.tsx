@@ -16,6 +16,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LanguageProvider, useLanguage } from '../contexts/LanguageContext';
 
 // Platform-specific imports
@@ -28,6 +29,7 @@ if (Platform.OS !== 'web') {
 }
 
 const EXPO_PUBLIC_BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
+const USERNAME_STORAGE_KEY = 'myco_username';
 
 interface MushroomSpot {
   latitude: number;
@@ -35,6 +37,7 @@ interface MushroomSpot {
   mushroom_type: string;
   notes: string;
   photo_base64?: string;
+  created_by?: string;
 }
 
 function AddSpotScreen() {
@@ -45,9 +48,23 @@ function AddSpotScreen() {
   const [photo, setPhoto] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [gettingLocation, setGettingLocation] = useState(true);
+  const [username, setUsername] = useState<string>('user');
 
   useEffect(() => {
+    loadUsername();
     getCurrentLocation();
+  }, []);
+
+  const loadUsername = async () => {
+    try {
+      const savedUsername = await AsyncStorage.getItem(USERNAME_STORAGE_KEY);
+      if (savedUsername) {
+        setUsername(savedUsername);
+      }
+    } catch (error) {
+      console.error('Error loading username:', error);
+    }
+  };
   }, []);
 
   const getCurrentLocation = async () => {
