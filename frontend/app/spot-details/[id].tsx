@@ -275,6 +275,12 @@ export default function SpotDetailsScreen() {
           </Text>
         </TouchableOpacity>
       </View>
+      
+      <ShareSpotModal 
+        visible={showShareModal} 
+        onClose={() => setShowShareModal(false)} 
+        spot={spot} 
+      />
     </SafeAreaView>
   );
 }
