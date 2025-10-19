@@ -165,7 +165,7 @@ const translations = {
     'home.locationEnabled': '✅ Location enabled',
     'home.locationDisabled': '❌ Location disabled',
     'home.gettingLocation': 'Getting your location...',
-    'home.sos': 'SOS',
+    'home.sos': "I'm lost",
     'home.settings': 'Settings',
     
     // Welcome Screen
