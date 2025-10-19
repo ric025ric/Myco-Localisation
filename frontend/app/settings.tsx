@@ -83,7 +83,10 @@ function SettingsContent() {
 
         <View style={styles.footer}>
           <View style={styles.logoContainer}>
-            <Ionicons name="leaf" size={32} color="#4CAF50" />
+            <Image
+              source={require('../assets/images/icon.png')}
+              style={styles.mushroomIcon}
+            />
             <Text style={styles.footerText}>{t('app.title')}</Text>
           </View>
           <Text style={styles.footerSubtext}>
