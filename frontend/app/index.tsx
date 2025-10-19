@@ -33,9 +33,13 @@ function HomeScreenContent() {
   const [carLocation, setCarLocation] = useState<any>(null);
 
   useEffect(() => {
-    checkLocationPermission();
-    loadCarLocation();
+    initializeApp();
   }, []);
+
+  const initializeApp = async () => {
+    await loadCarLocation();
+    await checkLocationPermission();
+  };
 
   const loadCarLocation = async () => {
     try {
