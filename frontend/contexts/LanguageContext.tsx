@@ -27,6 +27,14 @@ const translations = {
     'home.locationEnabled': '✅ Localisation activée',
     'home.locationDisabled': '❌ Localisation désactivée',
     'home.gettingLocation': 'Obtention de votre localisation...',
+    'home.sos': 'SOS',
+    'home.settings': 'Paramètres',
+    
+    // Welcome Screen
+    'welcome.title': 'Bienvenue sur Myco Localisation !',
+    'welcome.subtitle': 'Pour commencer, quel est votre nom ou pseudo ?',
+    'welcome.placeholder': 'Votre nom ou pseudo',
+    'welcome.continue': 'Continuer',
     
     // Add Spot Screen
     'addSpot.title': 'Ajouter un Spot de Champignon',
