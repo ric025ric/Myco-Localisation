@@ -156,15 +156,38 @@ const translations = {
     // Home Screen
     'home.addSpot': 'Add Mushroom Spot',
     'home.addSpotSubtext': 'Mark your current location',
-    'home.carLocation': 'Locate my Car',
+    'home.carLocation': 'Locate My Car',
     'home.carLocationSubtext': 'Save and find your vehicle',
     'home.viewMap': 'View Map',
     'home.viewMapSubtext': 'See all your spots',
     'home.spotsList': 'Spots List',
-    'home.spotsListSubtext': 'Browse your finds',
+    'home.spotsListSubtext': 'Browse your findings',
     'home.locationEnabled': '✅ Location enabled',
     'home.locationDisabled': '❌ Location disabled',
     'home.gettingLocation': 'Getting your location...',
+    'home.sos': 'SOS',
+    'home.settings': 'Settings',
+    
+    // Welcome Screen
+    'welcome.title': 'Welcome to Myco Localisation!',
+    'welcome.subtitle': 'To get started, what is your name or nickname?',
+    'welcome.placeholder': 'Your name or nickname',
+    'welcome.continue': 'Continue',
+    
+    // Share Spot
+    'share.title': 'Share this Spot',
+    'share.qrcode': 'Scan this QR Code',
+    'share.copyLink': 'Copy link',
+    'share.shareButton': 'Share',
+    'share.linkCopied': 'Link copied!',
+    'share.sharedFrom': 'Shared from:',
+    
+    // SOS
+    'sos.title': 'Emergency Position Sharing',
+    'sos.message': 'Select a contact to share your position',
+    'sos.selectContact': 'Select contact',
+    'sos.sent': 'Position shared successfully',
+    'sos.error': 'Unable to share position',
     
     // Add Spot Screen
     'addSpot.title': 'Add Mushroom Spot',
