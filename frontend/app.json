@@ -67,10 +67,7 @@
       "typedRoutes": true
     },
     "extra": {
-      "router": {},
-      "eas": {
-        "projectId": "myco-localisation"
-      }
+      "router": {}
     }
   }
 }
