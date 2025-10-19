@@ -16,6 +16,7 @@ import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
 import { router, useLocalSearchParams } from 'expo-router';
 import ShareSpotModal from '../../components/ShareSpotModal';
+import { LanguageProvider } from '../../contexts/LanguageContext';
 
 const EXPO_PUBLIC_BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
