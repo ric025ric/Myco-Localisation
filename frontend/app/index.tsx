@@ -181,6 +181,7 @@ function HomeScreenContent() {
         
         const location = await Promise.race([locationPromise, timeoutPromise]);
         setLocation(location);
+        await saveLocationToStorage(location);
       } catch (error) {
         console.error('Error getting current location:', error);
         // Continue without location - app will still work
