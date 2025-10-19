@@ -16,6 +16,7 @@
       }
     },
     "android": {
+      "package": "com.skyrico.mycolocalisation",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#4CAF50"
