@@ -17,7 +17,7 @@
     },
     "android": {
       "package": "com.skyrico.mycolocalisation",
-      "versionCode": 4,
+      "versionCode": 5,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#4CAF50"
