@@ -31,7 +31,7 @@ interface MushroomSpot {
   created_by: string;
 }
 
-export default function SpotDetailsScreen() {
+function SpotDetailsScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const [spot, setSpot] = useState<MushroomSpot | null>(null);
   const [loading, setLoading] = useState(true);
