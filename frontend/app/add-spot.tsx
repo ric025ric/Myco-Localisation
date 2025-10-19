@@ -65,7 +65,6 @@ function AddSpotScreen() {
       console.error('Error loading username:', error);
     }
   };
-  }, []);
 
   const getCurrentLocation = async () => {
     try {
