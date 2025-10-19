@@ -196,6 +196,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 8,
   },
+  mushroomIcon: {
+    width: 32,
+    height: 32,
+  },
   footerText: {
     fontSize: 18,
     fontWeight: 'bold',
