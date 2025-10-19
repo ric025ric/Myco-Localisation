@@ -24,6 +24,8 @@ if (Platform.OS !== 'web') {
 }
 
 const CAR_LOCATION_STORAGE_KEY = 'myco_car_location';
+const LAST_LOCATION_STORAGE_KEY = 'myco_last_location';
+const LOCATION_MAX_AGE = 5 * 60 * 1000; // 5 minutes
 
 function HomeScreenContent() {
   const { t } = useLanguage();
@@ -38,7 +40,39 @@ function HomeScreenContent() {
 
   const initializeApp = async () => {
     await loadCarLocation();
+    await loadLastKnownLocation();
     await checkLocationPermission();
+  };
+
+  const loadLastKnownLocation = async () => {
+    try {
+      const savedLocation = await AsyncStorage.getItem(LAST_LOCATION_STORAGE_KEY);
+      if (savedLocation) {
+        const parsedLocation = JSON.parse(savedLocation);
+        const age = Date.now() - parsedLocation.timestamp;
+        
+        // Si la localisation a moins de 5 minutes, on l'utilise
+        if (age < LOCATION_MAX_AGE) {
+          setLocation(parsedLocation.location);
+          return true;
+        }
+      }
+    } catch (error) {
+      console.error('Error loading last known location:', error);
+    }
+    return false;
+  };
+
+  const saveLocationToStorage = async (loc: any) => {
+    try {
+      const locationData = {
+        location: loc,
+        timestamp: Date.now(),
+      };
+      await AsyncStorage.setItem(LAST_LOCATION_STORAGE_KEY, JSON.stringify(locationData));
+    } catch (error) {
+      console.error('Error saving location:', error);
+    }
   };
 
   const loadCarLocation = async () => {
