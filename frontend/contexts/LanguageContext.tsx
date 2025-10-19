@@ -212,7 +212,8 @@ const translations = {
     
     // Errors & Permissions
     'error.location': 'Could not get your location. Please try again.',
-    'error.locationRequired': 'Location access is required to add mushroom spots.',
+    'error.locationRequired': 'Location access is required for this feature.',
+    'error.locationRequiredSpot': 'Location access is required to add mushroom spots.',
     'error.cameraRequired': 'Camera access is required to take photos.',
     'error.galleryRequired': 'Gallery access is required to select photos.',
     'error.mushroomTypeRequired': 'Please enter the mushroom type.',
