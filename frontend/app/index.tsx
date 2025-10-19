@@ -10,21 +10,27 @@ import {
   Platform,
   ImageBackground,
   Linking,
+  Share,
+  Image,
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router';
 import { LanguageProvider, useLanguage } from '../contexts/LanguageContext';
+import WelcomeModal from '../components/WelcomeModal';
 
 // Platform-specific imports
 let Location: any = null;
+let Contacts: any = null;
 if (Platform.OS !== 'web') {
   Location = require('expo-location');
+  Contacts = require('expo-contacts');
 }
 
 const CAR_LOCATION_STORAGE_KEY = 'myco_car_location';
 const LAST_LOCATION_STORAGE_KEY = 'myco_last_location';
+const USERNAME_STORAGE_KEY = 'myco_username';
 const LOCATION_MAX_AGE = 5 * 60 * 1000; // 5 minutes
 
 function HomeScreenContent() {
