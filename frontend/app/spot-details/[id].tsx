@@ -103,18 +103,7 @@ export default function SpotDetailsScreen() {
 
   const shareSpot = async () => {
     if (!spot) return;
-
-    try {
-      const message = `Found ${spot.mushroom_type} at coordinates ${spot.latitude.toFixed(6)}, ${spot.longitude.toFixed(6)}`;
-      const googleMapsUrl = `https://maps.google.com/?q=${spot.latitude},${spot.longitude}`;
-      
-      await Share.share({
-        message: `${message}\n\nView on map: ${googleMapsUrl}`,
-        title: `Mushroom Find: ${spot.mushroom_type}`,
-      });
-    } catch (error) {
-      console.error('Error sharing:', error);
-    }
+    setShowShareModal(true);
   };
 
   const openInMaps = async () => {
