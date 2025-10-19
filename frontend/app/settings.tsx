@@ -77,7 +77,7 @@ function SettingsContent() {
           </View>
           <View style={styles.aboutItem}>
             <Text style={styles.aboutLabel}>{t('settings.version')}</Text>
-            <Text style={styles.aboutValue}>1.0.0</Text>
+            <Text style={styles.aboutValue}>{Constants.expoConfig?.version || '1.0.0'}</Text>
           </View>
         </View>
 
