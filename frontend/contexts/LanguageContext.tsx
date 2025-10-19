@@ -98,7 +98,8 @@ const translations = {
     
     // Errors & Permissions
     'error.location': 'Impossible d\'obtenir votre localisation. Veuillez réessayer.',
-    'error.locationRequired': 'L\'accès à la localisation est requis pour ajouter des spots.',
+    'error.locationRequired': 'L\'accès à la localisation est requis pour cette fonctionnalité.',
+    'error.locationRequiredSpot': 'L\'accès à la localisation est requis pour ajouter des spots.',
     'error.cameraRequired': 'L\'accès à la caméra est requis pour prendre des photos.',
     'error.galleryRequired': 'L\'accès à la galerie est requis pour sélectionner des photos.',
     'error.mushroomTypeRequired': 'Veuillez saisir le type de champignon.',
