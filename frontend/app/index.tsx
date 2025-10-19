@@ -19,6 +19,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router';
 import { LanguageProvider, useLanguage } from '../contexts/LanguageContext';
 import WelcomeModal from '../components/WelcomeModal';
+import SOSButton from '../components/SOSButton';
 
 // Platform-specific imports
 let Location: any = null;
