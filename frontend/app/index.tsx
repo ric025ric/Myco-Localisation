@@ -537,19 +537,30 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(76, 175, 80, 0.1)',
     borderWidth: 1,
     borderColor: '#4CAF50',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  settingsText: {
+    color: '#4CAF50',
+    fontSize: 12,
+    fontWeight: '600',
   },
   titleContainer: {
     alignItems: 'center',
     flex: 1,
+    marginTop: 40,
   },
-  placeholder: {
-    width: 48, // Match settingsButton width
+  mushroomIcon: {
+    width: 48,
+    height: 48,
+    marginBottom: 12,
   },
   title: {
     fontSize: 28,
     fontWeight: 'bold',
     color: '#fff',
-    marginTop: 16,
+    marginTop: 8,
   },
   subtitle: {
     fontSize: 16,
