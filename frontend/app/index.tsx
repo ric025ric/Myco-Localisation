@@ -118,6 +118,14 @@ function HomeScreenContent() {
       }
 
       setLocationPermission(true);
+      
+      // Si on a déjà une localisation récente, pas besoin d'en demander une nouvelle
+      const hasRecentLocation = await loadLastKnownLocation();
+      if (hasRecentLocation) {
+        setLoading(false);
+        return;
+      }
+      
       getCurrentLocation();
     } catch (error) {
       console.error('Error requesting location permission:', error);
