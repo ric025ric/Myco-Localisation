@@ -92,7 +92,7 @@ function AddSpotScreen() {
       if (status !== 'granted') {
         Alert.alert(
           'Permission Required',
-          t('error.locationRequired')
+          t('error.locationRequiredSpot')
         );
         router.back();
         return;
