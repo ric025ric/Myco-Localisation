@@ -99,7 +99,7 @@ function AddSpotScreen() {
       }
 
       const location = await Location.getCurrentPositionAsync({
-        accuracy: Location.Accuracy.High,
+        accuracy: Location.Accuracy.Balanced,
       });
       setLocation(location);
     } catch (error) {
