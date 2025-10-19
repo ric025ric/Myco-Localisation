@@ -405,10 +405,9 @@ function HomeScreenContent() {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="light" />
+      <WelcomeModal visible={showWelcomeModal} onComplete={handleWelcomeComplete} />
       <ImageBackground
-        source={{
-          uri: 'https://images.pexels.com/photos/2637657/pexels-photo-2637657.jpeg'
-        }}
+        source={require('../assets/forest-background.jpg')}
         style={styles.backgroundImage}
         imageStyle={styles.backgroundImageStyle}
       >
@@ -418,16 +417,20 @@ function HomeScreenContent() {
               style={styles.settingsButton}
               onPress={() => router.push('/settings')}
             >
-              <Ionicons name="settings-outline" size={24} color="#4CAF50" />
+              <Ionicons name="settings-outline" size={20} color="#4CAF50" />
+              <Text style={styles.settingsText}>{t('home.settings')}</Text>
             </TouchableOpacity>
             
             <View style={styles.titleContainer}>
-              <Ionicons name="leaf" size={40} color="#4CAF50" />
+              <Image
+                source={require('../assets/images/icon.png')}
+                style={styles.mushroomIcon}
+              />
               <Text style={styles.title}>{t('app.title')}</Text>
               <Text style={styles.subtitle}>{t('app.subtitle')}</Text>
             </View>
             
-            <View style={styles.placeholder} />
+            <SOSButton location={location} />
           </View>
 
       {location && (
