@@ -36,6 +36,21 @@ const translations = {
     'welcome.placeholder': 'Votre nom ou pseudo',
     'welcome.continue': 'Continuer',
     
+    // Share Spot
+    'share.title': 'Partager ce Spot',
+    'share.qrcode': 'Scannez ce QR Code',
+    'share.copyLink': 'Copier le lien',
+    'share.shareButton': 'Partager',
+    'share.linkCopied': 'Lien copié !',
+    'share.sharedFrom': 'Partagé depuis:',
+    
+    // SOS
+    'sos.title': 'Partage de Position Urgence',
+    'sos.message': 'Sélectionnez un contact pour partager votre position',
+    'sos.selectContact': 'Sélectionner un contact',
+    'sos.sent': 'Position partagée avec succès',
+    'sos.error': 'Impossible de partager la position',
+    
     // Add Spot Screen
     'addSpot.title': 'Ajouter un Spot de Champignon',
     'addSpot.currentLocation': 'Localisation Actuelle',
