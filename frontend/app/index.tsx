@@ -544,25 +544,18 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     alignItems: 'center',
-    flex: 1,
-    marginTop: 40,
-  },
-  mushroomIcon: {
-    width: 48,
-    height: 48,
-    marginBottom: 12,
+    marginTop: 24,
+    marginBottom: 24,
   },
   title: {
-    fontSize: 28,
+    fontSize: 26,
     fontWeight: 'bold',
     color: '#fff',
-    marginTop: 8,
   },
   subtitle: {
-    fontSize: 16,
+    fontSize: 14,
     color: '#ccc',
-    marginTop: 8,
-    textAlign: 'center',
+    marginTop: 4,
   },
   locationInfo: {
     flexDirection: 'row',
