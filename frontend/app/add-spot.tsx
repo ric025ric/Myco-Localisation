@@ -275,6 +275,7 @@ function AddSpotScreen() {
         longitude: location.coords.longitude,
         mushroom_type: mushroomType.trim(),
         notes: notes.trim(),
+        created_by: username,
       };
 
       if (photo) {
