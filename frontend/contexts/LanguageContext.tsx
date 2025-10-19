@@ -27,7 +27,7 @@ const translations = {
     'home.locationEnabled': '✅ Localisation activée',
     'home.locationDisabled': '❌ Localisation désactivée',
     'home.gettingLocation': 'Obtention de votre localisation...',
-    'home.sos': 'SOS',
+    'home.sos': 'Je suis perdu',
     'home.settings': 'Paramètres',
     
     // Welcome Screen
