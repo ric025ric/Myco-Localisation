@@ -35,7 +35,7 @@ export default function ShareSpotModal({ visible, onClose, spot }: ShareSpotModa
     photo: spot.photo_base64 ? spot.photo_base64.substring(0, 100) : null,
   };
 
-  const shareLink = `mycolocalisation://spot/share?data=${encodeURIComponent(JSON.stringify(spotData))}`;
+  const shareLink = `mushroom-finder://spot/receive-spot?data=${encodeURIComponent(JSON.stringify(spotData))}`;
 
   const handleCopyLink = async () => {
     await Clipboard.setStringAsync(shareLink);
