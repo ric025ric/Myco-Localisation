@@ -56,30 +56,25 @@ export default function ShareSpotModal({ visible, onClose, spot }: ShareSpotModa
           <Text style={styles.title}>{t('share.title')}</Text>
 
           <View style={styles.spotInfo}>
-            <Text style={styles.spotType}>{spot.mushroom_type}</Text>
-            {spot.notes && <Text style={styles.spotNotes}>{spot.notes}</Text>}
-          </View>
-
-          <View style={styles.qrContainer}>
-            <Text style={styles.qrText}>{t('share.qrcode')}</Text>
-            <ViewShot ref={viewShotRef} options={{ format: 'png', quality: 0.9 }}>
-              <View style={styles.qrCodeWrapper}>
-                <QRCode
-                  value={shareLink}
-                  size={200}
-                  backgroundColor="white"
-                  color="black"
-                />
+            <View style={styles.infoRow}>
+              <Ionicons name="leaf" size={24} color="#4CAF50" />
+              <Text style={styles.spotType}>{spot.mushroom_type}</Text>
+            </View>
+            {spot.notes && (
+              <View style={styles.infoRow}>
+                <Ionicons name="document-text" size={20} color="#999" />
+                <Text style={styles.spotNotes}>{spot.notes}</Text>
               </View>
-            </ViewShot>
+            )}
+            <View style={styles.infoRow}>
+              <Ionicons name="location" size={20} color="#999" />
+              <Text style={styles.coordinates}>
+                {spot.latitude.toFixed(6)}, {spot.longitude.toFixed(6)}
+              </Text>
+            </View>
           </View>
 
-          <TouchableOpacity style={styles.button} onPress={handleCopyLink}>
-            <Ionicons name="copy-outline" size={24} color="#fff" />
-            <Text style={styles.buttonText}>{t('share.copyLink')}</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={[styles.button, styles.shareButton]} onPress={handleShare}>
+          <TouchableOpacity style={styles.shareButton} onPress={handleShare}>
             <Ionicons name="share-social-outline" size={24} color="#fff" />
             <Text style={styles.buttonText}>{t('share.shareButton')}</Text>
           </TouchableOpacity>
