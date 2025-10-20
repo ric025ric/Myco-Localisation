@@ -120,42 +120,37 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     marginBottom: 24,
   },
+  infoRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+    gap: 12,
+  },
   spotType: {
     fontSize: 18,
     fontWeight: 'bold',
     color: '#4CAF50',
-    marginBottom: 8,
+    flex: 1,
   },
   spotNotes: {
     fontSize: 14,
     color: '#ccc',
+    flex: 1,
   },
-  qrContainer: {
-    alignItems: 'center',
-    marginBottom: 24,
+  coordinates: {
+    fontSize: 12,
+    color: '#999',
+    fontFamily: 'monospace',
+    flex: 1,
   },
-  qrText: {
-    fontSize: 16,
-    color: '#ccc',
-    marginBottom: 12,
-  },
-  qrCodeWrapper: {
-    padding: 16,
-    backgroundColor: '#fff',
-    borderRadius: 12,
-  },
-  button: {
-    backgroundColor: '#4CAF50',
+  shareButton: {
+    backgroundColor: '#2196F3',
     borderRadius: 12,
     paddingVertical: 14,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
-    marginBottom: 12,
-  },
-  shareButton: {
-    backgroundColor: '#2196F3',
   },
   buttonText: {
     color: '#fff',
