@@ -41,8 +41,13 @@ export default function ShareSpotModal({ visible, onClose, spot }: ShareSpotModa
 
   const handleShare = async () => {
     try {
+      const googleMapsLink = `https://www.google.com/maps?q=${spot.latitude},${spot.longitude}`;
+      const sharedBy = spot.created_by || 'Un utilisateur';
+      
+      const message = `🍄 Spot de champignons partagé !\n\nType : ${spot.mushroom_type}\n${spot.notes ? `Notes : ${spot.notes}\n` : ''}Partagé par : ${sharedBy}\n\n📍 Coordonnées : ${spot.latitude.toFixed(6)}, ${spot.longitude.toFixed(6)}\n\nOuvrir dans Google Maps:\n${googleMapsLink}`;
+      
       await Share.share({
-        message: `Découvrez ce spot de champignons ! ${spot.mushroom_type} - ${shareLink}`,
+        message,
       });
     } catch (error) {
       console.error('Error sharing:', error);
