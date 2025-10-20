@@ -45,7 +45,7 @@ class MushroomSpot(BaseModel):
     notes: str = ""
     photo_base64: Optional[str] = None
     timestamp: datetime = Field(default_factory=datetime.utcnow)
-    created_by: str = "user"  # For future multi-user support
+    created_by: str = "Utilisateur"  # Default if not provided
 
 class MushroomSpotCreate(BaseModel):
     latitude: float
