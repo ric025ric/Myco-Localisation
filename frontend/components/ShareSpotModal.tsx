@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   View,
   Text,
@@ -12,6 +12,8 @@ import { Ionicons } from '@expo/vector-icons';
 import QRCode from 'react-native-qrcode-svg';
 import { useLanguage } from '../contexts/LanguageContext';
 import * as Clipboard from 'expo-clipboard';
+import ViewShot from 'react-native-view-shot';
+import * as Sharing from 'expo-sharing';
 
 interface ShareSpotModalProps {
   visible: boolean;
