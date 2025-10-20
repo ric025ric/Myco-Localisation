@@ -22,19 +22,6 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#4CAF50"
       },
-      "intentFilters": [
-        {
-          "action": "VIEW",
-          "autoVerify": true,
-          "data": [
-            {
-              "scheme": "mushroom-finder",
-              "host": "spot"
-            }
-          ],
-          "category": ["BROWSABLE", "DEFAULT"]
-        }
-      ],
       "permissions": [
         "android.permission.ACCESS_FINE_LOCATION",
         "android.permission.ACCESS_COARSE_LOCATION",
