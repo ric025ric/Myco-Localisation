@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -9,11 +9,7 @@ import {
   Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import QRCode from 'react-native-qrcode-svg';
 import { useLanguage } from '../contexts/LanguageContext';
-import * as Clipboard from 'expo-clipboard';
-import ViewShot from 'react-native-view-shot';
-import * as Sharing from 'expo-sharing';
 
 interface ShareSpotModalProps {
   visible: boolean;
@@ -23,37 +19,22 @@ interface ShareSpotModalProps {
 
 export default function ShareSpotModal({ visible, onClose, spot }: ShareSpotModalProps) {
   const { t } = useLanguage();
-  const viewShotRef = useRef<any>(null);
 
   if (!spot) return null;
-
-  const spotData = {
-    latitude: spot.latitude,
-    longitude: spot.longitude,
-    type: spot.mushroom_type,
-    notes: spot.notes,
-    photo: spot.photo_base64 ? spot.photo_base64.substring(0, 100) : null,
-  };
-
-  const shareLink = `mushroom-finder://spot/receive-spot?data=${encodeURIComponent(JSON.stringify(spotData))}`;
-
-  const handleCopyLink = async () => {
-    await Clipboard.setStringAsync(shareLink);
-    Alert.alert(t('common.success'), t('share.linkCopied'));
-  };
 
   const handleShare = async () => {
     try {
       const googleMapsLink = `https://www.google.com/maps?q=${spot.latitude},${spot.longitude}`;
       const sharedBy = spot.created_by || 'Un utilisateur';
       
-      const message = `🍄 Spot de champignons partagé !\n\nType : ${spot.mushroom_type}\n${spot.notes ? `Notes : ${spot.notes}\n` : ''}Partagé par : ${sharedBy}\n\n📍 Coordonnées : ${spot.latitude.toFixed(6)}, ${spot.longitude.toFixed(6)}\n\nOuvrir dans Google Maps:\n${googleMapsLink}\n\n📲 Ouvrir dans Myco Localisation:\n${shareLink}`;
+      const message = `🍄 Spot de champignons partagé !\n\nType : ${spot.mushroom_type}\n${spot.notes ? `Notes : ${spot.notes}\n` : ''}Partagé par : ${sharedBy}\n\n📍 Coordonnées : ${spot.latitude.toFixed(6)}, ${spot.longitude.toFixed(6)}\n\nOuvrir dans Google Maps:\n${googleMapsLink}`;
       
-      // Share text message with the deep link
       await Share.share({
         message,
         title: `Spot: ${spot.mushroom_type}`,
       });
+      
+      onClose();
     } catch (error) {
       console.error('Error sharing:', error);
     }
