@@ -53,6 +53,7 @@ class MushroomSpotCreate(BaseModel):
     mushroom_type: str
     notes: str = ""
     photo_base64: Optional[str] = None
+    created_by: str = "Utilisateur"
 
 class MushroomSpotUpdate(BaseModel):
     mushroom_type: Optional[str] = None
