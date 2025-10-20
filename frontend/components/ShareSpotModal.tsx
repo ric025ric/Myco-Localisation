@@ -90,14 +90,16 @@ export default function ShareSpotModal({ visible, onClose, spot }: ShareSpotModa
 
           <View style={styles.qrContainer}>
             <Text style={styles.qrText}>{t('share.qrcode')}</Text>
-            <View style={styles.qrCodeWrapper}>
-              <QRCode
-                value={shareLink}
-                size={200}
-                backgroundColor="white"
-                color="black"
-              />
-            </View>
+            <ViewShot ref={viewShotRef} options={{ format: 'png', quality: 0.9 }}>
+              <View style={styles.qrCodeWrapper}>
+                <QRCode
+                  value={shareLink}
+                  size={200}
+                  backgroundColor="white"
+                  color="black"
+                />
+              </View>
+            </ViewShot>
           </View>
 
           <TouchableOpacity style={styles.button} onPress={handleCopyLink}>
