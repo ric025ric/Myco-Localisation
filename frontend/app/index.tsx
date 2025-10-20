@@ -248,14 +248,31 @@ function HomeScreenContent() {
     router.push('/spots-list');
   };
 
-  const handleCarLocation = () => {
-    if (!locationPermission || !location) {
+  const handleCarLocation = async () => {
+    if (!locationPermission) {
       Alert.alert(
         t('common.error'),
         t('error.locationRequired'),
         [{ text: t('common.ok') }]
       );
       return;
+    }
+
+    // If location is not available, try to get it
+    if (!location) {
+      setLoading(true);
+      await getCurrentLocation();
+      setLoading(false);
+      
+      // Check again after getting location
+      if (!location) {
+        Alert.alert(
+          t('common.error'),
+          t('error.location'),
+          [{ text: t('common.ok') }]
+        );
+        return;
+      }
     }
 
     if (carLocation) {
