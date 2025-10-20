@@ -44,27 +44,18 @@ export default function ShareSpotModal({ visible, onClose, spot }: ShareSpotModa
 
   const handleShare = async () => {
     try {
-      // Capture QR code as image
-      const uri = await viewShotRef.current.capture();
-      
       const googleMapsLink = `https://www.google.com/maps?q=${spot.latitude},${spot.longitude}`;
       const sharedBy = spot.created_by || 'Un utilisateur';
       
-      const message = `🍄 Spot de champignons partagé !\n\nType : ${spot.mushroom_type}\n${spot.notes ? `Notes : ${spot.notes}\n` : ''}Partagé par : ${sharedBy}\n\n📍 Coordonnées : ${spot.latitude.toFixed(6)}, ${spot.longitude.toFixed(6)}\n\nOuvrir dans Google Maps:\n${googleMapsLink}`;
+      const message = `🍄 Spot de champignons partagé !\n\nType : ${spot.mushroom_type}\n${spot.notes ? `Notes : ${spot.notes}\n` : ''}Partagé par : ${sharedBy}\n\n📍 Coordonnées : ${spot.latitude.toFixed(6)}, ${spot.longitude.toFixed(6)}\n\nOuvrir dans Google Maps:\n${googleMapsLink}\n\n📲 Ouvrir dans Myco Localisation:\n${shareLink}`;
       
-      // Share with QR code image
-      await Sharing.shareAsync(uri, {
-        mimeType: 'image/png',
-        dialogTitle: message,
-        UTI: 'image/png',
+      // Share text message with the deep link
+      await Share.share({
+        message,
+        title: `Spot: ${spot.mushroom_type}`,
       });
     } catch (error) {
       console.error('Error sharing:', error);
-      // Fallback to text-only share
-      const googleMapsLink = `https://www.google.com/maps?q=${spot.latitude},${spot.longitude}`;
-      const sharedBy = spot.created_by || 'Un utilisateur';
-      const message = `🍄 Spot de champignons partagé !\n\nType : ${spot.mushroom_type}\n${spot.notes ? `Notes : ${spot.notes}\n` : ''}Partagé par : ${sharedBy}\n\n📍 Coordonnées : ${spot.latitude.toFixed(6)}, ${spot.longitude.toFixed(6)}\n\nOuvrir dans Google Maps:\n${googleMapsLink}`;
-      await Share.share({ message });
     }
   };
 
