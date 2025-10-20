@@ -108,7 +108,7 @@ const translations = {
     'settings.french': 'Français',
     'settings.english': 'English',
     'settings.about': 'À Propos',
-    'settings.version': 'Version 1.0.0',
+    'settings.version': 'Version',
     
     // Common & Alerts
     'common.ok': 'OK',
@@ -246,7 +246,7 @@ const translations = {
     'settings.french': 'Français',
     'settings.english': 'English',
     'settings.about': 'About',
-    'settings.version': 'Version 1.0.0',
+    'settings.version': 'Version',
     
     // Common & Alerts
     'common.ok': 'OK',
