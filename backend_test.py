@@ -489,7 +489,14 @@ class MushroomAPITester:
             print("❌ API is not responding. Stopping tests.")
             return self.test_results
 
+        # NEW: Run mushroom database tests first (as requested in review)
+        self.run_mushroom_database_tests()
+
         # Test 2-3: Create multiple mushroom spots and verify creation
+        print("\n" + "=" * 60)
+        print("MUSHROOM SPOTS API TESTS")
+        print("=" * 60)
+        
         created_ids = []
         for i, test_data in enumerate(TEST_MUSHROOM_DATA):
             print(f"Creating test spot {i+1}/3...")
