@@ -211,6 +211,42 @@ frontend:
         agent: "main"
         comment: "Created detailed view of individual mushroom spots with sharing and navigation features"
 
+  - task: "Mushroom Guide Screen"
+    implemented: true
+    working: "NA"
+    file: "app/mushroom-guide.tsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Created mushroom guide screen with search functionality to browse and search mushroom database. Displays mushrooms with photos, edibility badges, and seasons."
+
+  - task: "Mushroom Details Screen"
+    implemented: true
+    working: "NA"
+    file: "app/mushroom-details/[id].tsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Created detailed mushroom view displaying comprehensive information including common name, latin name, edibility, season, description, characteristics, habitat, and lookalike warnings with danger levels."
+
+  - task: "Admin Mushroom Screen"
+    implemented: true
+    working: "NA"
+    file: "app/admin-mushroom.tsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Created admin screen to add new mushrooms to the database. Features include form inputs for all mushroom properties, dynamic lookalike management, edibility selection, and validation before saving to backend."
+
 metadata:
   created_by: "main_agent"
   version: "1.0"
