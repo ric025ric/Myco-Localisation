@@ -36,6 +36,7 @@ interface MushroomInfo {
   habitat: string;
   lookalikes: MushroomLookalike[];
   photo_urls: string[];
+  photos_base64?: string[];  // Photos en base64
 }
 
 function MushroomDetailsScreen() {
