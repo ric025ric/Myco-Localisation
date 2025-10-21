@@ -10,10 +10,12 @@ import {
   Alert,
   KeyboardAvoidingView,
   Platform,
+  Image,
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import * as ImagePicker from 'expo-image-picker';
 import { LanguageProvider, useLanguage } from '../contexts/LanguageContext';
 import Constants from 'expo-constants';
 
