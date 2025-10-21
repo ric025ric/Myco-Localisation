@@ -203,10 +203,16 @@ function MushroomDetailsScreen() {
       />
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-        {mushroom.photo_urls && mushroom.photo_urls.length > 0 && (
+        {/* Photos (URLs et Base64) */}
+        {((mushroom.photo_urls && mushroom.photo_urls.length > 0) || (mushroom.photos_base64 && mushroom.photos_base64.length > 0)) && (
           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.photosContainer}>
-            {mushroom.photo_urls.map((url, index) => (
-              <Image key={index} source={{ uri: url }} style={styles.photo} />
+            {/* Photos depuis URLs */}
+            {mushroom.photo_urls && mushroom.photo_urls.map((url, index) => (
+              <Image key={`url-${index}`} source={{ uri: url }} style={styles.photo} />
+            ))}
+            {/* Photos en base64 */}
+            {mushroom.photos_base64 && mushroom.photos_base64.map((photo, index) => (
+              <Image key={`base64-${index}`} source={{ uri: photo }} style={styles.photo} />
             ))}
           </ScrollView>
         )}
