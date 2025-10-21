@@ -65,6 +65,57 @@ function MushroomDetailsScreen() {
     }
   };
 
+  const handleDeleteMushroom = async () => {
+    if (!mushroom) return;
+
+    try {
+      setDeleting(true);
+      const response = await fetch(`${EXPO_PUBLIC_BACKEND_URL}/api/mushrooms/${mushroom.id}`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        Alert.alert(
+          t('common.success'),
+          'Champignon supprimé avec succès',
+          [
+            {
+              text: t('common.ok'),
+              onPress: () => router.back(),
+            },
+          ]
+        );
+      } else {
+        throw new Error('Failed to delete mushroom');
+      }
+    } catch (error) {
+      console.error('Error deleting mushroom:', error);
+      Alert.alert(t('common.error'), 'Erreur lors de la suppression du champignon');
+    } finally {
+      setDeleting(false);
+    }
+  };
+
+  const confirmDelete = () => {
+    if (!mushroom) return;
+    
+    Alert.alert(
+      'Supprimer le champignon',
+      `Êtes-vous sûr de vouloir supprimer "${mushroom.common_name}" ?`,
+      [
+        {
+          text: t('common.cancel'),
+          style: 'cancel',
+        },
+        {
+          text: 'Supprimer',
+          style: 'destructive',
+          onPress: handleDeleteMushroom,
+        },
+      ]
+    );
+  };
+
   const getEdibilityColor = (edibility: string) => {
     switch (edibility) {
       case 'comestible':
