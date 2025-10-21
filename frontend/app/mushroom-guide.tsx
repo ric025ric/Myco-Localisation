@@ -233,6 +233,9 @@ const styles = StyleSheet.create({
   placeholder: {
     width: 40,
   },
+  addButton: {
+    padding: 8,
+  },
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
