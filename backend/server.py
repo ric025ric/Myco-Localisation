@@ -204,6 +204,42 @@ async def get_nearby_mushroom_spots(latitude: float, longitude: float, radius_km
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+# Mushroom Database Endpoints
+@api_router.get("/mushrooms", response_model=List[MushroomInfo])
+async def get_mushrooms(search: Optional[str] = None):
+    """Get all mushrooms or search by name"""
+    try:
+        if search:
+            # Case-insensitive search by common or latin name
+            mushrooms = await db.mushroom_database.find({
+                "$or": [
+                    {"common_name": {"$regex": search, "$options": "i"}},
+                    {"latin_name": {"$regex": search, "$options": "i"}}
+                ]
+            }).to_list(100)
+        else:
+            mushrooms = await db.mushroom_database.find().to_list(100)
+        
+        return [MushroomInfo(**mushroom) for mushroom in mushrooms]
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.get("/mushrooms/{mushroom_id}", response_model=MushroomInfo)
+async def get_mushroom(mushroom_id: str):
+    """Get a specific mushroom by ID"""
+    mushroom = await db.mushroom_database.find_one({"id": mushroom_id})
+    if not mushroom:
+        raise HTTPException(status_code=404, detail="Mushroom not found")
+    return MushroomInfo(**mushroom)
+
+@api_router.post("/mushrooms", response_model=MushroomInfo)
+async def create_mushroom(mushroom: MushroomInfoCreate):
+    """Create a new mushroom entry (for admin use)"""
+    mushroom_dict = mushroom.dict()
+    mushroom_obj = MushroomInfo(**mushroom_dict)
+    await db.mushroom_database.insert_one(mushroom_obj.dict())
+    return mushroom_obj
+
 # Include the router in the main app
 app.include_router(api_router)
 
