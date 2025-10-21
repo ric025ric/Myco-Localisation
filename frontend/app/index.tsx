@@ -658,6 +658,27 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 8,
   },
+  fullWidthButton: {
+    width: '100%',
+    padding: 20,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
+    gap: 12,
+    marginTop: 16,
+  },
+  guideButton: {
+    backgroundColor: '#8B4513', // Brun pour le guide
+    shadowColor: '#8B4513',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8,
+  },
   secondaryButton: {
     backgroundColor: 'rgba(42, 42, 42, 0.8)',
     borderWidth: 2,
