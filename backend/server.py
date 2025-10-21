@@ -89,6 +89,7 @@ class MushroomInfoCreate(BaseModel):
     habitat: str
     lookalikes: List[MushroomLookalike] = []
     photo_urls: List[str] = []
+    photos_base64: List[str] = []  # Photos stockées en base64
 
 # Add your routes to the router instead of directly to app
 @api_router.get("/")
