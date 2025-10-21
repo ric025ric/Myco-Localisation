@@ -168,6 +168,7 @@ function AdminMushroomContent() {
         habitat: habitat.trim(),
         lookalikes: validLookalikes,
         photo_urls: photoUrlsArray,
+        photos_base64: photos,  // Ajout des photos en base64
       };
 
       console.log('Sending to:', `${API_URL}/api/mushrooms`);
