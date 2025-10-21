@@ -78,6 +78,7 @@ class MushroomInfo(BaseModel):
     habitat: str
     lookalikes: List[MushroomLookalike] = []
     photo_urls: List[str] = []
+    photos_base64: List[str] = []  # Photos en base64
 
 class MushroomInfoCreate(BaseModel):
     common_name: str
