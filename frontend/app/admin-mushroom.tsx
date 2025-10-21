@@ -354,6 +354,43 @@ function AdminMushroomContent() {
             />
           </View>
 
+          {/* Photos (Base64) */}
+          <View style={styles.inputGroup}>
+            <View style={styles.sectionHeader}>
+              <Text style={styles.label}>Photos (Appareil)</Text>
+              <View style={styles.photoButtonsContainer}>
+                <TouchableOpacity style={styles.photoButton} onPress={takePhoto}>
+                  <Ionicons name="camera" size={20} color="#fff" />
+                  <Text style={styles.photoButtonText}>Prendre</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.photoButton} onPress={pickImage}>
+                  <Ionicons name="images" size={20} color="#fff" />
+                  <Text style={styles.photoButtonText}>Galerie</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+            
+            {photos.length > 0 && (
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.photosPreview}>
+                {photos.map((photo, index) => (
+                  <View key={index} style={styles.photoPreviewContainer}>
+                    <Image source={{ uri: photo }} style={styles.photoPreview} />
+                    <TouchableOpacity
+                      style={styles.removePhotoButton}
+                      onPress={() => removePhoto(index)}
+                    >
+                      <Ionicons name="close-circle" size={24} color="#f44336" />
+                    </TouchableOpacity>
+                  </View>
+                ))}
+              </ScrollView>
+            )}
+            
+            {photos.length === 0 && (
+              <Text style={styles.noPhotosText}>Aucune photo ajoutée</Text>
+            )}
+          </View>
+
           {/* Lookalikes */}
           <View style={styles.inputGroup}>
             <View style={styles.sectionHeader}>
