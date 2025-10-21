@@ -74,6 +74,64 @@ function AdminMushroomContent() {
     setLookalikes(updated);
   };
 
+  const pickImage = async () => {
+    try {
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      
+      if (status !== 'granted') {
+        Alert.alert(t('common.error'), 'Permission d\'accès à la galerie refusée');
+        return;
+      }
+
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 0.3,  // Compression pour réduire la taille
+        base64: true,
+      });
+
+      if (!result.canceled && result.assets[0].base64) {
+        const base64Image = `data:image/jpeg;base64,${result.assets[0].base64}`;
+        setPhotos([...photos, base64Image]);
+      }
+    } catch (error) {
+      console.error('Error picking image:', error);
+      Alert.alert(t('common.error'), 'Erreur lors de la sélection de l\'image');
+    }
+  };
+
+  const takePhoto = async () => {
+    try {
+      const { status } = await ImagePicker.requestCameraPermissionsAsync();
+      
+      if (status !== 'granted') {
+        Alert.alert(t('common.error'), 'Permission d\'accès à la caméra refusée');
+        return;
+      }
+
+      const result = await ImagePicker.launchCameraAsync({
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 0.3,  // Compression pour réduire la taille
+        base64: true,
+      });
+
+      if (!result.canceled && result.assets[0].base64) {
+        const base64Image = `data:image/jpeg;base64,${result.assets[0].base64}`;
+        setPhotos([...photos, base64Image]);
+      }
+    } catch (error) {
+      console.error('Error taking photo:', error);
+      Alert.alert(t('common.error'), 'Erreur lors de la prise de photo');
+    }
+  };
+
+  const removePhoto = (index: number) => {
+    const updated = photos.filter((_, i) => i !== index);
+    setPhotos(updated);
+  };
+
   const handleSave = async () => {
     // Validation
     if (!commonName.trim() || !latinName.trim() || !season.trim() || !description.trim() || !habitat.trim()) {
