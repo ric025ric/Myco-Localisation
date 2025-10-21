@@ -329,6 +329,9 @@ const styles = StyleSheet.create({
   placeholder: {
     width: 40,
   },
+  deleteButton: {
+    padding: 8,
+  },
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
