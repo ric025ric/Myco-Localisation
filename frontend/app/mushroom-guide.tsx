@@ -148,7 +148,7 @@ function MushroomGuideScreen() {
         <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
           <Ionicons name="arrow-back" size={24} color="#fff" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>{t('mushroom.guide')}</Text>
+        <Text style={styles.headerTitle}>{t('guide.title')}</Text>
         <TouchableOpacity onPress={() => setShowPinModal(true)} style={styles.addButton}>
           <Ionicons name="add-circle" size={24} color="#4CAF50" />
         </TouchableOpacity>
@@ -167,7 +167,7 @@ function MushroomGuideScreen() {
         <Ionicons name="search" size={20} color="#999" style={styles.searchIcon} />
         <TextInput
           style={styles.searchInput}
-          placeholder={t('mushroom.search')}
+          placeholder={t('guide.search')}
           placeholderTextColor="#999"
           value={searchQuery}
           onChangeText={setSearchQuery}
@@ -186,7 +186,7 @@ function MushroomGuideScreen() {
       ) : filteredMushrooms.length === 0 ? (
         <View style={styles.emptyContainer}>
           <Ionicons name="leaf-outline" size={64} color="#666" />
-          <Text style={styles.emptyText}>{t('mushroom.noResults')}</Text>
+          <Text style={styles.emptyText}>{t('guide.noResults')}</Text>
         </View>
       ) : (
         <FlatList
