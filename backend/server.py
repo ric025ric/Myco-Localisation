@@ -240,6 +240,14 @@ async def create_mushroom(mushroom: MushroomInfoCreate):
     await db.mushroom_database.insert_one(mushroom_obj.dict())
     return mushroom_obj
 
+@api_router.delete("/mushrooms/{mushroom_id}")
+async def delete_mushroom(mushroom_id: str):
+    """Delete a mushroom entry (for admin use)"""
+    result = await db.mushroom_database.delete_one({"id": mushroom_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Mushroom not found")
+    return {"message": "Mushroom deleted successfully", "id": mushroom_id}
+
 # Include the router in the main app
 app.include_router(api_router)
 
