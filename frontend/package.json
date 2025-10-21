@@ -20,7 +20,7 @@
     "@react-navigation/native-stack": "^7.3.28",
     "@react-navigation/stack": "^7.4.9",
     "@shopify/flash-list": "2.0.2",
-    "expo": "^54.0.17",
+    "expo": "^54.0.18",
     "expo-blur": "~15.0.7",
     "expo-clipboard": "^8.0.7",
     "expo-constants": "~18.0.9",
