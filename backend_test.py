@@ -40,6 +40,7 @@ TEST_MUSHROOM_DATA = [
 class MushroomAPITester:
     def __init__(self):
         self.created_spot_ids = []
+        self.created_mushroom_id = None
         self.test_results = {
             "passed": 0,
             "failed": 0,
