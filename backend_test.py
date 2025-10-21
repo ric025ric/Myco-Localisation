@@ -278,6 +278,203 @@ class MushroomAPITester:
         except Exception as e:
             self.log_result("Error Handling - DELETE Non-existent", False, f"Request error: {str(e)}")
 
+    # NEW MUSHROOM DATABASE TESTING METHODS
+    def test_get_all_mushrooms(self):
+        """Test: GET /api/mushrooms - Get all mushrooms"""
+        try:
+            response = requests.get(f"{BASE_URL}/mushrooms", timeout=10)
+            if response.status_code == 200:
+                mushrooms = response.json()
+                if isinstance(mushrooms, list):
+                    self.log_result("GET All Mushrooms", True, 
+                                  f"Retrieved {len(mushrooms)} mushrooms from database")
+                    return mushrooms
+                else:
+                    self.log_result("GET All Mushrooms", False, f"Expected list, got {type(mushrooms)}")
+                    return None
+            else:
+                self.log_result("GET All Mushrooms", False, f"HTTP {response.status_code}", response)
+                return None
+        except Exception as e:
+            self.log_result("GET All Mushrooms", False, f"Request error: {str(e)}")
+            return None
+
+    def test_search_mushrooms(self, search_term):
+        """Test: GET /api/mushrooms?search=term - Search mushrooms"""
+        try:
+            response = requests.get(f"{BASE_URL}/mushrooms?search={search_term}", timeout=10)
+            if response.status_code == 200:
+                mushrooms = response.json()
+                if isinstance(mushrooms, list):
+                    self.log_result(f"Search Mushrooms - '{search_term}'", True, 
+                                  f"Search returned {len(mushrooms)} results")
+                    return mushrooms
+                else:
+                    self.log_result(f"Search Mushrooms - '{search_term}'", False, f"Expected list, got {type(mushrooms)}")
+                    return None
+            else:
+                self.log_result(f"Search Mushrooms - '{search_term}'", False, f"HTTP {response.status_code}", response)
+                return None
+        except Exception as e:
+            self.log_result(f"Search Mushrooms - '{search_term}'", False, f"Request error: {str(e)}")
+            return None
+
+    def test_create_mushroom(self):
+        """Test: POST /api/mushrooms - Create new mushroom entry"""
+        test_mushroom_data = {
+            "common_name": "Cèpe de Bordeaux",
+            "latin_name": "Boletus edulis",
+            "edibility": "comestible",
+            "season": "Été-Automne",
+            "description": "Le cèpe de Bordeaux est un champignon très apprécié en cuisine. Son chapeau est brun et son pied est massif et blanc.",
+            "characteristics": [
+                "Chapeau brun foncé",
+                "Pied blanc et massif",
+                "Chair blanche et ferme",
+                "Tubes blancs puis jaune-vert"
+            ],
+            "habitat": "Forêts de feuillus et de conifères, particulièrement sous les chênes",
+            "lookalikes": [
+                {
+                    "name": "Bolet amer",
+                    "latin_name": "Tylopilus felleus",
+                    "difference": "Chair très amère, pores roses",
+                    "danger_level": "non_comestible"
+                }
+            ],
+            "photo_urls": [
+                "https://example.com/cepe1.jpg",
+                "https://example.com/cepe2.jpg"
+            ]
+        }
+        
+        try:
+            response = requests.post(
+                f"{BASE_URL}/mushrooms",
+                json=test_mushroom_data,
+                headers={"Content-Type": "application/json"},
+                timeout=10
+            )
+            
+            if response.status_code == 200:
+                created_mushroom = response.json()
+                required_fields = ["id", "common_name", "latin_name", "edibility", "season"]
+                
+                if all(field in created_mushroom for field in required_fields):
+                    if created_mushroom["common_name"] == test_mushroom_data["common_name"]:
+                        self.created_mushroom_id = created_mushroom["id"]
+                        self.log_result("Create Mushroom", True, 
+                                      f"Created mushroom with ID: {self.created_mushroom_id}")
+                        return created_mushroom["id"]
+                    else:
+                        self.log_result("Create Mushroom", False, "Data mismatch in response")
+                        return None
+                else:
+                    self.log_result("Create Mushroom", False, f"Missing required fields in response")
+                    return None
+            else:
+                self.log_result("Create Mushroom", False, f"HTTP {response.status_code}", response)
+                return None
+        except Exception as e:
+            self.log_result("Create Mushroom", False, f"Request error: {str(e)}")
+            return None
+
+    def test_get_specific_mushroom(self, mushroom_id):
+        """Test: GET /api/mushrooms/{mushroom_id} - Get specific mushroom"""
+        try:
+            response = requests.get(f"{BASE_URL}/mushrooms/{mushroom_id}", timeout=10)
+            
+            if response.status_code == 200:
+                mushroom = response.json()
+                if mushroom.get("id") == mushroom_id:
+                    self.log_result("Get Specific Mushroom", True, 
+                                  f"Retrieved mushroom: {mushroom['common_name']} ({mushroom['latin_name']})")
+                    return mushroom
+                else:
+                    self.log_result("Get Specific Mushroom", False, "ID mismatch in response")
+                    return None
+            elif response.status_code == 404:
+                self.log_result("Get Specific Mushroom", False, "Mushroom not found (404)")
+                return None
+            else:
+                self.log_result("Get Specific Mushroom", False, f"HTTP {response.status_code}", response)
+                return None
+        except Exception as e:
+            self.log_result("Get Specific Mushroom", False, f"Request error: {str(e)}")
+            return None
+
+    def test_mushroom_error_handling(self):
+        """Test: Error handling for mushroom database endpoints"""
+        fake_id = "non-existent-mushroom-id-12345"
+        
+        try:
+            response = requests.get(f"{BASE_URL}/mushrooms/{fake_id}", timeout=10)
+            if response.status_code == 404:
+                self.log_result("Mushroom Error Handling - GET Non-existent", True, 
+                              "Correctly returned 404 for non-existent mushroom")
+            else:
+                self.log_result("Mushroom Error Handling - GET Non-existent", False, 
+                              f"Expected 404, got {response.status_code}")
+        except Exception as e:
+            self.log_result("Mushroom Error Handling - GET Non-existent", False, f"Request error: {str(e)}")
+
+    def run_mushroom_database_tests(self):
+        """Run all mushroom database tests"""
+        print("\n" + "=" * 60)
+        print("MUSHROOM DATABASE API TESTS")
+        print("=" * 60)
+        
+        # Test 1: Get all mushrooms (initial state)
+        initial_mushrooms = self.test_get_all_mushrooms()
+        
+        # Test 2: Search functionality (should work even if empty)
+        self.test_search_mushrooms("cepe")
+        
+        # Test 3: Create new mushroom
+        created_id = self.test_create_mushroom()
+        
+        # Test 4: Get specific mushroom (if created successfully)
+        if created_id:
+            self.test_get_specific_mushroom(created_id)
+            
+            # Test 5: Search for created mushroom by common name
+            search_results = self.test_search_mushrooms("Cèpe")
+            if search_results:
+                found = any(m["common_name"] == "Cèpe de Bordeaux" for m in search_results)
+                if found:
+                    self.log_result("Search Created Mushroom - Common Name", True, 
+                                  "Found created mushroom in search results")
+                else:
+                    self.log_result("Search Created Mushroom - Common Name", False, 
+                                  "Created mushroom not found in search results")
+            
+            # Test 6: Search for created mushroom by latin name
+            search_results = self.test_search_mushrooms("Boletus")
+            if search_results:
+                found = any(m["latin_name"] == "Boletus edulis" for m in search_results)
+                if found:
+                    self.log_result("Search Created Mushroom - Latin Name", True, 
+                                  "Found created mushroom by latin name search")
+                else:
+                    self.log_result("Search Created Mushroom - Latin Name", False, 
+                                  "Created mushroom not found by latin name search")
+        
+        # Test 7: Verify data persistence
+        final_mushrooms = self.test_get_all_mushrooms()
+        if initial_mushrooms is not None and final_mushrooms is not None:
+            if len(final_mushrooms) > len(initial_mushrooms):
+                self.log_result("Data Persistence Verification", True, 
+                              f"Mushroom count increased from {len(initial_mushrooms)} to {len(final_mushrooms)}")
+            elif created_id and any(m["id"] == created_id for m in final_mushrooms):
+                self.log_result("Data Persistence Verification", True, 
+                              "Created mushroom found in final database query")
+            else:
+                self.log_result("Data Persistence Verification", False, 
+                              "Created mushroom not persisted in database")
+        
+        # Test 8: Error handling
+        self.test_mushroom_error_handling()
+
     def run_comprehensive_test(self):
         """Run all tests in sequence"""
         print("=" * 60)
