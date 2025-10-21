@@ -33,6 +33,7 @@ function MushroomGuideScreen() {
   const [filteredMushrooms, setFilteredMushrooms] = useState<Mushroom[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const [showPinModal, setShowPinModal] = useState(false);
 
   useEffect(() => {
     loadMushrooms();
