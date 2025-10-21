@@ -9,8 +9,8 @@ import json
 import sys
 from datetime import datetime
 
-# Use the Render deployment URL as specified in the review request
-BASE_URL = "https://myco-localisation-backend.onrender.com/api"
+# Use the frontend environment variable for backend URL
+BASE_URL = "https://myco-local.preview.emergentagent.com/api"
 
 # Test data as specified in the review request
 TEST_MUSHROOM_DATA = [
