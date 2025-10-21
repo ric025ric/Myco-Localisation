@@ -149,8 +149,19 @@ function MushroomGuideScreen() {
           <Ionicons name="arrow-back" size={24} color="#fff" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>{t('mushroom.guide')}</Text>
-        <View style={styles.placeholder} />
+        <TouchableOpacity onPress={() => setShowPinModal(true)} style={styles.addButton}>
+          <Ionicons name="add-circle" size={24} color="#4CAF50" />
+        </TouchableOpacity>
       </View>
+
+      <PinModal
+        visible={showPinModal}
+        onClose={() => setShowPinModal(false)}
+        onSuccess={() => {
+          setShowPinModal(false);
+          router.push('/admin-mushroom');
+        }}
+      />
 
       <View style={styles.searchContainer}>
         <Ionicons name="search" size={20} color="#999" style={styles.searchIcon} />
