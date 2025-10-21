@@ -43,6 +43,8 @@ function MushroomDetailsScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const [mushroom, setMushroom] = useState<MushroomInfo | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showPinModal, setShowPinModal] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     loadMushroomDetails();
