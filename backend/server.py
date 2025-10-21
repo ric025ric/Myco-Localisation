@@ -60,6 +60,36 @@ class MushroomSpotUpdate(BaseModel):
     notes: Optional[str] = None
     photo_base64: Optional[str] = None
 
+# Mushroom Database Models
+class MushroomLookalike(BaseModel):
+    name: str
+    latin_name: str
+    difference: str
+    danger_level: str  # "mortel", "toxique", "non_comestible"
+
+class MushroomInfo(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    common_name: str
+    latin_name: str
+    edibility: str  # "comestible", "toxique", "mortel", "non_comestible", "comestible_conditionnel"
+    season: str
+    description: str
+    characteristics: List[str]
+    habitat: str
+    lookalikes: List[MushroomLookalike] = []
+    photo_urls: List[str] = []
+
+class MushroomInfoCreate(BaseModel):
+    common_name: str
+    latin_name: str
+    edibility: str
+    season: str
+    description: str
+    characteristics: List[str]
+    habitat: str
+    lookalikes: List[MushroomLookalike] = []
+    photo_urls: List[str] = []
+
 # Add your routes to the router instead of directly to app
 @api_router.get("/")
 async def root():
