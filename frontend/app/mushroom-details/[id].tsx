@@ -183,8 +183,23 @@ function MushroomDetailsScreen() {
         <Text style={styles.headerTitle} numberOfLines={1}>
           {mushroom.common_name}
         </Text>
-        <View style={styles.placeholder} />
+        <TouchableOpacity 
+          onPress={() => setShowPinModal(true)} 
+          style={styles.deleteButton}
+          disabled={deleting}
+        >
+          <Ionicons name="trash-outline" size={24} color="#f44336" />
+        </TouchableOpacity>
       </View>
+
+      <PinModal
+        visible={showPinModal}
+        onClose={() => setShowPinModal(false)}
+        onSuccess={() => {
+          setShowPinModal(false);
+          confirmDelete();
+        }}
+      />
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         {mushroom.photo_urls && mushroom.photo_urls.length > 0 && (
