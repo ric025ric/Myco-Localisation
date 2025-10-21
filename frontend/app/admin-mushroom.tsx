@@ -109,6 +109,9 @@ function AdminMushroomContent() {
         photo_urls: photoUrlsArray,
       };
 
+      console.log('Sending to:', `${API_URL}/api/mushrooms`);
+      console.log('Data:', JSON.stringify(mushroomData, null, 2));
+      
       const response = await fetch(`${API_URL}/api/mushrooms`, {
         method: 'POST',
         headers: {
@@ -117,9 +120,16 @@ function AdminMushroomContent() {
         body: JSON.stringify(mushroomData),
       });
 
+      console.log('Response status:', response.status);
+      
       if (!response.ok) {
-        throw new Error('Failed to save mushroom');
+        const errorText = await response.text();
+        console.error('Error response:', errorText);
+        throw new Error(`Failed to save mushroom: ${response.status} - ${errorText}`);
       }
+
+      const result = await response.json();
+      console.log('Success:', result);
 
       Alert.alert(
         t('common.success'),
@@ -133,7 +143,8 @@ function AdminMushroomContent() {
       );
     } catch (error) {
       console.error('Error saving mushroom:', error);
-      Alert.alert(t('common.error'), t('admin.error'));
+      const errorMessage = error instanceof Error ? error.message : t('admin.error');
+      Alert.alert(t('common.error'), errorMessage);
     } finally {
       setSaving(false);
     }
