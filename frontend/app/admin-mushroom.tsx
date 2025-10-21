@@ -628,6 +628,49 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
   },
+  photoButtonsContainer: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  photoButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#4CAF50',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 8,
+    gap: 4,
+  },
+  photoButtonText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  photosPreview: {
+    marginTop: 12,
+  },
+  photoPreviewContainer: {
+    position: 'relative',
+    marginRight: 12,
+  },
+  photoPreview: {
+    width: 120,
+    height: 120,
+    borderRadius: 8,
+    backgroundColor: '#3a3a3a',
+  },
+  removePhotoButton: {
+    position: 'absolute',
+    top: -8,
+    right: -8,
+    backgroundColor: '#1a1a1a',
+    borderRadius: 12,
+  },
+  noPhotosText: {
+    color: '#999',
+    fontStyle: 'italic',
+    marginTop: 8,
+  },
   spacer: {
     height: 32,
   },
