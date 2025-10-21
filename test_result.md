@@ -120,6 +120,18 @@ backend:
         agent: "testing"
         comment: "COMPREHENSIVE BACKEND TESTING COMPLETED - ALL 13 TESTS PASSED (100% success rate). Tested: API health check, CRUD operations (POST/GET/PUT/DELETE mushroom spots), nearby spots search, error handling for non-existent resources, base64 photo storage, data persistence in MongoDB. All endpoints return correct HTTP status codes, proper JSON responses matching Pydantic models, and handle errors appropriately. Created backend_test.py for future testing."
 
+  - task: "Mushroom Database API endpoints"
+    implemented: true
+    working: "NA"
+    file: "server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Created complete mushroom database API with GET /api/mushrooms (with search), GET /api/mushrooms/{id}, and POST /api/mushrooms endpoints. Includes comprehensive Pydantic models for MushroomInfo with lookalikes, characteristics, edibility, season, habitat, and photo URLs."
+
   - task: "Render Deployment Testing"
     implemented: true
     working: true
