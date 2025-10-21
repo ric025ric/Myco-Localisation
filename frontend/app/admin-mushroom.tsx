@@ -38,6 +38,7 @@ function AdminMushroomContent() {
   const [characteristics, setCharacteristics] = useState('');
   const [habitat, setHabitat] = useState('');
   const [photoUrls, setPhotoUrls] = useState('');
+  const [photos, setPhotos] = useState<string[]>([]);  // Photos en base64
   const [lookalikes, setLookalikes] = useState<MushroomLookalike[]>([]);
   const [saving, setSaving] = useState(false);
 
