@@ -347,6 +347,13 @@ const styles = StyleSheet.create({
   deleteButton: {
     padding: 8,
   },
+  headerActions: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  editButton: {
+    padding: 8,
+  },
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
