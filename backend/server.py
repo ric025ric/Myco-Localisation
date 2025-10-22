@@ -242,6 +242,20 @@ async def create_mushroom(mushroom: MushroomInfoCreate):
     await db.mushroom_database.insert_one(mushroom_obj.dict())
     return mushroom_obj
 
+@api_router.put("/mushrooms/{mushroom_id}", response_model=MushroomInfo)
+async def update_mushroom(mushroom_id: str, mushroom: MushroomInfoCreate):
+    """Update a mushroom entry (for admin use)"""
+    existing = await db.mushroom_database.find_one({"id": mushroom_id})
+    if not existing:
+        raise HTTPException(status_code=404, detail="Mushroom not found")
+    
+    mushroom_dict = mushroom.dict()
+    mushroom_dict["id"] = mushroom_id  # Preserve the ID
+    mushroom_obj = MushroomInfo(**mushroom_dict)
+    
+    await db.mushroom_database.replace_one({"id": mushroom_id}, mushroom_obj.dict())
+    return mushroom_obj
+
 @api_router.delete("/mushrooms/{mushroom_id}")
 async def delete_mushroom(mushroom_id: str):
     """Delete a mushroom entry (for admin use)"""
