@@ -184,13 +184,21 @@ function MushroomDetailsScreen() {
         <Text style={styles.headerTitle} numberOfLines={1}>
           {mushroom.common_name}
         </Text>
-        <TouchableOpacity 
-          onPress={() => setShowPinModal(true)} 
-          style={styles.deleteButton}
-          disabled={deleting}
-        >
-          <Ionicons name="trash-outline" size={24} color="#f44336" />
-        </TouchableOpacity>
+        <View style={styles.headerActions}>
+          <TouchableOpacity 
+            onPress={() => router.push(`/edit-mushroom/${mushroom.id}`)} 
+            style={styles.editButton}
+          >
+            <Ionicons name="create-outline" size={24} color="#4CAF50" />
+          </TouchableOpacity>
+          <TouchableOpacity 
+            onPress={() => setShowPinModal(true)} 
+            style={styles.deleteButton}
+            disabled={deleting}
+          >
+            <Ionicons name="trash-outline" size={24} color="#f44336" />
+          </TouchableOpacity>
+        </View>
       </View>
 
       <PinModal
