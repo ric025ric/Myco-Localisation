@@ -372,6 +372,11 @@ const translations = {
     'mushroom.commonName': 'Common Name',
     'mushroom.latinName': 'Latin Name',
     'mushroom.edibility': 'Edibility',
+    'mushroom.edibility.comestible': 'Edible',
+    'mushroom.edibility.toxique': 'Toxic',
+    'mushroom.edibility.mortel': 'Deadly',
+    'mushroom.edibility.non_comestible': 'Not Edible',
+    'mushroom.edibility.comestible_conditionnel': 'Conditionally Edible',
     'mushroom.season': 'Season',
     'mushroom.description': 'Description',
     'mushroom.characteristics': 'Characteristics',
@@ -379,6 +384,9 @@ const translations = {
     'mushroom.lookalikes': 'Lookalikes / Confusion Risks',
     'mushroom.nolookalikes': 'No known confusion risks',
     'mushroom.danger': 'Danger Level',
+    'mushroom.danger.mortel': 'Deadly',
+    'mushroom.danger.toxique': 'Toxic',
+    'mushroom.danger.non_comestible': 'Not Edible',
     'mushroom.difference': 'Difference',
     
     // Admin Add Mushroom
