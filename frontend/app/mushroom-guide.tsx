@@ -55,14 +55,39 @@ function MushroomGuideScreen() {
   const loadMushrooms = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`${EXPO_PUBLIC_BACKEND_URL}/api/mushrooms`);
+      
+      // Timeout de 10 secondes
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000);
+      
+      const response = await fetch(`${EXPO_PUBLIC_BACKEND_URL}/api/mushrooms`, {
+        signal: controller.signal,
+      });
+      
+      clearTimeout(timeoutId);
+      
       if (response.ok) {
         const data = await response.json();
         setMushrooms(data);
         setFilteredMushrooms(data);
+      } else {
+        console.error('Error loading mushrooms: HTTP', response.status);
+        Alert.alert(
+          t('common.error'),
+          `Erreur lors du chargement des champignons (${response.status})`
+        );
+        setMushrooms([]);
+        setFilteredMushrooms([]);
       }
     } catch (error) {
       console.error('Error loading mushrooms:', error);
+      const errorMessage = error instanceof Error && error.name === 'AbortError'
+        ? 'Délai d\'attente dépassé. Vérifiez votre connexion.'
+        : 'Impossible de charger les champignons. Vérifiez votre connexion.';
+      
+      Alert.alert(t('common.error'), errorMessage);
+      setMushrooms([]);
+      setFilteredMushrooms([]);
     } finally {
       setLoading(false);
     }
