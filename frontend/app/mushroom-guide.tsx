@@ -57,9 +57,9 @@ function MushroomGuideScreen() {
     try {
       setLoading(true);
       
-      // Timeout de 10 secondes
+      // Timeout de 30 secondes (pour gérer le cold start de Render)
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 10000);
+      const timeoutId = setTimeout(() => controller.abort(), 30000);
       
       const response = await fetch(`${EXPO_PUBLIC_BACKEND_URL}/api/mushrooms`, {
         signal: controller.signal,
@@ -83,7 +83,7 @@ function MushroomGuideScreen() {
     } catch (error) {
       console.error('Error loading mushrooms:', error);
       const errorMessage = error instanceof Error && error.name === 'AbortError'
-        ? 'Délai d\'attente dépassé. Vérifiez votre connexion.'
+        ? 'Le serveur met du temps à démarrer. Veuillez réessayer dans quelques secondes.'
         : 'Impossible de charger les champignons. Vérifiez votre connexion.';
       
       Alert.alert(t('common.error'), errorMessage);
