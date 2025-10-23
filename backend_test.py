@@ -769,6 +769,9 @@ class MushroomAPITester:
 
         # NEW: Run mushroom database tests first (as requested in review)
         self.run_mushroom_database_tests()
+        
+        # NEW: Run PUT endpoint tests specifically (as requested in review)
+        self.run_put_mushroom_tests()
 
         # Test 2-3: Create multiple mushroom spots and verify creation
         print("\n" + "=" * 60)
