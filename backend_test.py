@@ -718,6 +718,41 @@ class MushroomAPITester:
         # Test 8: Error handling
         self.test_mushroom_error_handling()
 
+    def run_put_mushroom_tests(self):
+        """Run PUT endpoint tests for mushrooms as requested"""
+        print("\n" + "=" * 60)
+        print("PUT /api/mushrooms/{id} ENDPOINT TESTS")
+        print("=" * 60)
+        
+        # First, ensure we have a mushroom to test with
+        mushrooms = self.test_get_all_mushrooms()
+        test_mushroom_id = None
+        
+        if mushrooms and len(mushrooms) > 0:
+            test_mushroom_id = mushrooms[0]["id"]
+            self.log_result("GET Initial Mushroom for PUT Testing", True, 
+                          f"Using existing mushroom ID: {test_mushroom_id}, Name: {mushrooms[0]['common_name']}")
+        else:
+            # Create a mushroom for testing if none exist
+            test_mushroom_id = self.test_create_mushroom()
+            if test_mushroom_id:
+                self.log_result("Create Mushroom for PUT Testing", True, 
+                              f"Created test mushroom ID: {test_mushroom_id}")
+        
+        if test_mushroom_id:
+            # Test PUT success - modify mushroom
+            updated_mushroom = self.test_put_mushroom_success(test_mushroom_id)
+            
+            # Test GET after modification - verify persistence
+            if updated_mushroom:
+                self.test_put_mushroom_verify_persistence(test_mushroom_id)
+            
+            # Test PUT photos modification
+            self.test_put_mushroom_photos_modification(test_mushroom_id)
+        
+        # Test PUT with non-existent ID - should return 404
+        self.test_put_mushroom_nonexistent_id()
+
     def run_comprehensive_test(self):
         """Run all tests in sequence"""
         print("=" * 60)
