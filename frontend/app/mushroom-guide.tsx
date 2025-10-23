@@ -208,6 +208,10 @@ function MushroomGuideScreen() {
       {loading ? (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#4CAF50" />
+          <Text style={styles.loadingText}>Chargement des champignons...</Text>
+          <Text style={styles.loadingSubtext}>
+            ⏱️ Le serveur démarre, veuillez patienter...
+          </Text>
         </View>
       ) : filteredMushrooms.length === 0 ? (
         <View style={styles.emptyContainer}>
