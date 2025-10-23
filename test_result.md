@@ -252,6 +252,9 @@ frontend:
       - working: "NA"
         agent: "main"
         comment: "Added edit button (pencil icon) in header protected by PIN modal. When user enters correct PIN (160810), they are redirected to /edit-mushroom/[id] screen. Also added delete button with PIN protection."
+      - working: "NA"
+        agent: "testing"
+        comment: "MUSHROOM DETAILS SCREEN NOT TESTED - Cannot reach due to welcome modal blocking navigation. The screen implementation appears complete based on code review, but functionality cannot be verified until welcome modal navigation issue is resolved."
 
   - task: "Edit Mushroom Screen"
     implemented: true
