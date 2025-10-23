@@ -226,11 +226,14 @@ frontend:
     file: "app/mushroom-guide.tsx"
     stuck_count: 0
     priority: "high"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Created mushroom guide screen with search functionality to browse and search mushroom database. Displays mushrooms with photos, edibility badges, and seasons."
+      - working: "NA"
+        agent: "main"
+        comment: "Improved loading experience for Render.com cold start: timeout increased to 30s, added informative loading messages ('Chargement des champignons...', 'Le serveur démarre, veuillez patienter...')."
 
   - task: "Mushroom Details Screen"
     implemented: true
