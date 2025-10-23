@@ -57,6 +57,7 @@ export default function WelcomeModal({ visible, onComplete }: WelcomeModalProps)
                 onChangeText={setUsername}
                 autoFocus
                 maxLength={20}
+                testID="welcome-username-input"
               />
             </View>
             
