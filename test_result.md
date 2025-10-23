@@ -240,6 +240,21 @@ frontend:
       - working: "NA"
         agent: "main"
         comment: "Created detailed mushroom view displaying comprehensive information including common name, latin name, edibility, season, description, characteristics, habitat, and lookalike warnings with danger levels."
+      - working: "NA"
+        agent: "main"
+        comment: "Added edit button (pencil icon) in header protected by PIN modal. When user enters correct PIN (160810), they are redirected to /edit-mushroom/[id] screen."
+
+  - task: "Edit Mushroom Screen"
+    implemented: true
+    working: "NA"
+    file: "app/edit-mushroom/[id].tsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Created complete edit mushroom screen that loads existing mushroom data, pre-populates all fields (common name, latin name, edibility, season, description, characteristics, habitat, photo URLs, base64 photos, and lookalikes), allows modifications, and submits changes via PUT /api/mushrooms/{id}. Includes photo management (add from camera/gallery, remove photos) and dynamic lookalike management."
 
   - task: "Admin Mushroom Screen"
     implemented: true
