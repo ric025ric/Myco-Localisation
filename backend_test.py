@@ -10,7 +10,7 @@ import sys
 from datetime import datetime
 
 # Use the frontend environment variable for backend URL
-BASE_URL = "https://myco-local.preview.emergentagent.com/api"
+BASE_URL = "https://myco-finder.preview.emergentagent.com/api"
 
 # Test data as specified in the review request
 TEST_MUSHROOM_DATA = [
