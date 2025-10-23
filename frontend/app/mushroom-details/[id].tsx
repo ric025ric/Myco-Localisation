@@ -44,7 +44,8 @@ function MushroomDetailsScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const [mushroom, setMushroom] = useState<MushroomInfo | null>(null);
   const [loading, setLoading] = useState(true);
-  const [showPinModal, setShowPinModal] = useState(false);
+  const [showPinModalForDelete, setShowPinModalForDelete] = useState(false);
+  const [showPinModalForEdit, setShowPinModalForEdit] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
