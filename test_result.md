@@ -291,12 +291,11 @@ metadata:
 
 test_plan:
   current_focus:
+    - "Home Screen with Location Services"
+  stuck_tasks:
     - "Mushroom Guide Screen"
-    - "Mushroom Details Screen"
-    - "Edit Mushroom Screen"
-  stuck_tasks: []
   test_all: false
-  test_priority: "high_first"
+  test_priority: "stuck_first"
 
 agent_communication:
   - agent: "main"
