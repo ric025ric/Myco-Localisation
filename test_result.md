@@ -222,11 +222,11 @@ frontend:
 
   - task: "Mushroom Guide Screen"
     implemented: true
-    working: "NA"
+    working: false
     file: "app/mushroom-guide.tsx"
-    stuck_count: 0
+    stuck_count: 1
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
@@ -234,6 +234,9 @@ frontend:
       - working: "NA"
         agent: "main"
         comment: "Improved loading experience for Render.com cold start: timeout increased to 30s, added informative loading messages ('Chargement des champignons...', 'Le serveur démarre, veuillez patienter...')."
+      - working: false
+        agent: "testing"
+        comment: "MUSHROOM GUIDE TESTING FAILED - WELCOME MODAL BLOCKING NAVIGATION. Comprehensive testing revealed: ✅ Backend API working correctly (9 mushrooms available via GET /api/mushrooms), ✅ Frontend loads and displays welcome modal properly, ❌ Welcome modal 'Continuer' button not functioning - prevents navigation to main app, ❌ Cannot reach mushroom guide screen due to modal blocking, ❌ All mushroom guide functionality untestable due to navigation issue. Root cause: Welcome modal implementation has selector/event handling issues preventing progression past initial screen. Backend is fully functional with test data including Cèpe de Bordeaux, Girolle, Amanite phalloïde, etc."
 
   - task: "Mushroom Details Screen"
     implemented: true
