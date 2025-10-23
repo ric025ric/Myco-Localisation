@@ -187,13 +187,13 @@ function MushroomDetailsScreen() {
         </Text>
         <View style={styles.headerActions}>
           <TouchableOpacity 
-            onPress={() => router.push(`/edit-mushroom/${mushroom.id}`)} 
+            onPress={() => setShowPinModalForEdit(true)} 
             style={styles.editButton}
           >
             <Ionicons name="create-outline" size={24} color="#4CAF50" />
           </TouchableOpacity>
           <TouchableOpacity 
-            onPress={() => setShowPinModal(true)} 
+            onPress={() => setShowPinModalForDelete(true)} 
             style={styles.deleteButton}
             disabled={deleting}
           >
