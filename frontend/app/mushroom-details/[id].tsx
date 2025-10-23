@@ -203,11 +203,20 @@ function MushroomDetailsScreen() {
       </View>
 
       <PinModal
-        visible={showPinModal}
-        onClose={() => setShowPinModal(false)}
+        visible={showPinModalForDelete}
+        onClose={() => setShowPinModalForDelete(false)}
         onSuccess={() => {
-          setShowPinModal(false);
+          setShowPinModalForDelete(false);
           confirmDelete();
+        }}
+      />
+
+      <PinModal
+        visible={showPinModalForEdit}
+        onClose={() => setShowPinModalForEdit(false)}
+        onSuccess={() => {
+          setShowPinModalForEdit(false);
+          router.push(`/edit-mushroom/${mushroom?.id}`);
         }}
       />
 
