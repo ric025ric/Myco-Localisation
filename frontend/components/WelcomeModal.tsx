@@ -64,6 +64,7 @@ export default function WelcomeModal({ visible, onComplete }: WelcomeModalProps)
               style={[styles.button, !username.trim() && styles.buttonDisabled]}
               onPress={handleContinue}
               disabled={!username.trim()}
+              testID="welcome-continue-button"
             >
               <Text style={styles.buttonText}>{t('welcome.continue')}</Text>
               <Ionicons name="arrow-forward" size={24} color="#fff" />
