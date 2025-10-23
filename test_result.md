@@ -241,14 +241,14 @@ frontend:
     file: "app/mushroom-details/[id].tsx"
     stuck_count: 0
     priority: "high"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Created detailed mushroom view displaying comprehensive information including common name, latin name, edibility, season, description, characteristics, habitat, and lookalike warnings with danger levels."
       - working: "NA"
         agent: "main"
-        comment: "Added edit button (pencil icon) in header protected by PIN modal. When user enters correct PIN (160810), they are redirected to /edit-mushroom/[id] screen."
+        comment: "Added edit button (pencil icon) in header protected by PIN modal. When user enters correct PIN (160810), they are redirected to /edit-mushroom/[id] screen. Also added delete button with PIN protection."
 
   - task: "Edit Mushroom Screen"
     implemented: true
@@ -256,7 +256,7 @@ frontend:
     file: "app/edit-mushroom/[id].tsx"
     stuck_count: 0
     priority: "high"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
       - working: "NA"
         agent: "main"
