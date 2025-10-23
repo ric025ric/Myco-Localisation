@@ -267,6 +267,9 @@ frontend:
       - working: "NA"
         agent: "main"
         comment: "Created complete edit mushroom screen that loads existing mushroom data, pre-populates all fields (common name, latin name, edibility, season, description, characteristics, habitat, photo URLs, base64 photos, and lookalikes), allows modifications, and submits changes via PUT /api/mushrooms/{id}. Includes photo management (add from camera/gallery, remove photos) and dynamic lookalike management."
+      - working: "NA"
+        agent: "testing"
+        comment: "EDIT MUSHROOM SCREEN NOT TESTED - Cannot reach due to welcome modal blocking navigation. The screen implementation appears complete based on code review with comprehensive form fields and PUT API integration, but functionality cannot be verified until welcome modal navigation issue is resolved."
 
   - task: "Admin Mushroom Screen"
     implemented: true
