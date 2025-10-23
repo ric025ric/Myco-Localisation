@@ -403,6 +403,249 @@ class MushroomAPITester:
             self.log_result("Get Specific Mushroom", False, f"Request error: {str(e)}")
             return None
 
+    def test_put_mushroom_success(self, mushroom_id):
+        """Test: PUT /api/mushrooms/{id} - Update mushroom successfully"""
+        if not mushroom_id:
+            self.log_result("PUT Mushroom - Success", False, "No mushroom ID provided")
+            return None
+            
+        # Get original mushroom data first
+        try:
+            get_response = requests.get(f"{BASE_URL}/mushrooms/{mushroom_id}", timeout=10)
+            if get_response.status_code != 200:
+                self.log_result("PUT Mushroom - Success", False, "Could not retrieve original mushroom data")
+                return None
+            
+            original_data = get_response.json()
+            
+            # Prepare modified data
+            modified_data = {
+                "common_name": "Cèpe de Bordeaux Modifié",
+                "latin_name": "Boletus edulis var. modified",
+                "edibility": "comestible",
+                "season": "Été-Automne-Hiver",
+                "description": "Description modifiée - Le cèpe de Bordeaux est un champignon très apprécié en cuisine. Son chapeau est brun et son pied est massif et blanc. Nouvelles informations ajoutées.",
+                "characteristics": [
+                    "Chapeau brun foncé modifié",
+                    "Pied blanc et massif",
+                    "Chair blanche et ferme",
+                    "Tubes blancs puis jaune-vert",
+                    "Nouvelle caractéristique ajoutée"
+                ],
+                "habitat": "Forêts de feuillus et de conifères, particulièrement sous les chênes et hêtres",
+                "lookalikes": [
+                    {
+                        "name": "Bolet amer",
+                        "latin_name": "Tylopilus felleus",
+                        "difference": "Chair très amère, pores roses à maturité",
+                        "danger_level": "non_comestible"
+                    },
+                    {
+                        "name": "Nouveau sosie ajouté",
+                        "latin_name": "Boletus pseudoedulis",
+                        "difference": "Chapeau plus clair, chair jaunissante",
+                        "danger_level": "non_comestible"
+                    }
+                ],
+                "photo_urls": [
+                    "https://example.com/cepe_modified1.jpg",
+                    "https://example.com/cepe_modified2.jpg"
+                ],
+                "photos_base64": [
+                    "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==",
+                    "iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAEklEQVR42mNkYGBgYGBgYAAAAAUAAY27m/MAAAAASUVORK5CYII="
+                ]
+            }
+            
+            # Execute PUT request
+            response = requests.put(
+                f"{BASE_URL}/mushrooms/{mushroom_id}",
+                json=modified_data,
+                headers={"Content-Type": "application/json"},
+                timeout=10
+            )
+            
+            if response.status_code == 200:
+                updated_mushroom = response.json()
+                
+                # Verify ID is preserved
+                id_preserved = updated_mushroom.get("id") == mushroom_id
+                
+                # Verify modifications were applied
+                name_updated = updated_mushroom.get("common_name") == "Cèpe de Bordeaux Modifié"
+                description_updated = "Description modifiée" in updated_mushroom.get("description", "")
+                characteristics_count = len(updated_mushroom.get("characteristics", []))
+                lookalikes_count = len(updated_mushroom.get("lookalikes", []))
+                photos_count = len(updated_mushroom.get("photos_base64", []))
+                
+                success = all([
+                    id_preserved,
+                    name_updated,
+                    description_updated,
+                    characteristics_count == 5,
+                    lookalikes_count == 2,
+                    photos_count == 2
+                ])
+                
+                details = f"ID preserved: {id_preserved}, Name updated: {name_updated}, " \
+                         f"Description updated: {description_updated}, Characteristics: {characteristics_count}/5, " \
+                         f"Lookalikes: {lookalikes_count}/2, Photos: {photos_count}/2"
+                
+                self.log_result("PUT Mushroom - Success", success, details)
+                return updated_mushroom if success else None
+            else:
+                self.log_result("PUT Mushroom - Success", False, f"HTTP {response.status_code}", response)
+                return None
+                
+        except Exception as e:
+            self.log_result("PUT Mushroom - Success", False, f"Request error: {str(e)}")
+            return None
+
+    def test_put_mushroom_verify_persistence(self, mushroom_id):
+        """Test: GET after PUT to verify changes persisted"""
+        if not mushroom_id:
+            self.log_result("PUT Mushroom - Verify Persistence", False, "No mushroom ID provided")
+            return None
+            
+        try:
+            response = requests.get(f"{BASE_URL}/mushrooms/{mushroom_id}", timeout=10)
+            
+            if response.status_code == 200:
+                mushroom = response.json()
+                
+                # Verify modifications persisted
+                name_persisted = mushroom.get("common_name") == "Cèpe de Bordeaux Modifié"
+                description_persisted = "Description modifiée" in mushroom.get("description", "")
+                characteristics_persisted = len(mushroom.get("characteristics", [])) == 5
+                lookalikes_persisted = len(mushroom.get("lookalikes", [])) == 2
+                photos_persisted = len(mushroom.get("photos_base64", [])) == 2
+                
+                success = all([
+                    name_persisted,
+                    description_persisted,
+                    characteristics_persisted,
+                    lookalikes_persisted,
+                    photos_persisted
+                ])
+                
+                details = f"Name: {name_persisted}, Description: {description_persisted}, " \
+                         f"Characteristics: {characteristics_persisted}, Lookalikes: {lookalikes_persisted}, " \
+                         f"Photos: {photos_persisted}"
+                
+                self.log_result("PUT Mushroom - Verify Persistence", success, details)
+                return mushroom if success else None
+            else:
+                self.log_result("PUT Mushroom - Verify Persistence", False, f"HTTP {response.status_code}", response)
+                return None
+                
+        except Exception as e:
+            self.log_result("PUT Mushroom - Verify Persistence", False, f"Request error: {str(e)}")
+            return None
+
+    def test_put_mushroom_nonexistent_id(self):
+        """Test: PUT /api/mushrooms/{id} with non-existent ID - should return 404"""
+        fake_id = "nonexistent-mushroom-id-12345"
+        
+        test_data = {
+            "common_name": "Test Mushroom",
+            "latin_name": "Testus mushroomus",
+            "edibility": "comestible",
+            "season": "Printemps",
+            "description": "Test description",
+            "characteristics": ["Test characteristic"],
+            "habitat": "Test habitat",
+            "lookalikes": [],
+            "photo_urls": [],
+            "photos_base64": []
+        }
+        
+        try:
+            response = requests.put(
+                f"{BASE_URL}/mushrooms/{fake_id}",
+                json=test_data,
+                headers={"Content-Type": "application/json"},
+                timeout=10
+            )
+            
+            success = response.status_code == 404
+            details = f"Status: {response.status_code}, Expected: 404"
+            if success and response.json():
+                details += f", Message: {response.json().get('detail', 'No detail')}"
+            
+            self.log_result("PUT Mushroom - Non-existent ID (404)", success, details)
+            return success
+            
+        except Exception as e:
+            self.log_result("PUT Mushroom - Non-existent ID (404)", False, f"Request error: {str(e)}")
+            return False
+
+    def test_put_mushroom_photos_modification(self, mushroom_id):
+        """Test: PUT /api/mushrooms/{id} - Specifically test photos_base64 modification"""
+        if not mushroom_id:
+            self.log_result("PUT Mushroom - Photos Modification", False, "No mushroom ID provided")
+            return None
+            
+        try:
+            # Get current mushroom data
+            get_response = requests.get(f"{BASE_URL}/mushrooms/{mushroom_id}", timeout=10)
+            if get_response.status_code != 200:
+                self.log_result("PUT Mushroom - Photos Modification", False, "Could not retrieve mushroom data")
+                return None
+            
+            current_data = get_response.json()
+            
+            # Modify only photos, keep other data the same
+            photo_update_data = {
+                "common_name": current_data["common_name"],
+                "latin_name": current_data["latin_name"],
+                "edibility": current_data["edibility"],
+                "season": current_data["season"],
+                "description": current_data["description"],
+                "characteristics": current_data["characteristics"],
+                "habitat": current_data["habitat"],
+                "lookalikes": current_data["lookalikes"],
+                "photo_urls": ["https://example.com/new_photo1.jpg", "https://example.com/new_photo2.jpg", "https://example.com/new_photo3.jpg"],
+                "photos_base64": [
+                    "iVBORw0KGgoAAAANSUhEUgAAAAMAAAADCAYAAABWKLW/AAAAGklEQVR42mNkYGBgYGBgYAAAAAUAAY27m/MAAAAASUVORK5CYII=",
+                    "iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAHklEQVR42mNkYGBgYGBgYGBgYGBgYGBgYGBgYGBgYAAABQABhQKBwAAAAABJRU5ErkJggg==",
+                    "iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAI0lEQVR42mNkYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYAAABwAHhwKBwAAAAABJRU5ErkJggg=="
+                ]
+            }
+            
+            response = requests.put(
+                f"{BASE_URL}/mushrooms/{mushroom_id}",
+                json=photo_update_data,
+                headers={"Content-Type": "application/json"},
+                timeout=10
+            )
+            
+            if response.status_code == 200:
+                updated_mushroom = response.json()
+                
+                photos_count_correct = len(updated_mushroom.get("photos_base64", [])) == 3
+                urls_count_correct = len(updated_mushroom.get("photo_urls", [])) == 3
+                photos_match = updated_mushroom.get("photos_base64") == photo_update_data["photos_base64"]
+                other_data_preserved = (
+                    updated_mushroom.get("common_name") == current_data["common_name"] and
+                    updated_mushroom.get("description") == current_data["description"]
+                )
+                
+                success = all([photos_count_correct, urls_count_correct, photos_match, other_data_preserved])
+                
+                details = f"Photos count: {len(updated_mushroom.get('photos_base64', []))}/3, " \
+                         f"URLs count: {len(updated_mushroom.get('photo_urls', []))}/3, " \
+                         f"Photos match: {photos_match}, Other data preserved: {other_data_preserved}"
+                
+                self.log_result("PUT Mushroom - Photos Modification", success, details)
+                return updated_mushroom if success else None
+            else:
+                self.log_result("PUT Mushroom - Photos Modification", False, f"HTTP {response.status_code}", response)
+                return None
+                
+        except Exception as e:
+            self.log_result("PUT Mushroom - Photos Modification", False, f"Request error: {str(e)}")
+            return None
+
     def test_mushroom_error_handling(self):
         """Test: Error handling for mushroom database endpoints"""
         fake_id = "non-existent-mushroom-id-12345"
