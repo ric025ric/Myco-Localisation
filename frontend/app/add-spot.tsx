@@ -475,6 +475,12 @@ const styles = StyleSheet.create({
     marginTop: 16,
     fontSize: 16,
   },
+  loadingSubtext: {
+    color: '#999',
+    marginTop: 8,
+    fontSize: 14,
+    textAlign: 'center',
+  },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
