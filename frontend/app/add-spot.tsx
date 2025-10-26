@@ -335,6 +335,9 @@ function AddSpotScreen() {
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#4CAF50" />
           <Text style={styles.loadingText}>{t('home.gettingLocation')}</Text>
+          <Text style={styles.loadingSubtext}>
+            📡 Recherche de la meilleure précision GPS...
+          </Text>
         </View>
       </SafeAreaView>
     );
