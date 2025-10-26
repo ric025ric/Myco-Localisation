@@ -121,8 +121,22 @@ function AddSpotScreen() {
         timeInterval: 1000, // Wait up to 1 second for best accuracy
       });
       
-      console.log('Location accuracy:', location.coords.accuracy, 'meters');
+      console.log('📍 Location captured:', {
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+        accuracy: location.coords.accuracy,
+      });
+      
       setLocation(location);
+      
+      // Warn user if accuracy is poor
+      if (location.coords.accuracy && location.coords.accuracy > 20) {
+        Alert.alert(
+          '⚠️ ' + t('addSpot.lowAccuracy'),
+          `${t('addSpot.lowAccuracyMessage')} (${Math.round(location.coords.accuracy)}m)\n\n${t('addSpot.lowAccuracyTip')}`,
+          [{ text: 'OK' }]
+        );
+      }
     } catch (error) {
       console.error('Error getting location:', error);
       Alert.alert(t('common.error'), t('error.location'));
