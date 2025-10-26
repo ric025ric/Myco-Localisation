@@ -114,9 +114,14 @@ function AddSpotScreen() {
         return;
       }
 
+      // Use highest accuracy for precise spot location
       const location = await Location.getCurrentPositionAsync({
-        accuracy: Location.Accuracy.Balanced,
+        accuracy: Location.Accuracy.BestForNavigation,
+        maximumAge: 0, // Don't use cached location
+        timeInterval: 1000, // Wait up to 1 second for best accuracy
       });
+      
+      console.log('Location accuracy:', location.coords.accuracy, 'meters');
       setLocation(location);
     } catch (error) {
       console.error('Error getting location:', error);
