@@ -35,14 +35,40 @@ function SpotsListContent() {
   const [spots, setSpots] = useState<MushroomSpot[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [username, setUsername] = useState<string>('');
 
   useEffect(() => {
-    fetchSpots();
+    loadUsernameAndFetchSpots();
   }, []);
 
-  const fetchSpots = async () => {
+  const loadUsernameAndFetchSpots = async () => {
     try {
-      const response = await fetch(`${EXPO_PUBLIC_BACKEND_URL}/api/mushroom-spots`);
+      const savedUsername = await AsyncStorage.getItem(USERNAME_STORAGE_KEY);
+      if (savedUsername) {
+        setUsername(savedUsername);
+        await fetchSpots(savedUsername);
+      } else {
+        setLoading(false);
+      }
+    } catch (error) {
+      console.error('Error loading username:', error);
+      setLoading(false);
+    }
+  };
+
+  const fetchSpots = async (user?: string) => {
+    try {
+      const userToFetch = user || username;
+      if (!userToFetch) {
+        console.warn('No username available to fetch spots');
+        setSpots([]);
+        return;
+      }
+
+      // Filter spots by username
+      const response = await fetch(
+        `${EXPO_PUBLIC_BACKEND_URL}/api/mushroom-spots?created_by=${encodeURIComponent(userToFetch)}`
+      );
       
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
