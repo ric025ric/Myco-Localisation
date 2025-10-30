@@ -290,9 +290,3 @@ logger = logging.getLogger(__name__)
 @app.on_event("shutdown")
 async def shutdown_db_client():
     client.close()
-
-⚠️ ATTENTION : Copiez CE code (sans les numéros de ligne 1|, 2|, etc.) !
-
-Remplacez TOUT le contenu sur GitHub avec ce code propre ! 🚀
-Oct 30, 09:23 PM
-Agent is waiting...
