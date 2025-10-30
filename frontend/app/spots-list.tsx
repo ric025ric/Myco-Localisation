@@ -232,12 +232,20 @@ function SpotsListContent() {
           <Ionicons name="arrow-back" size={24} color="#4CAF50" />
         </TouchableOpacity>
         <Text style={styles.title}>{t('spotsList.title')}</Text>
-        <TouchableOpacity
-          style={styles.addButton}
-          onPress={() => router.push('/add-spot')}
-        >
-          <Ionicons name="add" size={24} color="#4CAF50" />
-        </TouchableOpacity>
+        <View style={styles.headerActions}>
+          <TouchableOpacity
+            style={styles.importButton}
+            onPress={() => router.push('/import-spots')}
+          >
+            <Ionicons name="cloud-download-outline" size={22} color="#4CAF50" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.addButton}
+            onPress={() => router.push('/add-spot')}
+          >
+            <Ionicons name="add" size={24} color="#4CAF50" />
+          </TouchableOpacity>
+        </View>
       </View>
 
       <View style={styles.statsBar}>
