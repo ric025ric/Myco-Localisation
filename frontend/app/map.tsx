@@ -33,6 +33,7 @@ function MapContent() {
   const [spots, setSpots] = useState<MushroomSpot[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [username, setUsername] = useState<string>('');
 
   useEffect(() => {
     loadData();
@@ -41,7 +42,11 @@ function MapContent() {
   const loadData = async () => {
     try {
       setLoading(true);
-      await fetchSpots();
+      const savedUsername = await AsyncStorage.getItem(USERNAME_STORAGE_KEY);
+      if (savedUsername) {
+        setUsername(savedUsername);
+        await fetchSpots(savedUsername);
+      }
     } catch (error) {
       console.error('Error loading data:', error);
       Alert.alert(t('common.error'), t('error.loadMap'));
@@ -50,9 +55,18 @@ function MapContent() {
     }
   };
 
-  const fetchSpots = async () => {
+  const fetchSpots = async (user?: string) => {
     try {
-      const response = await fetch(`${EXPO_PUBLIC_BACKEND_URL}/api/mushroom-spots`);
+      const userToFetch = user || username;
+      if (!userToFetch) {
+        console.warn('No username available to fetch spots');
+        setSpots([]);
+        return;
+      }
+
+      const response = await fetch(
+        `${EXPO_PUBLIC_BACKEND_URL}/api/mushroom-spots?created_by=${encodeURIComponent(userToFetch)}`
+      );
       
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
