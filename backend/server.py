@@ -1,6 +1,3 @@
-Parfait ! Je vais vous donner le fichier `server.py` complet et correct. Voici tout le contenu :
-Action: file_editor view /app/backend/server.py
-Observation: /app/backend/server.py:
 1|from fastapi import FastAPI, APIRouter, HTTPException, File, UploadFile
 2|from dotenv import load_dotenv
 3|from starlette.middleware.cors import CORSMiddleware
