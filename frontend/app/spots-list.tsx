@@ -311,6 +311,13 @@ const styles = StyleSheet.create({
   backButton: {
     padding: 8,
   },
+  headerActions: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  importButton: {
+    padding: 8,
+  },
   addButton: {
     padding: 8,
   },
