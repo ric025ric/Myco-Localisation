@@ -121,18 +121,33 @@ async def create_mushroom_spot(mushroom_spot: MushroomSpotCreate):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@api_router.get("/mushroom-spots", response_model=List[MushroomSpot])
-async def get_mushroom_spots():
-    """Get all mushroom spots"""
-    try:
-        spots = await db.mushroom_spots.find().sort("timestamp", -1).to_list(1000)
-        return [MushroomSpot(**spot) for spot in spots]
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+```python
 
-@api_router.get("/mushroom-spots/{spot_id}", response_model=MushroomSpot)
-async def get_mushroom_spot(spot_id: str):
-    """Get a specific mushroom spot by ID"""
+@api_router.get("/mushroom-spots", response_model=List[MushroomSpot])
+
+async def get_mushroom_spots(created_by: str = None):
+
+"""Get mushroom spots filtered by user"""
+
+try:
+
+# Filter by created_by if provided
+
+query = {}
+
+if created_by:
+
+query["created_by"] = created_by
+
+spots = await db.mushroom_spots.find(query).sort("timestamp", -1).to_list(1000)
+
+return [MushroomSpot(**spot) for spot in spots]
+
+except Exception as e:
+
+raise HTTPException(status_code=500, detail=str(e))
+
+```
     try:
         spot = await db.mushroom_spots.find_one({"id": spot_id})
         if not spot:
