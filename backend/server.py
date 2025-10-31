@@ -66,6 +66,8 @@ class MushroomLookalike(BaseModel):
     latin_name: str
     difference: str
     danger_level: str  # "mortel", "toxique", "non_comestible"
+    photo_url: Optional[str] = None
+    photo_base64: Optional[str] = None
 
 class MushroomInfo(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
