@@ -74,6 +74,46 @@ function AdminMushroomContent() {
     setLookalikes(updated);
   };
 
+  const pickLookalikePhoto = async (lookalikeIndex: number, useCamera: boolean) => {
+    try {
+      let result;
+
+      if (useCamera) {
+        const { status } = await ImagePicker.requestCameraPermissionsAsync();
+        if (status !== 'granted') {
+          Alert.alert(t('common.error'), 'Permission d\'accès à la caméra refusée');
+          return;
+        }
+        result = await ImagePicker.launchCameraAsync({
+          allowsEditing: true,
+          aspect: [4, 3],
+          quality: 0.3,
+          base64: true,
+        });
+      } else {
+        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== 'granted') {
+          Alert.alert(t('common.error'), 'Permission d\'accès à la galerie refusée');
+          return;
+        }
+        result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+          allowsEditing: true,
+          aspect: [4, 3],
+          quality: 0.3,
+          base64: true,
+        });
+      }
+
+      if (!result.canceled && result.assets[0].base64) {
+        updateLookalike(lookalikeIndex, 'photo_base64', result.assets[0].base64);
+      }
+    } catch (error) {
+      console.error('Error picking lookalike photo:', error);
+      Alert.alert(t('common.error'), 'Erreur lors de la sélection de l\'image');
+    }
+  };
+
   const pickImage = async () => {
     try {
       const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
