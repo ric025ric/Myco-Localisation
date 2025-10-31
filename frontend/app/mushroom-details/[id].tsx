@@ -308,6 +308,20 @@ function MushroomDetailsScreen() {
                   </View>
                 </View>
                 <Text style={styles.lookalikeLatinName}>{lookalike.latin_name}</Text>
+                
+                {/* Photo du sosie */}
+                {(lookalike.photo_base64 || lookalike.photo_url) && (
+                  <Image
+                    source={{ 
+                      uri: lookalike.photo_base64 
+                        ? `data:image/jpeg;base64,${lookalike.photo_base64}` 
+                        : lookalike.photo_url 
+                    }}
+                    style={styles.lookalikePhoto}
+                    resizeMode="cover"
+                  />
+                )}
+                
                 <Text style={styles.lookalikeDifference}>{lookalike.difference}</Text>
               </View>
             ))}
