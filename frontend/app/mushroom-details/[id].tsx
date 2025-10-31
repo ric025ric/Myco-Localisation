@@ -513,6 +513,13 @@ const styles = StyleSheet.create({
     color: '#999',
     marginBottom: 8,
   },
+  lookalikePhoto: {
+    width: '100%',
+    height: 150,
+    borderRadius: 8,
+    marginVertical: 12,
+    backgroundColor: '#1a1a1a',
+  },
   lookalikeDifference: {
     fontSize: 14,
     color: '#ccc',
