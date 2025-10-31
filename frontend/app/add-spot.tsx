@@ -17,7 +17,9 @@ import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import NetInfo from '@react-native-community/netinfo';
 import { LanguageProvider, useLanguage } from '../contexts/LanguageContext';
+import { SyncService } from '../services/SyncService';
 
 // Platform-specific imports
 let Location: any = null;
