@@ -302,32 +302,71 @@ function AddSpotScreen() {
         spotData.photo_base64 = photo;
       }
 
-      const response = await fetch(`${EXPO_PUBLIC_BACKEND_URL}/api/mushroom-spots`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(spotData),
-      });
+      // Vérifier la connexion réseau
+      const isOnline = await SyncService.isNetworkAvailable();
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      if (isOnline) {
+        // Mode ONLINE : Envoi direct au serveur
+        console.log('📡 Network available, saving online...');
+        
+        try {
+          const response = await fetch(`${EXPO_PUBLIC_BACKEND_URL}/api/mushroom-spots`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(spotData),
+            signal: AbortSignal.timeout(10000), // 10s timeout
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          const result = await response.json();
+          console.log('✅ Spot saved online:', result);
+
+          Alert.alert(
+            '✅ ' + t('addSpot.success'),
+            t('addSpot.successMessage'),
+            [{ text: t('common.ok'), onPress: () => router.back() }]
+          );
+        } catch (networkError) {
+          // Échec de l'envoi en ligne -> basculer en mode offline
+          console.warn('⚠️ Online save failed, falling back to offline mode:', networkError);
+          await saveOffline(spotData);
+        }
+      } else {
+        // Mode OFFLINE : Sauvegarde locale
+        await saveOffline(spotData);
       }
-
-      const result = await response.json();
-      console.log('Spot saved:', result);
-
-      Alert.alert(
-        t('addSpot.success'),
-        t('addSpot.successMessage'),
-        [{ text: t('common.ok'), onPress: () => router.back() }]
-      );
     } catch (error) {
       console.error('Error saving spot:', error);
       Alert.alert(t('common.error'), t('error.saveSpot'));
     } finally {
       setLoading(false);
     }
+  };
+
+  const saveOffline = async (spotData: MushroomSpot) => {
+    console.log('💾 Saving offline...');
+    
+    await SyncService.addPendingSpot({
+      latitude: spotData.latitude,
+      longitude: spotData.longitude,
+      mushroom_type: spotData.mushroom_type,
+      notes: spotData.notes,
+      photo_base64: spotData.photo_base64 || null,
+      created_by: spotData.created_by || username,
+    });
+
+    const pendingCount = await SyncService.getPendingSpotsCount();
+
+    Alert.alert(
+      '💾 Spot enregistré localement',
+      `Le spot sera synchronisé automatiquement quand vous aurez du réseau.\n\n📦 ${pendingCount} spot(s) en attente de synchronisation.`,
+      [{ text: t('common.ok'), onPress: () => router.back() }]
+    );
   };
 
   if (gettingLocation) {
