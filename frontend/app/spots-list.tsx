@@ -97,10 +97,44 @@ function SpotsListContent() {
     setRefreshing(true);
     try {
       await fetchSpots();
+      await loadPendingCount();
     } catch (error) {
       console.error('Error refreshing:', error);
     } finally {
       setRefreshing(false);
+    }
+  };
+
+  const handleSync = async () => {
+    if (pendingCount === 0) {
+      Alert.alert('ℹ️ Info', 'Aucun spot à synchroniser');
+      return;
+    }
+
+    setSyncing(true);
+    try {
+      const result = await SyncService.syncAllPendingSpots();
+      
+      if (result.total === 0) {
+        Alert.alert('ℹ️ Info', 'Aucun spot à synchroniser');
+      } else {
+        Alert.alert(
+          '✅ Synchronisation terminée',
+          `${result.synced} spot(s) synchronisé(s)\n${result.failed > 0 ? `${result.failed} échec(s)` : ''}`,
+          [{ 
+            text: 'OK', 
+            onPress: async () => {
+              await loadPendingCount();
+              await onRefresh();
+            }
+          }]
+        );
+      }
+    } catch (error) {
+      console.error('Sync error:', error);
+      Alert.alert('❌ Erreur', 'Échec de la synchronisation');
+    } finally {
+      setSyncing(false);
     }
   };
 
