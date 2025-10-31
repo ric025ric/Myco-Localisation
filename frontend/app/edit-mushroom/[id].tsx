@@ -508,6 +508,42 @@ function EditMushroomContent() {
                     </TouchableOpacity>
                   ))}
                 </View>
+
+                {/* Photo du sosie */}
+                <Text style={[styles.label, styles.inputSpacing]}>Photo du sosie (optionnel)</Text>
+                {lookalike.photo_base64 ? (
+                  <View>
+                    <Image
+                      source={{ uri: `data:image/jpeg;base64,${lookalike.photo_base64}` }}
+                      style={styles.lookalikePhotoPreview}
+                      resizeMode="cover"
+                    />
+                    <TouchableOpacity
+                      style={styles.removePhotoButton}
+                      onPress={() => updateLookalike(index, 'photo_base64', null)}
+                    >
+                      <Ionicons name="close-circle" size={20} color="#f44336" />
+                      <Text style={styles.removePhotoText}>Retirer la photo</Text>
+                    </TouchableOpacity>
+                  </View>
+                ) : (
+                  <View style={styles.photoOptions}>
+                    <TouchableOpacity
+                      style={styles.photoOptionButton}
+                      onPress={() => pickLookalikePhoto(index, true)}
+                    >
+                      <Ionicons name="camera" size={20} color="#4CAF50" />
+                      <Text style={styles.photoOptionText}>{t('admin.takePhoto')}</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.photoOptionButton}
+                      onPress={() => pickLookalikePhoto(index, false)}
+                    >
+                      <Ionicons name="images" size={20} color="#4CAF50" />
+                      <Text style={styles.photoOptionText}>{t('admin.selectFromGallery')}</Text>
+                    </TouchableOpacity>
+                  </View>
+                )}
               </View>
             ))}
           </View>
