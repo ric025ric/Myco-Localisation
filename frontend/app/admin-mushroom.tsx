@@ -770,11 +770,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#3a3a3a',
   },
   removePhotoButton: {
-    position: 'absolute',
-    top: -8,
-    right: -8,
-    backgroundColor: '#1a1a1a',
-    borderRadius: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 8,
+    marginTop: 8,
   },
   noPhotosText: {
     color: '#999',
