@@ -376,6 +376,28 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 8,
   },
+  syncButton: {
+    padding: 8,
+    position: 'relative',
+  },
+  badge: {
+    position: 'absolute',
+    top: 2,
+    right: 2,
+    backgroundColor: '#FF9800',
+    borderRadius: 10,
+    minWidth: 18,
+    height: 18,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: '#1a1a1a',
+  },
+  badgeText: {
+    color: '#fff',
+    fontSize: 10,
+    fontWeight: 'bold',
+  },
   importButton: {
     padding: 8,
   },
