@@ -37,10 +37,18 @@ function SpotsListContent() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [username, setUsername] = useState<string>('');
+  const [pendingCount, setPendingCount] = useState(0);
+  const [syncing, setSyncing] = useState(false);
 
   useEffect(() => {
     loadUsernameAndFetchSpots();
+    loadPendingCount();
   }, []);
+
+  const loadPendingCount = async () => {
+    const count = await SyncService.getPendingSpotsCount();
+    setPendingCount(count);
+  };
 
   const loadUsernameAndFetchSpots = async () => {
     try {
