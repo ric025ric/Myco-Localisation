@@ -276,6 +276,24 @@ function SpotsListContent() {
         </TouchableOpacity>
         <Text style={styles.title}>{t('spotsList.title')}</Text>
         <View style={styles.headerActions}>
+          {pendingCount > 0 && (
+            <TouchableOpacity
+              style={styles.syncButton}
+              onPress={handleSync}
+              disabled={syncing}
+            >
+              {syncing ? (
+                <ActivityIndicator size="small" color="#4CAF50" />
+              ) : (
+                <>
+                  <Ionicons name="sync" size={22} color="#4CAF50" />
+                  <View style={styles.badge}>
+                    <Text style={styles.badgeText}>{pendingCount}</Text>
+                  </View>
+                </>
+              )}
+            </TouchableOpacity>
+          )}
           <TouchableOpacity
             style={styles.importButton}
             onPress={() => router.push('/import-spots')}
