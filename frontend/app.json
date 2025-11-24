@@ -2,7 +2,7 @@
   "expo": {
     "name": "Myco Localisation",
     "slug": "myco-localisation",
-    "version": "1.8.0",
+    "version": "1.8.1",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "mushroom-finder",
@@ -17,7 +17,7 @@
     },
     "android": {
       "package": "com.skyrico.mycolocalisation",
-      "versionCode": 29,
+      "versionCode": 30,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#4CAF50"
