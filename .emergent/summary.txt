@@ -1,91 +1,108 @@
 <analysis>
-The AI engineer systematically developed the Myco Localisation app, initially focusing on a GPS mushroom finder. Key work involved backend deployment on Render.com, addressing Android APK build errors, and implementing UX improvements like multi-language support and app icon adjustments. Significant effort went into developing new features: user registration, an emergency SOS, and a spot sharing mechanism. The primary focus of the provided trajectory was the Mushroom Database feature. The AI iteratively built out the backend API for mushrooms, frontend screens for listing, searching, and viewing mushroom details, and an admin interface for adding, editing, and deleting mushrooms with PIN protection. Persistent challenges included fixing backend URL misconfigurations for native builds, managing cold start issues with Render.com, and resolving Gradle build failures caused by external dependencies. The engineer also debugged image display issues, identifying the need to re-upload photos as base64 to the correct MongoDB Atlas instance and ensuring the Render backend was properly updated via GitHub.
+The user's primary language is French. The next agent must respond in French.
+
+This trajectory documents an extensive development cycle for the Myco Localisation app. The AI engineer addressed a wide range of user requests, demonstrating a full-stack development process.
+
+The work began by finalizing the Edit Mushroom feature, which involved adding PIN protection to the edit button, verifying the backend  endpoint, and running backend tests. A user-reported issue about a 30-second timeout on the mushroom guide screen was addressed by improving the loading message to handle Render.com's cold start delays. Frontend tests revealed issues with a welcome modal and missing translations, which were promptly fixed.
+
+The engineer then guided the user through the Google Play Store submission process, explaining how to handle internal test versions, answering the data safety questionnaire, and generating promotional screenshots and a high-resolution app icon. A critical  error blocking a new release was diagnosed and resolved by incrementing the version in  and rebuilding.
+
+Subsequent user feedback drove major feature development:
+1.  **GPS Accuracy:** Improved by changing  settings from  to .
+2.  **Data Privacy:** A critical flaw where all user spots were public was fixed by modifying the backend to filter spots by a  field and updating the frontend to send the username.
+3.  **KML/KMZ Import:** A feature to import spots from Google Maps was implemented by adding new screens and file parsing logic.
+4.  **Offline Mode:** An offline-first architecture was introduced using  and  to save spots locally and sync later.
+5.  **Secure User ID:** A major security flaw (users identified by a simple pseudo) was addressed by starting the implementation of a persistent, device-unique UUID system with import/export functionality to prevent data loss on re-installation.
+
+The work concluded mid-implementation of this UUID system.
 </analysis>
 
 <product_requirements>
-The user requested an Android app, Myco Localisation, to save GPS-tagged mushroom spots with details (type, notes, photos) and view them on a map/list. Core features include multi-language (FR/EN), Localiser ma Voiture (parking spot saving), and UI enhancements like a dark forest background and a 2x2 grid navigation. User profiles capture a pseudo, displayed with spots. Spot sharing (coordinates, Google Maps link) and emergency SOS were added. UI refinements were requested for the home and settings screens. A significant new feature is a Mushroom Database for searchable mushroom descriptions and photos without AI. Performance optimizations for location and photo uploads were also requested. The app is intended for internal beta testing via Play Store, requiring AAB builds.
+The Myco Localisation application is an Android app for mushroom foragers. Its primary function is to allow users to save GPS locations of mushroom spots, including details like mushroom type, notes, and photos. Users can view their saved spots on a list or a map.
+
+**Key Features Implemented:**
+-   **Spot Management:** Create, view, update, and delete GPS-tagged mushroom spots.
+-   **Mushroom Guide:** A searchable, admin-manageable database of mushrooms with details, photos, and lookalikes.
+-   **Admin Panel:** PIN-protected screens for adding, editing, and deleting mushroom entries in the guide.
+-   **Multi-language Support:** French and English.
+-   **Offline Mode:** Users can save new spots without an internet connection. These spots are stored locally and can be synchronized with the server later.
+-   **KML Import:** Users can import spots from a KML/KMZ file exported from Google My Maps.
+-   **Enhanced GPS Accuracy:** Location requests are set to high accuracy for precise spot marking.
+
+**Current Problem & Security Enhancement:**
+The app initially identified users by a self-reported pseudo, creating a major privacy and security issue: any user could enter another's pseudo and access their spots. The current development effort focuses on replacing this with a persistent, device-unique ID (UUID) to ensure each user's data is private and secure. To prevent data loss upon app re-installation, an import/export feature for this user ID is also being developed.
 </product_requirements>
 
 <key_technical_concepts>
-- **Expo & React Native:** Cross-platform mobile app development.
-- **Expo Router:** File-based navigation for screens.
-- **FastAPI & MongoDB:** Backend API and NoSQL database.
-- ** & :** Location and mapping services.
-- **Base64 Encoding:** For image storage in the database.
-- ** & :** Multi-language support.
-- **:** Local persistent storage for app data.
-- **EAS Build:** Expo Application Services for native Android builds (APK, AAB).
-- **Render.com:** Cloud platform for backend API deployment.
+- **Full-Stack:** Expo (React Native) frontend, FastAPI (Python) backend.
+- **Database:** MongoDB (via Motor for async operations).
+- **Navigation:** Expo Router (file-based).
+- **State & UI:** React Hooks,  for localization.
+- **Offline Storage:**  for queueing unsynchronized data.
+- **Device Features:**  (high accuracy), , , .
+- **Deployment & Build:** Render.com for backend hosting, EAS Build for creating APK and AAB files.
+- **Authentication/Security:** A custom, device-specific UUID system is being implemented to replace a non-secure pseudo-based identification.
 </key_technical_concepts>
 
 <code_architecture>
+The application follows a standard monorepo structure with distinct  and  directories.
+
 **Directory Structure:**
 
 
-**Key Files and Modifications:**
+**Key File Analysis:**
 
 -   ****:
-    -   **Importance:** FastAPI backend defining data models and API endpoints.
-    -   **Changes:**
-        -    and  models were enhanced with  for base64 image storage.
-        -   New endpoints:  (add),  (all),  (search),  (details),  (delete), and  (edit).
+    -   **Importance:** Defines all API endpoints and data models for the application.
+    -   **Summary of Changes:** Major changes were made to enforce data privacy. The  GET endpoint was modified to accept a  query parameter, filtering spots by user. Later, a more complex security model was started, intending to switch from a  (pseudo) to a  (UUID) field. The  model was also updated to include optional  fields.
+
 -   ****:
-    -   **Importance:** Manages application-wide internationalization.
-    -   **Changes:** Added new French and English translations for mushroom guide features (, , , , , , etc.).
+    -   **Importance:** The screen for creating a new mushroom spot.
+    -   **Summary of Changes:** This file was heavily modified. First, the  request was updated to use  for higher precision. Later, it was refactored for offline functionality. Instead of directly calling the API, it now saves the spot data to a local queue via  if the device is offline or the API call fails.
+
 -   ****:
-    -   **Importance:** The main home screen.
-    -   **Changes:** A new button Guide des Champignons was added to the 2x2 grid, linking to the mushroom guide.
--   ** (New/Modified)**:
-    -   **Importance:** Displays a searchable list of mushrooms.
-    -   **Changes:**
-        -   Initial creation for displaying and searching mushrooms.
-        -   Integrated API calls to fetch mushrooms.
-        -   Header updated to include a + button to navigate to the admin screen, protected by .
-        -   Error handling and loading states improved, including an increased timeout and a server starting message to address Render.com cold starts.
-        -   Translation keys updated from  to .
--   ** (New/Modified)**:
-    -   **Importance:** Shows detailed information for a selected mushroom.
-    -   **Changes:**
-        -   Initial creation to display mushroom attributes.
-        -   Modified to display  images.
-        -   Added a Delete button (trashcan icon) in the header, protected by  and linked to the  API.
-        -   Added an Edit button (pencil icon) in the header, also protected by , to navigate to the edit screen.
+    -   **Importance:** Displays the list of all saved mushroom spots.
+    -   **Summary of Changes:** Updated to pass the user's identifier to the  function to support private, user-specific data. It was then significantly enhanced to support offline mode, adding a Sync button and a badge showing the count of pending spots. Logic was added to handle the manual synchronization process via .
+
+-   ****:
+    -   **Importance:** The main entry point and home screen of the app.
+    -   **Summary of Changes:** The logic in  is being refactored to incorporate the new . It will check for an existing UUID, manage the visibility of the , and handle the new user/account restoration flow.
+
+-   ****:
+    -   **Importance:** The first-run modal that prompts the user for a pseudo.
+    -   **Summary of Changes:** This component is being modified to support the new secure user ID system. It will offer two paths for a new user: Create New Account (which generates a UUID) and Restore Account (which uses the import functionality from ).
+
 -   ** (New)**:
-    -   **Importance:** Screen for administrators to add new mushroom entries.
-    -   **Changes:** Created a form for inputting mushroom details (name, description, comestibility, season, habitat, lookalikes). Integrated  to add  from camera or gallery and sends them to .
+    -   **Importance:** A new service to manage user identity securely.
+    -   **Summary of Changes:** Created to handle the generation, storage, import, and export of a persistent, device-unique user ID (UUID). This service centralizes user identity logic, abstracting it away from the UI components. It uses , , and .
+
 -   ** (New)**:
-    -   **Importance:** Screen for administrators to edit existing mushroom entries.
-    -   **Changes:** Created to load existing mushroom data and allow modifications, then submit changes using . (Based on , but pre-populates fields).
--   ** (New)**:
-    -   **Importance:** Reusable modal component for PIN-based access control.
-    -   **Changes:** Created to prompt for a 6-digit PIN () to secure admin features (add, edit, delete mushrooms).
--   ****:
-    -   **Importance:** EAS Build configuration for native builds.
-    -   **Changes:** Updated the  profile to include  pointing to  to ensure correct backend communication for native builds. A  profile for AAB builds also exists and was confirmed to have the correct URL.
--   ****:
-    -   **Importance:** Expo project metadata and configuration.
-    -   **Changes:**  and  incremented multiple times throughout the trajectory to , , , , , , .
--   ****:
-    -   **Importance:** Render.com deployment configuration.
-    -   **Changes:**  was , requiring manual redeployments to update the backend service.
+    -   **Importance:** Manages the offline spot queue.
+    -   **Summary of Changes:** Created to handle saving spots to  when offline and synchronizing them with the backend when a connection is available. It provides functions to add spots to the queue, retrieve the queue, and clear it upon successful synchronization.
 </code_architecture>
 
 <pending_tasks>
-- Finalize and integrate the Edit Mushroom screen () fully, including pre-populating data and submitting updates via the PUT API.
-- Re-evaluate performance optimizations (loading indicators, data caching) which were temporarily deprioritized.
-- Address the Render.com cold start issue by either implementing a more robust frontend retry mechanism with a longer timeout or recommending a paid Render plan.
+- Complete the implementation of the secure UUID-based user identification system.
+- Finalize the UI in  to include Import Account functionality.
+- Implement the Export Account and Import Account UI and logic within the  screen.
+- Fully replace the  (pseudo) logic with  (UUID) across the entire application (frontend API calls and backend models/endpoints).
+- Create a new build (v1.8.1) incorporating the UUID security fix and the offline mode features.
 </pending_tasks>
 
 <current_work>
-The AI engineer is currently addressing two main issues:
-1.  **Backend Deployment and Data Consistency**: The Render.com backend was not consistently updated with the latest code, specifically missing  in mushroom data and the  endpoint for editing. This was resolved by providing the user with an updated  file to manually push to GitHub and trigger a Render.com deployment. The user confirmed that newly added mushrooms with photos now display correctly. However, old mushrooms still lack photos as they were added before  was implemented.
-2.  **Frontend Functionality**:
-    *   **Edit Mushroom Feature**: The Edit button (pencil icon) has been added to the  screen, which should navigate to the new  screen. The  screen itself has been created.
-    *   **Initial Load Issue**: The Guide des Champignons screen was getting stuck in a continuous loading state or showing Aucun champignon trouvé () initially. This was identified as a cold start issue with the free Render.com tier causing backend delays. A partial fix involved increasing the frontend timeout in  to 30 seconds and adding a user-friendly Le serveur démarre, veuillez patienter... message. The trajectory ends with this partial fix being implemented.
+The AI engineer was in the middle of implementing a critical security feature to replace the insecure pseudo-based user identification with a persistent, device-unique ID (UUID), combined with an import/export function to prevent data loss.
 
-The user has confirmed that adding new mushrooms with photos works, and the list of mushrooms now appears (after the cold start delay), but editing is not yet functional, and old mushrooms still don't show photos.
+**State of Implementation:**
+1.  **Dependencies Installed:**  and  were added to  to support the import/export functionality.
+2.  **Service Layer Created:** A new file, , was created to encapsulate all logic related to UUID generation, storage in , and the import/export of the user's identity file. Another service, , was created for the offline feature.
+3.  **Core Logic Refactoring (In-Progress):**
+    -   ****: The main app initialization logic () was being modified to use  to check if a user UUID already exists or if the  needs to be shown for a new user.
+    -   ****: This component was being updated to present two options to the user on first launch: Create a new account or Restore an account from a file.
+
+**Last Action:**
+The last concrete action taken by the AI engineer was editing  (Message 518) to add the UI for the new Import Account button. The next logical step was to add the corresponding styles and wire up the functionality. The entire feature is partially implemented and not yet functional.
 </current_work>
 
 <optional_next_step>
-Finalize the implementation of the Edit Mushroom screen in  to load and save existing mushroom data.
+Continue implementing the UUID feature by adding the necessary styles for the new buttons in  and connecting their  handlers to the functions defined in .
 </optional_next_step>
