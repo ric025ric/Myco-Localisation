@@ -13,828 +13,357 @@ import base64
 # Backend URL from frontend environment
 BACKEND_URL = "https://mushroom-locator.preview.emergentagent.com/api"
 
-# Test data as specified in the review request
-TEST_MUSHROOM_DATA = [
-    {
-        "latitude": 48.8566,
-        "longitude": 2.3522,
-        "mushroom_type": "Test Champignon",
-        "notes": "Test depuis Render",
-        "photo_base64": None
-    },
-    {
-        "latitude": 47.6100,
-        "longitude": -122.3350,
-        "mushroom_type": "Porcini",
-        "notes": "Large cluster",
-        "photo_base64": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="
-    },
-    {
-        "latitude": 47.6080,
-        "longitude": -122.3300,
-        "mushroom_type": "Oyster Mushroom",
-        "notes": "Growing on fallen log",
-        "photo_base64": None  # Test without photo
-    }
-]
-
-class MushroomAPITester:
+class BackendTester:
     def __init__(self):
-        self.created_spot_ids = []
-        self.created_mushroom_id = None
-        self.test_results = {
-            "passed": 0,
-            "failed": 0,
-            "errors": []
-        }
-
-    def log_result(self, test_name, success, message="", response=None):
+        self.test_results = []
+        self.created_spots = []  # Track created spots for cleanup
+        
+    def log_test(self, test_name, success, details=""):
         """Log test results"""
         status = "✅ PASS" if success else "❌ FAIL"
+        self.test_results.append({
+            "test": test_name,
+            "status": status,
+            "success": success,
+            "details": details
+        })
         print(f"{status}: {test_name}")
-        if message:
-            print(f"   {message}")
-        if response and not success:
-            print(f"   Response: {response.status_code} - {response.text[:200]}")
-        
-        if success:
-            self.test_results["passed"] += 1
-        else:
-            self.test_results["failed"] += 1
-            self.test_results["errors"].append(f"{test_name}: {message}")
-        print()
-
-    def test_api_health_check(self):
-        """Test 1: Basic API health check - GET /api/"""
+        if details:
+            print(f"   Details: {details}")
+    
+    def test_api_health(self):
+        """Test API health check"""
         try:
-            response = requests.get(f"{BASE_URL}/", timeout=10)
-            
-            if response.status_code == 200:
-                data = response.json()
-                if "message" in data and "Mushroom Finder API" in data["message"]:
-                    self.log_result("API Health Check", True, f"API is responding correctly: {data['message']}")
-                    return True
-                else:
-                    self.log_result("API Health Check", False, f"Unexpected response format: {data}")
-                    return False
-            else:
-                self.log_result("API Health Check", False, f"HTTP {response.status_code}", response)
-                return False
-                
-        except Exception as e:
-            self.log_result("API Health Check", False, f"Connection error: {str(e)}")
-            return False
-
-    def test_create_mushroom_spot(self, test_data):
-        """Test 2: Create mushroom spot - POST /api/mushroom-spots"""
-        try:
-            response = requests.post(
-                f"{BASE_URL}/mushroom-spots",
-                json=test_data,
-                headers={"Content-Type": "application/json"},
-                timeout=10
-            )
-            
-            if response.status_code == 200:
-                data = response.json()
-                required_fields = ["id", "latitude", "longitude", "mushroom_type", "timestamp"]
-                
-                if all(field in data for field in required_fields):
-                    # Verify data matches input
-                    if (data["latitude"] == test_data["latitude"] and 
-                        data["longitude"] == test_data["longitude"] and
-                        data["mushroom_type"] == test_data["mushroom_type"]):
-                        
-                        self.created_spot_ids.append(data["id"])
-                        self.log_result("Create Mushroom Spot", True, 
-                                      f"Created spot with ID: {data['id']}, Type: {data['mushroom_type']}")
-                        return data["id"]
-                    else:
-                        self.log_result("Create Mushroom Spot", False, "Data mismatch in response")
-                        return None
-                else:
-                    self.log_result("Create Mushroom Spot", False, f"Missing required fields in response: {data}")
-                    return None
-            else:
-                self.log_result("Create Mushroom Spot", False, f"HTTP {response.status_code}", response)
-                return None
-                
-        except Exception as e:
-            self.log_result("Create Mushroom Spot", False, f"Request error: {str(e)}")
-            return None
-
-    def test_get_all_mushroom_spots(self):
-        """Test 3: Get all mushroom spots - GET /api/mushroom-spots"""
-        try:
-            response = requests.get(f"{BASE_URL}/mushroom-spots", timeout=10)
-            
-            if response.status_code == 200:
-                data = response.json()
-                if isinstance(data, list):
-                    self.log_result("Get All Mushroom Spots", True, 
-                                  f"Retrieved {len(data)} mushroom spots")
-                    return data
-                else:
-                    self.log_result("Get All Mushroom Spots", False, "Response is not a list")
-                    return None
-            else:
-                self.log_result("Get All Mushroom Spots", False, f"HTTP {response.status_code}", response)
-                return None
-                
-        except Exception as e:
-            self.log_result("Get All Mushroom Spots", False, f"Request error: {str(e)}")
-            return None
-
-    def test_get_specific_mushroom_spot(self, spot_id):
-        """Test 4: Get specific mushroom spot - GET /api/mushroom-spots/{spot_id}"""
-        try:
-            response = requests.get(f"{BASE_URL}/mushroom-spots/{spot_id}", timeout=10)
-            
-            if response.status_code == 200:
-                data = response.json()
-                if data.get("id") == spot_id:
-                    self.log_result("Get Specific Mushroom Spot", True, 
-                                  f"Retrieved spot: {data['mushroom_type']} at ({data['latitude']}, {data['longitude']})")
-                    return data
-                else:
-                    self.log_result("Get Specific Mushroom Spot", False, "ID mismatch in response")
-                    return None
-            elif response.status_code == 404:
-                self.log_result("Get Specific Mushroom Spot", False, "Spot not found (404)")
-                return None
-            else:
-                self.log_result("Get Specific Mushroom Spot", False, f"HTTP {response.status_code}", response)
-                return None
-                
-        except Exception as e:
-            self.log_result("Get Specific Mushroom Spot", False, f"Request error: {str(e)}")
-            return None
-
-    def test_update_mushroom_spot(self, spot_id):
-        """Test 5: Update mushroom spot - PUT /api/mushroom-spots/{spot_id}"""
-        try:
-            update_data = {
-                "mushroom_type": "Updated Chanterelle",
-                "notes": "Updated notes - found in different location"
-            }
-            
-            response = requests.put(
-                f"{BASE_URL}/mushroom-spots/{spot_id}",
-                json=update_data,
-                headers={"Content-Type": "application/json"},
-                timeout=10
-            )
-            
-            if response.status_code == 200:
-                data = response.json()
-                if (data.get("mushroom_type") == update_data["mushroom_type"] and 
-                    data.get("notes") == update_data["notes"]):
-                    self.log_result("Update Mushroom Spot", True, 
-                                  f"Updated spot successfully: {data['mushroom_type']}")
-                    return data
-                else:
-                    self.log_result("Update Mushroom Spot", False, "Update data not reflected in response")
-                    return None
-            elif response.status_code == 404:
-                self.log_result("Update Mushroom Spot", False, "Spot not found for update (404)")
-                return None
-            else:
-                self.log_result("Update Mushroom Spot", False, f"HTTP {response.status_code}", response)
-                return None
-                
-        except Exception as e:
-            self.log_result("Update Mushroom Spot", False, f"Request error: {str(e)}")
-            return None
-
-    def test_nearby_mushroom_spots(self, latitude, longitude):
-        """Test 6: Get nearby mushroom spots - GET /api/mushroom-spots/nearby/{lat}/{lon}"""
-        try:
-            response = requests.get(
-                f"{BASE_URL}/mushroom-spots/nearby/{latitude}/{longitude}",
-                timeout=10
-            )
-            
-            if response.status_code == 200:
-                data = response.json()
-                if isinstance(data, list):
-                    self.log_result("Get Nearby Mushroom Spots", True, 
-                                  f"Found {len(data)} nearby spots within default radius")
-                    return data
-                else:
-                    self.log_result("Get Nearby Mushroom Spots", False, "Response is not a list")
-                    return None
-            else:
-                self.log_result("Get Nearby Mushroom Spots", False, f"HTTP {response.status_code}", response)
-                return None
-                
-        except Exception as e:
-            self.log_result("Get Nearby Mushroom Spots", False, f"Request error: {str(e)}")
-            return None
-
-    def test_delete_mushroom_spot(self, spot_id):
-        """Test 7: Delete mushroom spot - DELETE /api/mushroom-spots/{spot_id}"""
-        try:
-            response = requests.delete(f"{BASE_URL}/mushroom-spots/{spot_id}", timeout=10)
-            
-            if response.status_code == 200:
-                data = response.json()
-                if "message" in data and "deleted" in data["message"].lower():
-                    self.log_result("Delete Mushroom Spot", True, f"Deleted spot successfully: {data['message']}")
-                    return True
-                else:
-                    self.log_result("Delete Mushroom Spot", False, f"Unexpected delete response: {data}")
-                    return False
-            elif response.status_code == 404:
-                self.log_result("Delete Mushroom Spot", False, "Spot not found for deletion (404)")
-                return False
-            else:
-                self.log_result("Delete Mushroom Spot", False, f"HTTP {response.status_code}", response)
-                return False
-                
-        except Exception as e:
-            self.log_result("Delete Mushroom Spot", False, f"Request error: {str(e)}")
-            return False
-
-    def test_error_handling(self):
-        """Test 8: Error handling for non-existent resources"""
-        fake_id = "non-existent-id-12345"
-        
-        # Test GET non-existent spot
-        try:
-            response = requests.get(f"{BASE_URL}/mushroom-spots/{fake_id}", timeout=10)
-            if response.status_code == 404:
-                self.log_result("Error Handling - GET Non-existent", True, "Correctly returned 404 for non-existent spot")
-            else:
-                self.log_result("Error Handling - GET Non-existent", False, f"Expected 404, got {response.status_code}")
-        except Exception as e:
-            self.log_result("Error Handling - GET Non-existent", False, f"Request error: {str(e)}")
-
-        # Test DELETE non-existent spot
-        try:
-            response = requests.delete(f"{BASE_URL}/mushroom-spots/{fake_id}", timeout=10)
-            if response.status_code == 404:
-                self.log_result("Error Handling - DELETE Non-existent", True, "Correctly returned 404 for non-existent spot")
-            else:
-                self.log_result("Error Handling - DELETE Non-existent", False, f"Expected 404, got {response.status_code}")
-        except Exception as e:
-            self.log_result("Error Handling - DELETE Non-existent", False, f"Request error: {str(e)}")
-
-    # NEW MUSHROOM DATABASE TESTING METHODS
-    def test_get_all_mushrooms(self):
-        """Test: GET /api/mushrooms - Get all mushrooms"""
-        try:
-            response = requests.get(f"{BASE_URL}/mushrooms", timeout=10)
-            if response.status_code == 200:
-                mushrooms = response.json()
-                if isinstance(mushrooms, list):
-                    self.log_result("GET All Mushrooms", True, 
-                                  f"Retrieved {len(mushrooms)} mushrooms from database")
-                    return mushrooms
-                else:
-                    self.log_result("GET All Mushrooms", False, f"Expected list, got {type(mushrooms)}")
-                    return None
-            else:
-                self.log_result("GET All Mushrooms", False, f"HTTP {response.status_code}", response)
-                return None
-        except Exception as e:
-            self.log_result("GET All Mushrooms", False, f"Request error: {str(e)}")
-            return None
-
-    def test_search_mushrooms(self, search_term):
-        """Test: GET /api/mushrooms?search=term - Search mushrooms"""
-        try:
-            response = requests.get(f"{BASE_URL}/mushrooms?search={search_term}", timeout=10)
-            if response.status_code == 200:
-                mushrooms = response.json()
-                if isinstance(mushrooms, list):
-                    self.log_result(f"Search Mushrooms - '{search_term}'", True, 
-                                  f"Search returned {len(mushrooms)} results")
-                    return mushrooms
-                else:
-                    self.log_result(f"Search Mushrooms - '{search_term}'", False, f"Expected list, got {type(mushrooms)}")
-                    return None
-            else:
-                self.log_result(f"Search Mushrooms - '{search_term}'", False, f"HTTP {response.status_code}", response)
-                return None
-        except Exception as e:
-            self.log_result(f"Search Mushrooms - '{search_term}'", False, f"Request error: {str(e)}")
-            return None
-
-    def test_create_mushroom(self):
-        """Test: POST /api/mushrooms - Create new mushroom entry"""
-        test_mushroom_data = {
-            "common_name": "Cèpe de Bordeaux",
-            "latin_name": "Boletus edulis",
-            "edibility": "comestible",
-            "season": "Été-Automne",
-            "description": "Le cèpe de Bordeaux est un champignon très apprécié en cuisine. Son chapeau est brun et son pied est massif et blanc.",
-            "characteristics": [
-                "Chapeau brun foncé",
-                "Pied blanc et massif",
-                "Chair blanche et ferme",
-                "Tubes blancs puis jaune-vert"
-            ],
-            "habitat": "Forêts de feuillus et de conifères, particulièrement sous les chênes",
-            "lookalikes": [
-                {
-                    "name": "Bolet amer",
-                    "latin_name": "Tylopilus felleus",
-                    "difference": "Chair très amère, pores roses",
-                    "danger_level": "non_comestible"
-                }
-            ],
-            "photo_urls": [
-                "https://example.com/cepe1.jpg",
-                "https://example.com/cepe2.jpg"
-            ]
-        }
-        
-        try:
-            response = requests.post(
-                f"{BASE_URL}/mushrooms",
-                json=test_mushroom_data,
-                headers={"Content-Type": "application/json"},
-                timeout=10
-            )
-            
-            if response.status_code == 200:
-                created_mushroom = response.json()
-                required_fields = ["id", "common_name", "latin_name", "edibility", "season"]
-                
-                if all(field in created_mushroom for field in required_fields):
-                    if created_mushroom["common_name"] == test_mushroom_data["common_name"]:
-                        self.created_mushroom_id = created_mushroom["id"]
-                        self.log_result("Create Mushroom", True, 
-                                      f"Created mushroom with ID: {self.created_mushroom_id}")
-                        return created_mushroom["id"]
-                    else:
-                        self.log_result("Create Mushroom", False, "Data mismatch in response")
-                        return None
-                else:
-                    self.log_result("Create Mushroom", False, f"Missing required fields in response")
-                    return None
-            else:
-                self.log_result("Create Mushroom", False, f"HTTP {response.status_code}", response)
-                return None
-        except Exception as e:
-            self.log_result("Create Mushroom", False, f"Request error: {str(e)}")
-            return None
-
-    def test_get_specific_mushroom(self, mushroom_id):
-        """Test: GET /api/mushrooms/{mushroom_id} - Get specific mushroom"""
-        try:
-            response = requests.get(f"{BASE_URL}/mushrooms/{mushroom_id}", timeout=10)
-            
-            if response.status_code == 200:
-                mushroom = response.json()
-                if mushroom.get("id") == mushroom_id:
-                    self.log_result("Get Specific Mushroom", True, 
-                                  f"Retrieved mushroom: {mushroom['common_name']} ({mushroom['latin_name']})")
-                    return mushroom
-                else:
-                    self.log_result("Get Specific Mushroom", False, "ID mismatch in response")
-                    return None
-            elif response.status_code == 404:
-                self.log_result("Get Specific Mushroom", False, "Mushroom not found (404)")
-                return None
-            else:
-                self.log_result("Get Specific Mushroom", False, f"HTTP {response.status_code}", response)
-                return None
-        except Exception as e:
-            self.log_result("Get Specific Mushroom", False, f"Request error: {str(e)}")
-            return None
-
-    def test_put_mushroom_success(self, mushroom_id):
-        """Test: PUT /api/mushrooms/{id} - Update mushroom successfully"""
-        if not mushroom_id:
-            self.log_result("PUT Mushroom - Success", False, "No mushroom ID provided")
-            return None
-            
-        # Get original mushroom data first
-        try:
-            get_response = requests.get(f"{BASE_URL}/mushrooms/{mushroom_id}", timeout=10)
-            if get_response.status_code != 200:
-                self.log_result("PUT Mushroom - Success", False, "Could not retrieve original mushroom data")
-                return None
-            
-            original_data = get_response.json()
-            
-            # Prepare modified data
-            modified_data = {
-                "common_name": "Cèpe de Bordeaux Modifié",
-                "latin_name": "Boletus edulis var. modified",
-                "edibility": "comestible",
-                "season": "Été-Automne-Hiver",
-                "description": "Description modifiée - Le cèpe de Bordeaux est un champignon très apprécié en cuisine. Son chapeau est brun et son pied est massif et blanc. Nouvelles informations ajoutées.",
-                "characteristics": [
-                    "Chapeau brun foncé modifié",
-                    "Pied blanc et massif",
-                    "Chair blanche et ferme",
-                    "Tubes blancs puis jaune-vert",
-                    "Nouvelle caractéristique ajoutée"
-                ],
-                "habitat": "Forêts de feuillus et de conifères, particulièrement sous les chênes et hêtres",
-                "lookalikes": [
-                    {
-                        "name": "Bolet amer",
-                        "latin_name": "Tylopilus felleus",
-                        "difference": "Chair très amère, pores roses à maturité",
-                        "danger_level": "non_comestible"
-                    },
-                    {
-                        "name": "Nouveau sosie ajouté",
-                        "latin_name": "Boletus pseudoedulis",
-                        "difference": "Chapeau plus clair, chair jaunissante",
-                        "danger_level": "non_comestible"
-                    }
-                ],
-                "photo_urls": [
-                    "https://example.com/cepe_modified1.jpg",
-                    "https://example.com/cepe_modified2.jpg"
-                ],
-                "photos_base64": [
-                    "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==",
-                    "iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAEklEQVR42mNkYGBgYGBgYAAAAAUAAY27m/MAAAAASUVORK5CYII="
-                ]
-            }
-            
-            # Execute PUT request
-            response = requests.put(
-                f"{BASE_URL}/mushrooms/{mushroom_id}",
-                json=modified_data,
-                headers={"Content-Type": "application/json"},
-                timeout=10
-            )
-            
-            if response.status_code == 200:
-                updated_mushroom = response.json()
-                
-                # Verify ID is preserved
-                id_preserved = updated_mushroom.get("id") == mushroom_id
-                
-                # Verify modifications were applied
-                name_updated = updated_mushroom.get("common_name") == "Cèpe de Bordeaux Modifié"
-                description_updated = "Description modifiée" in updated_mushroom.get("description", "")
-                characteristics_count = len(updated_mushroom.get("characteristics", []))
-                lookalikes_count = len(updated_mushroom.get("lookalikes", []))
-                photos_count = len(updated_mushroom.get("photos_base64", []))
-                
-                success = all([
-                    id_preserved,
-                    name_updated,
-                    description_updated,
-                    characteristics_count == 5,
-                    lookalikes_count == 2,
-                    photos_count == 2
-                ])
-                
-                details = f"ID preserved: {id_preserved}, Name updated: {name_updated}, " \
-                         f"Description updated: {description_updated}, Characteristics: {characteristics_count}/5, " \
-                         f"Lookalikes: {lookalikes_count}/2, Photos: {photos_count}/2"
-                
-                self.log_result("PUT Mushroom - Success", success, details)
-                return updated_mushroom if success else None
-            else:
-                self.log_result("PUT Mushroom - Success", False, f"HTTP {response.status_code}", response)
-                return None
-                
-        except Exception as e:
-            self.log_result("PUT Mushroom - Success", False, f"Request error: {str(e)}")
-            return None
-
-    def test_put_mushroom_verify_persistence(self, mushroom_id):
-        """Test: GET after PUT to verify changes persisted"""
-        if not mushroom_id:
-            self.log_result("PUT Mushroom - Verify Persistence", False, "No mushroom ID provided")
-            return None
-            
-        try:
-            response = requests.get(f"{BASE_URL}/mushrooms/{mushroom_id}", timeout=10)
-            
-            if response.status_code == 200:
-                mushroom = response.json()
-                
-                # Verify modifications persisted
-                name_persisted = mushroom.get("common_name") == "Cèpe de Bordeaux Modifié"
-                description_persisted = "Description modifiée" in mushroom.get("description", "")
-                characteristics_persisted = len(mushroom.get("characteristics", [])) == 5
-                lookalikes_persisted = len(mushroom.get("lookalikes", [])) == 2
-                photos_persisted = len(mushroom.get("photos_base64", [])) == 2
-                
-                success = all([
-                    name_persisted,
-                    description_persisted,
-                    characteristics_persisted,
-                    lookalikes_persisted,
-                    photos_persisted
-                ])
-                
-                details = f"Name: {name_persisted}, Description: {description_persisted}, " \
-                         f"Characteristics: {characteristics_persisted}, Lookalikes: {lookalikes_persisted}, " \
-                         f"Photos: {photos_persisted}"
-                
-                self.log_result("PUT Mushroom - Verify Persistence", success, details)
-                return mushroom if success else None
-            else:
-                self.log_result("PUT Mushroom - Verify Persistence", False, f"HTTP {response.status_code}", response)
-                return None
-                
-        except Exception as e:
-            self.log_result("PUT Mushroom - Verify Persistence", False, f"Request error: {str(e)}")
-            return None
-
-    def test_put_mushroom_nonexistent_id(self):
-        """Test: PUT /api/mushrooms/{id} with non-existent ID - should return 404"""
-        fake_id = "nonexistent-mushroom-id-12345"
-        
-        test_data = {
-            "common_name": "Test Mushroom",
-            "latin_name": "Testus mushroomus",
-            "edibility": "comestible",
-            "season": "Printemps",
-            "description": "Test description",
-            "characteristics": ["Test characteristic"],
-            "habitat": "Test habitat",
-            "lookalikes": [],
-            "photo_urls": [],
-            "photos_base64": []
-        }
-        
-        try:
-            response = requests.put(
-                f"{BASE_URL}/mushrooms/{fake_id}",
-                json=test_data,
-                headers={"Content-Type": "application/json"},
-                timeout=10
-            )
-            
-            success = response.status_code == 404
-            details = f"Status: {response.status_code}, Expected: 404"
-            if success and response.json():
-                details += f", Message: {response.json().get('detail', 'No detail')}"
-            
-            self.log_result("PUT Mushroom - Non-existent ID (404)", success, details)
+            response = requests.get(f"{BACKEND_URL}/", timeout=30)
+            success = response.status_code == 200
+            details = f"Status: {response.status_code}, Response: {response.json()}"
+            self.log_test("API Health Check", success, details)
             return success
-            
         except Exception as e:
-            self.log_result("PUT Mushroom - Non-existent ID (404)", False, f"Request error: {str(e)}")
+            self.log_test("API Health Check", False, f"Error: {str(e)}")
             return False
-
-    def test_put_mushroom_photos_modification(self, mushroom_id):
-        """Test: PUT /api/mushrooms/{id} - Specifically test photos_base64 modification"""
-        if not mushroom_id:
-            self.log_result("PUT Mushroom - Photos Modification", False, "No mushroom ID provided")
-            return None
-            
+    
+    def test_create_spot_with_user_id(self):
+        """Test 1: Create spot with user_id"""
         try:
-            # Get current mushroom data
-            get_response = requests.get(f"{BASE_URL}/mushrooms/{mushroom_id}", timeout=10)
-            if get_response.status_code != 200:
-                self.log_result("PUT Mushroom - Photos Modification", False, "Could not retrieve mushroom data")
-                return None
-            
-            current_data = get_response.json()
-            
-            # Modify only photos, keep other data the same
-            photo_update_data = {
-                "common_name": current_data["common_name"],
-                "latin_name": current_data["latin_name"],
-                "edibility": current_data["edibility"],
-                "season": current_data["season"],
-                "description": current_data["description"],
-                "characteristics": current_data["characteristics"],
-                "habitat": current_data["habitat"],
-                "lookalikes": current_data["lookalikes"],
-                "photo_urls": ["https://example.com/new_photo1.jpg", "https://example.com/new_photo2.jpg", "https://example.com/new_photo3.jpg"],
-                "photos_base64": [
-                    "iVBORw0KGgoAAAANSUhEUgAAAAMAAAADCAYAAABWKLW/AAAAGklEQVR42mNkYGBgYGBgYAAAAAUAAY27m/MAAAAASUVORK5CYII=",
-                    "iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAHklEQVR42mNkYGBgYGBgYGBgYGBgYGBgYGBgYGBgYAAABQABhQKBwAAAAABJRU5ErkJggg==",
-                    "iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAI0lEQVR42mNkYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYAAABwAHhwKBwAAAAABJRU5ErkJggg=="
-                ]
+            user_id = f"user_{uuid.uuid4().hex[:8]}"
+            spot_data = {
+                "latitude": 45.7640,
+                "longitude": 4.8357,
+                "mushroom_type": "Cèpe de Bordeaux",
+                "notes": "Found near oak trees, perfect specimen for UUID testing",
+                "user_id": user_id,
+                "photo_base64": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k="
             }
             
-            response = requests.put(
-                f"{BASE_URL}/mushrooms/{mushroom_id}",
-                json=photo_update_data,
-                headers={"Content-Type": "application/json"},
-                timeout=10
-            )
+            response = requests.post(f"{BACKEND_URL}/mushroom-spots", 
+                                   json=spot_data, timeout=30)
             
             if response.status_code == 200:
-                updated_mushroom = response.json()
-                
-                photos_count_correct = len(updated_mushroom.get("photos_base64", [])) == 3
-                urls_count_correct = len(updated_mushroom.get("photo_urls", [])) == 3
-                photos_match = updated_mushroom.get("photos_base64") == photo_update_data["photos_base64"]
-                other_data_preserved = (
-                    updated_mushroom.get("common_name") == current_data["common_name"] and
-                    updated_mushroom.get("description") == current_data["description"]
-                )
-                
-                success = all([photos_count_correct, urls_count_correct, photos_match, other_data_preserved])
-                
-                details = f"Photos count: {len(updated_mushroom.get('photos_base64', []))}/3, " \
-                         f"URLs count: {len(updated_mushroom.get('photo_urls', []))}/3, " \
-                         f"Photos match: {photos_match}, Other data preserved: {other_data_preserved}"
-                
-                self.log_result("PUT Mushroom - Photos Modification", success, details)
-                return updated_mushroom if success else None
+                spot = response.json()
+                self.created_spots.append(spot["id"])
+                success = (spot["user_id"] == user_id and 
+                          spot["mushroom_type"] == "Cèpe de Bordeaux")
+                details = f"Created spot ID: {spot['id']}, user_id: {spot['user_id']}"
+                self.log_test("Create spot with user_id", success, details)
+                return success, user_id, spot["id"]
             else:
-                self.log_result("PUT Mushroom - Photos Modification", False, f"HTTP {response.status_code}", response)
-                return None
+                self.log_test("Create spot with user_id", False, 
+                            f"Status: {response.status_code}, Response: {response.text}")
+                return False, None, None
                 
         except Exception as e:
-            self.log_result("PUT Mushroom - Photos Modification", False, f"Request error: {str(e)}")
-            return None
-
-    def test_mushroom_error_handling(self):
-        """Test: Error handling for mushroom database endpoints"""
-        fake_id = "non-existent-mushroom-id-12345"
-        
+            self.log_test("Create spot with user_id", False, f"Error: {str(e)}")
+            return False, None, None
+    
+    def test_retrieve_spots_by_user_id(self, user_id):
+        """Test 2: Retrieve spots filtered by user_id"""
         try:
-            response = requests.get(f"{BASE_URL}/mushrooms/{fake_id}", timeout=10)
-            if response.status_code == 404:
-                self.log_result("Mushroom Error Handling - GET Non-existent", True, 
-                              "Correctly returned 404 for non-existent mushroom")
+            response = requests.get(f"{BACKEND_URL}/mushroom-spots?user_id={user_id}", 
+                                  timeout=30)
+            
+            if response.status_code == 200:
+                spots = response.json()
+                success = len(spots) > 0 and all(spot["user_id"] == user_id for spot in spots)
+                details = f"Found {len(spots)} spots for user_id: {user_id}"
+                self.log_test("Retrieve spots by user_id", success, details)
+                return success
             else:
-                self.log_result("Mushroom Error Handling - GET Non-existent", False, 
-                              f"Expected 404, got {response.status_code}")
+                self.log_test("Retrieve spots by user_id", False, 
+                            f"Status: {response.status_code}, Response: {response.text}")
+                return False
+                
         except Exception as e:
-            self.log_result("Mushroom Error Handling - GET Non-existent", False, f"Request error: {str(e)}")
-
-    def run_mushroom_database_tests(self):
-        """Run all mushroom database tests"""
-        print("\n" + "=" * 60)
-        print("MUSHROOM DATABASE API TESTS")
-        print("=" * 60)
-        
-        # Test 1: Get all mushrooms (initial state)
-        initial_mushrooms = self.test_get_all_mushrooms()
-        
-        # Test 2: Search functionality (should work even if empty)
-        self.test_search_mushrooms("cepe")
-        
-        # Test 3: Create new mushroom
-        created_id = self.test_create_mushroom()
-        
-        # Test 4: Get specific mushroom (if created successfully)
-        if created_id:
-            self.test_get_specific_mushroom(created_id)
+            self.log_test("Retrieve spots by user_id", False, f"Error: {str(e)}")
+            return False
+    
+    def test_user_privacy_verification(self):
+        """Test 3: user_id privacy verification"""
+        try:
+            # Create spots for two different users
+            user_a_id = f"user_a_{uuid.uuid4().hex[:8]}"
+            user_b_id = f"user_b_{uuid.uuid4().hex[:8]}"
             
-            # Test 5: Search for created mushroom by common name
-            search_results = self.test_search_mushrooms("Cèpe")
-            if search_results:
-                found = any(m["common_name"] == "Cèpe de Bordeaux" for m in search_results)
-                if found:
-                    self.log_result("Search Created Mushroom - Common Name", True, 
-                                  "Found created mushroom in search results")
-                else:
-                    self.log_result("Search Created Mushroom - Common Name", False, 
-                                  "Created mushroom not found in search results")
+            # Create spot for user A
+            spot_a_data = {
+                "latitude": 45.7640,
+                "longitude": 4.8357,
+                "mushroom_type": "Girolle User A",
+                "notes": "Private spot for user A",
+                "user_id": user_a_id
+            }
             
-            # Test 6: Search for created mushroom by latin name
-            search_results = self.test_search_mushrooms("Boletus")
-            if search_results:
-                found = any(m["latin_name"] == "Boletus edulis" for m in search_results)
-                if found:
-                    self.log_result("Search Created Mushroom - Latin Name", True, 
-                                  "Found created mushroom by latin name search")
+            response_a = requests.post(f"{BACKEND_URL}/mushroom-spots", 
+                                     json=spot_a_data, timeout=30)
+            
+            # Create spot for user B
+            spot_b_data = {
+                "latitude": 45.7650,
+                "longitude": 4.8367,
+                "mushroom_type": "Morille User B",
+                "notes": "Private spot for user B",
+                "user_id": user_b_id
+            }
+            
+            response_b = requests.post(f"{BACKEND_URL}/mushroom-spots", 
+                                     json=spot_b_data, timeout=30)
+            
+            if response_a.status_code == 200 and response_b.status_code == 200:
+                spot_a = response_a.json()
+                spot_b = response_b.json()
+                self.created_spots.extend([spot_a["id"], spot_b["id"]])
+                
+                # Request spots for user A - should only get user A's spots
+                response = requests.get(f"{BACKEND_URL}/mushroom-spots?user_id={user_a_id}", 
+                                      timeout=30)
+                
+                if response.status_code == 200:
+                    user_a_spots = response.json()
+                    # Verify user A only sees their own spots
+                    success = (len(user_a_spots) > 0 and 
+                             all(spot["user_id"] == user_a_id for spot in user_a_spots) and
+                             not any(spot["user_id"] == user_b_id for spot in user_a_spots))
+                    
+                    details = f"User A sees {len(user_a_spots)} spots, all belong to user A"
+                    self.log_test("User privacy verification", success, details)
+                    return success
                 else:
-                    self.log_result("Search Created Mushroom - Latin Name", False, 
-                                  "Created mushroom not found by latin name search")
-        
-        # Test 7: Verify data persistence
-        final_mushrooms = self.test_get_all_mushrooms()
-        if initial_mushrooms is not None and final_mushrooms is not None:
-            if len(final_mushrooms) > len(initial_mushrooms):
-                self.log_result("Data Persistence Verification", True, 
-                              f"Mushroom count increased from {len(initial_mushrooms)} to {len(final_mushrooms)}")
-            elif created_id and any(m["id"] == created_id for m in final_mushrooms):
-                self.log_result("Data Persistence Verification", True, 
-                              "Created mushroom found in final database query")
+                    self.log_test("User privacy verification", False, 
+                                f"Failed to retrieve user A spots: {response.status_code}")
+                    return False
             else:
-                self.log_result("Data Persistence Verification", False, 
-                              "Created mushroom not persisted in database")
+                self.log_test("User privacy verification", False, 
+                            "Failed to create test spots for privacy verification")
+                return False
+                
+        except Exception as e:
+            self.log_test("User privacy verification", False, f"Error: {str(e)}")
+            return False
+    
+    def test_backwards_compatibility_created_by(self):
+        """Test 4: Backwards compatibility with created_by"""
+        try:
+            # Create a spot with both user_id and created_by (legacy)
+            user_id = f"user_{uuid.uuid4().hex[:8]}"
+            created_by = "TestUserLegacy"
+            
+            spot_data = {
+                "latitude": 45.7660,
+                "longitude": 4.8377,
+                "mushroom_type": "Champignon Legacy",
+                "notes": "Testing backwards compatibility",
+                "user_id": user_id,
+                "created_by": created_by
+            }
+            
+            response = requests.post(f"{BACKEND_URL}/mushroom-spots", 
+                                   json=spot_data, timeout=30)
+            
+            if response.status_code == 200:
+                spot = response.json()
+                self.created_spots.append(spot["id"])
+                
+                # Test legacy created_by parameter
+                response = requests.get(f"{BACKEND_URL}/mushroom-spots?created_by={created_by}", 
+                                      timeout=30)
+                
+                if response.status_code == 200:
+                    spots = response.json()
+                    success = len(spots) > 0 and any(spot["created_by"] == created_by for spot in spots)
+                    details = f"Found {len(spots)} spots using legacy created_by parameter"
+                    self.log_test("Backwards compatibility with created_by", success, details)
+                    return success
+                else:
+                    self.log_test("Backwards compatibility with created_by", False, 
+                                f"Failed to retrieve by created_by: {response.status_code}")
+                    return False
+            else:
+                self.log_test("Backwards compatibility with created_by", False, 
+                            f"Failed to create spot: {response.status_code}")
+                return False
+                
+        except Exception as e:
+            self.log_test("Backwards compatibility with created_by", False, f"Error: {str(e)}")
+            return False
+    
+    def test_user_id_precedence(self):
+        """Test 5: user_id takes precedence over created_by"""
+        try:
+            # Create spots with different user_id and created_by combinations
+            user_id_1 = f"user_precedence_{uuid.uuid4().hex[:8]}"
+            user_id_2 = f"user_precedence_{uuid.uuid4().hex[:8]}"
+            created_by = "SharedLegacyUser"
+            
+            # Create spot 1 with user_id_1
+            spot_1_data = {
+                "latitude": 45.7670,
+                "longitude": 4.8387,
+                "mushroom_type": "Precedence Test 1",
+                "notes": "Testing precedence - spot 1",
+                "user_id": user_id_1,
+                "created_by": created_by
+            }
+            
+            # Create spot 2 with user_id_2 but same created_by
+            spot_2_data = {
+                "latitude": 45.7680,
+                "longitude": 4.8397,
+                "mushroom_type": "Precedence Test 2",
+                "notes": "Testing precedence - spot 2",
+                "user_id": user_id_2,
+                "created_by": created_by
+            }
+            
+            response_1 = requests.post(f"{BACKEND_URL}/mushroom-spots", 
+                                     json=spot_1_data, timeout=30)
+            response_2 = requests.post(f"{BACKEND_URL}/mushroom-spots", 
+                                     json=spot_2_data, timeout=30)
+            
+            if response_1.status_code == 200 and response_2.status_code == 200:
+                spot_1 = response_1.json()
+                spot_2 = response_2.json()
+                self.created_spots.extend([spot_1["id"], spot_2["id"]])
+                
+                # Request with both user_id and created_by - user_id should take precedence
+                response = requests.get(f"{BACKEND_URL}/mushroom-spots?user_id={user_id_1}&created_by={created_by}", 
+                                      timeout=30)
+                
+                if response.status_code == 200:
+                    spots = response.json()
+                    # Should only return spots with user_id_1, not all spots with created_by
+                    success = (len(spots) > 0 and 
+                             all(spot["user_id"] == user_id_1 for spot in spots) and
+                             not any(spot["user_id"] == user_id_2 for spot in spots))
+                    
+                    details = f"Found {len(spots)} spots, all with user_id: {user_id_1} (precedence working)"
+                    self.log_test("user_id takes precedence over created_by", success, details)
+                    return success
+                else:
+                    self.log_test("user_id takes precedence over created_by", False, 
+                                f"Failed to retrieve spots: {response.status_code}")
+                    return False
+            else:
+                self.log_test("user_id takes precedence over created_by", False, 
+                            "Failed to create test spots")
+                return False
+                
+        except Exception as e:
+            self.log_test("user_id takes precedence over created_by", False, f"Error: {str(e)}")
+            return False
+    
+    def test_error_handling_missing_user_id(self):
+        """Test 6: Error handling - POST without user_id should fail"""
+        try:
+            # Try to create spot without user_id (should fail)
+            spot_data = {
+                "latitude": 45.7690,
+                "longitude": 4.8407,
+                "mushroom_type": "Invalid Spot",
+                "notes": "This should fail - no user_id",
+                "created_by": "TestUser"
+            }
+            
+            response = requests.post(f"{BACKEND_URL}/mushroom-spots", 
+                                   json=spot_data, timeout=30)
+            
+            # Should fail with 422 (validation error) since user_id is required
+            success = response.status_code in [400, 422]
+            details = f"Status: {response.status_code} (expected 400/422 for missing user_id)"
+            self.log_test("Error handling - missing user_id", success, details)
+            return success
+                
+        except Exception as e:
+            self.log_test("Error handling - missing user_id", False, f"Error: {str(e)}")
+            return False
+    
+    def cleanup_test_data(self):
+        """Clean up created test spots"""
+        print("\n🧹 Cleaning up test data...")
+        cleaned = 0
+        for spot_id in self.created_spots:
+            try:
+                response = requests.delete(f"{BACKEND_URL}/mushroom-spots/{spot_id}", timeout=30)
+                if response.status_code == 200:
+                    cleaned += 1
+            except Exception as e:
+                print(f"   Failed to delete spot {spot_id}: {str(e)}")
         
-        # Test 8: Error handling
-        self.test_mushroom_error_handling()
-
-    def run_put_mushroom_tests(self):
-        """Run PUT endpoint tests for mushrooms as requested"""
+        print(f"   Cleaned up {cleaned}/{len(self.created_spots)} test spots")
+    
+    def run_all_tests(self):
+        """Run all UUID-based user identification tests"""
+        print("🧪 Starting UUID-based User Identification System Tests")
+        print("=" * 60)
+        
+        # Test 0: API Health Check
+        if not self.test_api_health():
+            print("❌ API not available, stopping tests")
+            return False
+        
+        # Test 1: Create spot with user_id
+        success_1, test_user_id, test_spot_id = self.test_create_spot_with_user_id()
+        
+        # Test 2: Retrieve spots by user_id (using the user_id from test 1)
+        success_2 = False
+        if success_1 and test_user_id:
+            success_2 = self.test_retrieve_spots_by_user_id(test_user_id)
+        
+        # Test 3: User privacy verification
+        success_3 = self.test_user_privacy_verification()
+        
+        # Test 4: Backwards compatibility with created_by
+        success_4 = self.test_backwards_compatibility_created_by()
+        
+        # Test 5: user_id takes precedence over created_by
+        success_5 = self.test_user_id_precedence()
+        
+        # Test 6: Error handling - missing user_id
+        success_6 = self.test_error_handling_missing_user_id()
+        
+        # Cleanup
+        self.cleanup_test_data()
+        
+        # Summary
         print("\n" + "=" * 60)
-        print("PUT /api/mushrooms/{id} ENDPOINT TESTS")
+        print("📊 TEST SUMMARY")
         print("=" * 60)
         
-        # First, ensure we have a mushroom to test with
-        mushrooms = self.test_get_all_mushrooms()
-        test_mushroom_id = None
+        passed = sum(1 for result in self.test_results if result["success"])
+        total = len(self.test_results)
         
-        if mushrooms and len(mushrooms) > 0:
-            test_mushroom_id = mushrooms[0]["id"]
-            self.log_result("GET Initial Mushroom for PUT Testing", True, 
-                          f"Using existing mushroom ID: {test_mushroom_id}, Name: {mushrooms[0]['common_name']}")
+        for result in self.test_results:
+            print(f"{result['status']}: {result['test']}")
+        
+        print(f"\n🎯 OVERALL RESULT: {passed}/{total} tests passed ({passed/total*100:.1f}%)")
+        
+        if passed == total:
+            print("✅ ALL UUID-BASED USER IDENTIFICATION TESTS PASSED!")
+            return True
         else:
-            # Create a mushroom for testing if none exist
-            test_mushroom_id = self.test_create_mushroom()
-            if test_mushroom_id:
-                self.log_result("Create Mushroom for PUT Testing", True, 
-                              f"Created test mushroom ID: {test_mushroom_id}")
-        
-        if test_mushroom_id:
-            # Test PUT success - modify mushroom
-            updated_mushroom = self.test_put_mushroom_success(test_mushroom_id)
-            
-            # Test GET after modification - verify persistence
-            if updated_mushroom:
-                self.test_put_mushroom_verify_persistence(test_mushroom_id)
-            
-            # Test PUT photos modification
-            self.test_put_mushroom_photos_modification(test_mushroom_id)
-        
-        # Test PUT with non-existent ID - should return 404
-        self.test_put_mushroom_nonexistent_id()
-
-    def run_comprehensive_test(self):
-        """Run all tests in sequence"""
-        print("=" * 60)
-        print("MUSHROOM FINDER API COMPREHENSIVE TEST SUITE")
-        print("=" * 60)
-        print(f"Testing against: {BASE_URL}")
-        print(f"Test started at: {datetime.now()}")
-        print()
-
-        # Test 1: API Health Check
-        if not self.test_api_health_check():
-            print("❌ API is not responding. Stopping tests.")
-            return self.test_results
-
-        # NEW: Run mushroom database tests first (as requested in review)
-        self.run_mushroom_database_tests()
-        
-        # NEW: Run PUT endpoint tests specifically (as requested in review)
-        self.run_put_mushroom_tests()
-
-        # Test 2-3: Create multiple mushroom spots and verify creation
-        print("\n" + "=" * 60)
-        print("MUSHROOM SPOTS API TESTS")
-        print("=" * 60)
-        
-        created_ids = []
-        for i, test_data in enumerate(TEST_MUSHROOM_DATA):
-            print(f"Creating test spot {i+1}/3...")
-            spot_id = self.test_create_mushroom_spot(test_data)
-            if spot_id:
-                created_ids.append(spot_id)
-
-        if not created_ids:
-            print("❌ No spots were created successfully. Stopping CRUD tests.")
-        else:
-            # Test 4: Get all spots
-            all_spots = self.test_get_all_mushroom_spots()
-            
-            # Test 5: Get specific spot
-            if created_ids:
-                self.test_get_specific_mushroom_spot(created_ids[0])
-            
-            # Test 6: Update spot
-            if created_ids:
-                self.test_update_mushroom_spot(created_ids[0])
-            
-            # Test 7: Nearby search
-            self.test_nearby_mushroom_spots(47.6062, -122.3321)
-
-        # Test 8: Error handling
-        self.test_error_handling()
-
-        # Test 9: Cleanup - Delete created spots
-        print("Cleaning up created test data...")
-        for spot_id in created_ids:
-            self.test_delete_mushroom_spot(spot_id)
-
-        # Final results
-        print("=" * 60)
-        print("TEST RESULTS SUMMARY")
-        print("=" * 60)
-        print(f"✅ Passed: {self.test_results['passed']}")
-        print(f"❌ Failed: {self.test_results['failed']}")
-        print(f"Total Tests: {self.test_results['passed'] + self.test_results['failed']}")
-        
-        if self.test_results['errors']:
-            print("\nFAILED TESTS:")
-            for error in self.test_results['errors']:
-                print(f"  - {error}")
-        
-        success_rate = (self.test_results['passed'] / (self.test_results['passed'] + self.test_results['failed'])) * 100
-        print(f"\nSuccess Rate: {success_rate:.1f}%")
-        
-        return self.test_results
+            print("❌ SOME TESTS FAILED - UUID system needs attention")
+            return False
 
 if __name__ == "__main__":
-    tester = MushroomAPITester()
-    results = tester.run_comprehensive_test()
-    
-    # Exit with error code if tests failed
-    if results['failed'] > 0:
-        sys.exit(1)
-    else:
-        sys.exit(0)
+    tester = BackendTester()
+    success = tester.run_all_tests()
+    exit(0 if success else 1)
