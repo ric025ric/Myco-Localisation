@@ -190,9 +190,12 @@ function ImportSpotsContent() {
 
   const checkDuplicates = async (spots: ImportedSpot[]): Promise<ImportedSpot[]> => {
     try {
+      // Récupérer le user_id unique
+      const userId = await UserService.getUserId();
+      
       // Fetch existing spots
       const response = await fetch(
-        `${EXPO_PUBLIC_BACKEND_URL}/api/mushroom-spots?created_by=${encodeURIComponent(username)}`
+        `${EXPO_PUBLIC_BACKEND_URL}/api/mushroom-spots?user_id=${encodeURIComponent(userId)}`
       );
       
       if (!response.ok) {
