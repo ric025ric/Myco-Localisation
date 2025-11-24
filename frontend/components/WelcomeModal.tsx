@@ -8,9 +8,11 @@ import {
   Modal,
   KeyboardAvoidingView,
   Platform,
+  Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useLanguage } from '../contexts/LanguageContext';
+import { UserService } from '../services/UserService';
 
 interface WelcomeModalProps {
   visible: boolean;
@@ -20,10 +22,31 @@ interface WelcomeModalProps {
 export default function WelcomeModal({ visible, onComplete }: WelcomeModalProps) {
   const { t } = useLanguage();
   const [username, setUsername] = useState('');
+  const [importing, setImporting] = useState(false);
 
   const handleContinue = () => {
     if (username.trim()) {
       onComplete(username.trim());
+    }
+  };
+
+  const handleImport = async () => {
+    setImporting(true);
+    try {
+      const result = await UserService.importAccount();
+      if (result.success && result.account) {
+        Alert.alert(
+          '✅ Compte restauré',
+          `Bienvenue ${result.account.username} !`,
+          [{ text: 'OK', onPress: () => onComplete(result.account!.username) }]
+        );
+      } else {
+        Alert.alert('❌ Erreur', result.error || 'Impossible d\'importer le compte');
+      }
+    } catch (error) {
+      Alert.alert('❌ Erreur', 'Une erreur est survenue');
+    } finally {
+      setImporting(false);
     }
   };
 
