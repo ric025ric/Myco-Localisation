@@ -83,6 +83,59 @@ function SettingsContent() {
       </View>
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+        {/* Account Section */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>{t('settings.account')}</Text>
+          <Text style={styles.sectionDescription}>{t('settings.accountDescription')}</Text>
+          
+          <TouchableOpacity
+            style={styles.actionButton}
+            onPress={handleExportAccount}
+            disabled={exporting}
+          >
+            <View style={styles.actionButtonContent}>
+              <View style={styles.actionButtonLeft}>
+                <View style={styles.iconCircle}>
+                  <Ionicons name="cloud-upload-outline" size={24} color="#4CAF50" />
+                </View>
+                <View>
+                  <Text style={styles.actionButtonTitle}>{t('settings.exportAccount')}</Text>
+                  <Text style={styles.actionButtonSubtext}>{t('settings.exportAccountSubtext')}</Text>
+                </View>
+              </View>
+              {exporting ? (
+                <ActivityIndicator size="small" color="#4CAF50" />
+              ) : (
+                <Ionicons name="chevron-forward" size={24} color="#666" />
+              )}
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.actionButton}
+            onPress={handleImportAccount}
+            disabled={importing}
+          >
+            <View style={styles.actionButtonContent}>
+              <View style={styles.actionButtonLeft}>
+                <View style={styles.iconCircle}>
+                  <Ionicons name="cloud-download-outline" size={24} color="#4CAF50" />
+                </View>
+                <View>
+                  <Text style={styles.actionButtonTitle}>{t('settings.importAccount')}</Text>
+                  <Text style={styles.actionButtonSubtext}>{t('settings.importAccountSubtext')}</Text>
+                </View>
+              </View>
+              {importing ? (
+                <ActivityIndicator size="small" color="#4CAF50" />
+              ) : (
+                <Ionicons name="chevron-forward" size={24} color="#666" />
+              )}
+            </View>
+          </TouchableOpacity>
+        </View>
+
+        {/* Language Section */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{t('settings.language')}</Text>
           <Text style={styles.sectionDescription}>{t('settings.languageDescription')}</Text>
