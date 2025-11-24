@@ -40,7 +40,8 @@ interface MushroomSpot {
   mushroom_type: string;
   notes: string;
   photo_base64?: string;
-  created_by?: string;
+  user_id: string;  // UUID unique par appareil
+  created_by?: string;  // Legacy field (pseudo)
 }
 
 function AddSpotScreen() {
