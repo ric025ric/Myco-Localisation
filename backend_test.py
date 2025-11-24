@@ -1,16 +1,17 @@
 #!/usr/bin/env python3
 """
-Comprehensive Backend API Testing for Mushroom Finder App
-Tests all CRUD operations and nearby search functionality
+Comprehensive Backend Testing for UUID-based User Identification System
+Tests the secure UUID-based user identification system implementation
 """
 
 import requests
 import json
-import sys
+import uuid
 from datetime import datetime
+import base64
 
-# Use the frontend environment variable for backend URL
-BASE_URL = "https://mushroom-locator.preview.emergentagent.com/api"
+# Backend URL from frontend environment
+BACKEND_URL = "https://mushroom-locator.preview.emergentagent.com/api"
 
 # Test data as specified in the review request
 TEST_MUSHROOM_DATA = [
