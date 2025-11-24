@@ -93,6 +93,23 @@ export default function WelcomeModal({ visible, onComplete }: WelcomeModalProps)
               <Text style={styles.buttonText}>{t('welcome.continue')}</Text>
               <Ionicons name="arrow-forward" size={24} color="#fff" />
             </TouchableOpacity>
+
+            <View style={styles.divider}>
+              <View style={styles.dividerLine} />
+              <Text style={styles.dividerText}>OU</Text>
+              <View style={styles.dividerLine} />
+            </View>
+
+            <TouchableOpacity
+              style={styles.importButton}
+              onPress={handleImport}
+              disabled={importing}
+            >
+              <Ionicons name="cloud-download-outline" size={24} color="#4CAF50" />
+              <Text style={styles.importButtonText}>
+                {importing ? 'Import en cours...' : 'Restaurer un compte'}
+              </Text>
+            </TouchableOpacity>
           </View>
         </View>
       </KeyboardAvoidingView>
