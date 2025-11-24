@@ -280,6 +280,9 @@ function ImportSpotsContent() {
       let successCount = 0;
       let failCount = 0;
 
+      // Récupérer le user_id unique
+      const userId = await UserService.getUserId();
+      
       for (const spot of selectedSpots) {
         try {
           const spotData = {
@@ -287,6 +290,7 @@ function ImportSpotsContent() {
             longitude: spot.longitude,
             mushroom_type: spot.name,
             notes: spot.description || '',
+            user_id: userId,
             created_by: username,
           };
 
