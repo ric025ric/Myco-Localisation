@@ -57,9 +57,10 @@ function HomeScreenContent() {
 
   const checkFirstLaunch = async () => {
     try {
-      const savedUsername = await AsyncStorage.getItem(USERNAME_STORAGE_KEY);
-      if (savedUsername) {
-        setUsername(savedUsername);
+      const hasAccount = await UserService.hasAccount();
+      if (hasAccount) {
+        const savedUsername = await UserService.getUsername();
+        setUsername(savedUsername || '');
       } else {
         setShowWelcomeModal(true);
       }
@@ -70,7 +71,8 @@ function HomeScreenContent() {
 
   const handleWelcomeComplete = async (name: string) => {
     try {
-      await AsyncStorage.setItem(USERNAME_STORAGE_KEY, name);
+      await UserService.getUserId(); // Génère UUID si nécessaire
+      await UserService.setUsername(name);
       setUsername(name);
       setShowWelcomeModal(false);
     } catch (error) {
