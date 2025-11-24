@@ -20,6 +20,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import NetInfo from '@react-native-community/netinfo';
 import { LanguageProvider, useLanguage } from '../contexts/LanguageContext';
 import { SyncService } from '../services/SyncService';
+import { UserService } from '../services/UserService';
 
 // Platform-specific imports
 let Location: any = null;
