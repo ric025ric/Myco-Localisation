@@ -96,6 +96,7 @@ export class SyncService {
         mushroom_type: spot.mushroom_type,
         notes: spot.notes,
         photo_base64: spot.photo_base64,
+        user_id: spot.user_id,
         created_by: spot.created_by,
       };
 
