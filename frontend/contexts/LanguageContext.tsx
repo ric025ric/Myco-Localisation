@@ -112,6 +112,16 @@ const translations = {
     'settings.english': 'English',
     'settings.about': 'À Propos',
     'settings.version': 'Version',
+    'settings.account': 'Mon Compte',
+    'settings.accountDescription': 'Gérez vos données et votre compte',
+    'settings.exportAccount': 'Exporter mon Compte',
+    'settings.exportAccountSubtext': 'Sauvegarder votre identité pour la réinstallation',
+    'settings.importAccount': 'Importer un Compte',
+    'settings.importAccountSubtext': 'Restaurer votre compte depuis un fichier',
+    'settings.accountExported': 'Compte exporté avec succès !',
+    'settings.accountImported': 'Compte restauré avec succès !',
+    'settings.exportError': 'Erreur lors de l\'export',
+    'settings.importError': 'Erreur lors de l\'import',
     
     // Common & Alerts
     'common.ok': 'OK',
