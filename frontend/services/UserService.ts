@@ -139,8 +139,10 @@ export class UserService {
         const response = await fetch(file.uri);
         fileContent = await response.text();
       } else {
-        const RNFS = require('react-native-fs');
-        fileContent = await RNFS.readFile(file.uri, 'utf8');
+        // Utiliser expo-file-system pour mobile
+        fileContent = await FileSystem.readAsStringAsync(file.uri, {
+          encoding: FileSystem.EncodingType.UTF8,
+        });
       }
 
       // Parser le JSON
