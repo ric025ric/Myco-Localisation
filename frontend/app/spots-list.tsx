@@ -56,28 +56,22 @@ function SpotsListContent() {
       const savedUsername = await AsyncStorage.getItem(USERNAME_STORAGE_KEY);
       if (savedUsername) {
         setUsername(savedUsername);
-        await fetchSpots(savedUsername);
-      } else {
-        setLoading(false);
       }
+      await fetchSpots();
     } catch (error) {
       console.error('Error loading username:', error);
       setLoading(false);
     }
   };
 
-  const fetchSpots = async (user?: string) => {
+  const fetchSpots = async () => {
     try {
-      const userToFetch = user || username;
-      if (!userToFetch) {
-        console.warn('No username available to fetch spots');
-        setSpots([]);
-        return;
-      }
+      // Récupérer le user_id unique
+      const userId = await UserService.getUserId();
 
-      // Filter spots by username
+      // Filter spots by user_id
       const response = await fetch(
-        `${EXPO_PUBLIC_BACKEND_URL}/api/mushroom-spots?created_by=${encodeURIComponent(userToFetch)}`
+        `${EXPO_PUBLIC_BACKEND_URL}/api/mushroom-spots?user_id=${encodeURIComponent(userId)}`
       );
       
       if (!response.ok) {
