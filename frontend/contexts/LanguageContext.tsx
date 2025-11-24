@@ -331,6 +331,16 @@ const translations = {
     'settings.english': 'English',
     'settings.about': 'About',
     'settings.version': 'Version',
+    'settings.account': 'My Account',
+    'settings.accountDescription': 'Manage your data and account',
+    'settings.exportAccount': 'Export my Account',
+    'settings.exportAccountSubtext': 'Save your identity for reinstallation',
+    'settings.importAccount': 'Import an Account',
+    'settings.importAccountSubtext': 'Restore your account from a file',
+    'settings.accountExported': 'Account exported successfully!',
+    'settings.accountImported': 'Account restored successfully!',
+    'settings.exportError': 'Error during export',
+    'settings.importError': 'Error during import',
     
     // Common & Alerts
     'common.ok': 'OK',
