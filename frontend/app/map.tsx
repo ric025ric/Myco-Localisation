@@ -46,8 +46,8 @@ function MapContent() {
       const savedUsername = await AsyncStorage.getItem(USERNAME_STORAGE_KEY);
       if (savedUsername) {
         setUsername(savedUsername);
-        await fetchSpots(savedUsername);
       }
+      await fetchSpots();
     } catch (error) {
       console.error('Error loading data:', error);
       Alert.alert(t('common.error'), t('error.loadMap'));
@@ -56,17 +56,13 @@ function MapContent() {
     }
   };
 
-  const fetchSpots = async (user?: string) => {
+  const fetchSpots = async () => {
     try {
-      const userToFetch = user || username;
-      if (!userToFetch) {
-        console.warn('No username available to fetch spots');
-        setSpots([]);
-        return;
-      }
+      // Récupérer le user_id unique
+      const userId = await UserService.getUserId();
 
       const response = await fetch(
-        `${EXPO_PUBLIC_BACKEND_URL}/api/mushroom-spots?created_by=${encodeURIComponent(userToFetch)}`
+        `${EXPO_PUBLIC_BACKEND_URL}/api/mushroom-spots?user_id=${encodeURIComponent(userId)}`
       );
       
       if (!response.ok) {
