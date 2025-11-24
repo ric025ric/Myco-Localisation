@@ -19,6 +19,8 @@ import { UserService } from '../services/UserService';
 
 function SettingsContent() {
   const { language, setLanguage, t } = useLanguage();
+  const [exporting, setExporting] = useState(false);
+  const [importing, setImporting] = useState(false);
 
   const languageOptions = [
     { key: 'fr' as const, label: t('settings.french') },
@@ -27,6 +29,42 @@ function SettingsContent() {
 
   const handleLanguageChange = async (newLanguage: 'fr' | 'en') => {
     await setLanguage(newLanguage);
+  };
+
+  const handleExportAccount = async () => {
+    setExporting(true);
+    try {
+      const result = await UserService.exportAccount();
+      if (result.success) {
+        Alert.alert('✅ ' + t('common.success'), t('settings.accountExported'));
+      } else {
+        Alert.alert('❌ ' + t('common.error'), result.error || t('settings.exportError'));
+      }
+    } catch (error) {
+      Alert.alert('❌ ' + t('common.error'), t('settings.exportError'));
+    } finally {
+      setExporting(false);
+    }
+  };
+
+  const handleImportAccount = async () => {
+    setImporting(true);
+    try {
+      const result = await UserService.importAccount();
+      if (result.success && result.account) {
+        Alert.alert(
+          '✅ ' + t('common.success'),
+          t('settings.accountImported'),
+          [{ text: t('common.ok'), onPress: () => router.replace('/') }]
+        );
+      } else if (result.error !== 'Import annulé') {
+        Alert.alert('❌ ' + t('common.error'), result.error || t('settings.importError'));
+      }
+    } catch (error) {
+      Alert.alert('❌ ' + t('common.error'), t('settings.importError'));
+    } finally {
+      setImporting(false);
+    }
   };
 
   return (
