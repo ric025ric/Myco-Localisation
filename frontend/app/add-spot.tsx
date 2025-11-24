@@ -292,12 +292,16 @@ function AddSpotScreen() {
     setLoading(true);
 
     try {
+      // Récupérer le user_id unique
+      const userId = await UserService.getUserId();
+      
       const spotData: MushroomSpot = {
         latitude: location.coords.latitude,
         longitude: location.coords.longitude,
         mushroom_type: mushroomType.trim(),
         notes: notes.trim(),
-        created_by: username,
+        user_id: userId,
+        created_by: username,  // Legacy field
       };
 
       if (photo) {
