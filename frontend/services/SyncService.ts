@@ -11,7 +11,8 @@ export interface PendingSpot {
   mushroom_type: string;
   notes: string;
   photo_base64: string | null;
-  created_by: string;
+  user_id: string;  // UUID unique par appareil
+  created_by: string;  // Legacy field (pseudo)
   timestamp: string;
   sync_status: 'pending' | 'syncing' | 'failed';
   sync_attempts: number;
