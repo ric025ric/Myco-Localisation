@@ -363,6 +363,7 @@ function AddSpotScreen() {
       mushroom_type: spotData.mushroom_type,
       notes: spotData.notes,
       photo_base64: spotData.photo_base64 || null,
+      user_id: spotData.user_id,
       created_by: spotData.created_by || username,
     });
 
