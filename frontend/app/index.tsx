@@ -20,6 +20,7 @@ import { router } from 'expo-router';
 import { LanguageProvider, useLanguage } from '../contexts/LanguageContext';
 import WelcomeModal from '../components/WelcomeModal';
 import SOSButton from '../components/SOSButton';
+import { UserService } from '../services/UserService';
 
 // Platform-specific imports
 let Location: any = null;
