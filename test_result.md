@@ -306,9 +306,7 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Home Screen with Location Services"
-    - "Mushroom Details Screen"
-    - "Edit Mushroom Screen"
+    - "UUID-based User Identification System"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
