@@ -159,6 +159,18 @@ backend:
         agent: "testing"
         comment: "RENDER DEPLOYMENT TESTING SUCCESSFUL - MONGODB ATLAS INTEGRATION WORKING! Comprehensive re-testing after MongoDB Atlas modifications shows complete success: ✅ Service Health (GET /api/) - 200 OK, ✅ Get Mushroom Spots (GET /api/mushroom-spots) - 200 OK with existing data, ✅ Create Mushroom Spot (POST /api/mushroom-spots) - 200 OK with test data 'Cèpe de Bordeaux', ✅ Verify New Spot Creation - Successfully found created spot in list, ✅ Get Spot Details (GET /api/mushroom-spots/{id}) - 200 OK with full details, ✅ Error Handling - 404 for invalid IDs, 422 for invalid data, ✅ Nearby Spots Endpoint - 200 OK. MongoDB Atlas connection fully operational, all CRUD operations working correctly. Previous authentication issues have been resolved. Deployment is production-ready."
 
+  - task: "UUID-based User Identification System"
+    implemented: true
+    working: "NA"
+    file: "server.py, UserService.ts, WelcomeModal.tsx, settings.tsx, add-spot.tsx, spots-list.tsx, map.tsx, import-spots.tsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Implemented secure UUID-based user identification system to replace insecure pseudo-based authentication. Backend: Updated MushroomSpot models to include user_id (UUID) field while keeping created_by for backwards compatibility. Modified GET /api/mushroom-spots endpoint to accept user_id parameter (preferred) or created_by (legacy). Frontend: Created UserService.ts with UUID generation, storage, import/export functionality. Updated WelcomeModal to offer 'Create New Account' and 'Restore Account' options. Added export/import UI in settings.tsx with cloud upload/download icons. Modified all spot creation/fetch logic (add-spot.tsx, spots-list.tsx, map.tsx, import-spots.tsx) to use user_id instead of created_by. Updated SyncService to include user_id in offline spot queue. System now generates a persistent device-unique UUID on first launch, stores it in AsyncStorage, and allows users to export/import their account identity via .myco files to prevent data loss on app reinstallation."
+
 frontend:
   - task: "Home Screen with Location Services"
     implemented: true
