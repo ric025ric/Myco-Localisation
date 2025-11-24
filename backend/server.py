@@ -126,12 +126,15 @@ async def create_mushroom_spot(mushroom_spot: MushroomSpotCreate):
         raise HTTPException(status_code=400, detail=str(e))
 
 @api_router.get("/mushroom-spots", response_model=List[MushroomSpot])
-async def get_mushroom_spots(created_by: str = None):
-    """Get mushroom spots filtered by user"""
+async def get_mushroom_spots(user_id: str = None, created_by: str = None):
+    """Get mushroom spots filtered by user_id (preferred) or created_by (legacy)"""
     try:
-        # Filter by created_by if provided
         query = {}
-        if created_by:
+        # Prioritize user_id over created_by
+        if user_id:
+            query["user_id"] = user_id
+        elif created_by:
+            # Legacy support for old clients
             query["created_by"] = created_by
         
         spots = await db.mushroom_spots.find(query).sort("timestamp", -1).to_list(1000)
