@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
 import * as DocumentPicker from 'expo-document-picker';
+import { Platform } from 'react-native';
 
 const USER_ID_KEY = 'user_id';
 const USERNAME_KEY = 'myco_username';
