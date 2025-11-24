@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   ScrollView,
   Image,
+  Alert,
+  ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
@@ -13,6 +15,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import Constants from 'expo-constants';
 import { LanguageProvider, useLanguage } from '../contexts/LanguageContext';
+import { UserService } from '../services/UserService';
 
 function SettingsContent() {
   const { language, setLanguage, t } = useLanguage();
