@@ -304,6 +304,41 @@ const styles = StyleSheet.create({
     color: '#666',
     textAlign: 'center',
   },
+  actionButton: {
+    backgroundColor: '#2a2a2a',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 12,
+  },
+  actionButtonContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  actionButtonLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+    gap: 12,
+  },
+  iconCircle: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: 'rgba(76, 175, 80, 0.1)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  actionButtonTitle: {
+    fontSize: 16,
+    color: '#fff',
+    fontWeight: '600',
+    marginBottom: 4,
+  },
+  actionButtonSubtext: {
+    fontSize: 12,
+    color: '#999',
+  },
 });
 
 export default function SettingsScreen() {
