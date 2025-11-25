@@ -704,6 +704,7 @@ const styles = StyleSheet.create({
 export default function HomeScreen() {
   return (
     <LanguageProvider>
+      <UpdateRequiredModal />
       <HomeScreenContent />
     </LanguageProvider>
   );
