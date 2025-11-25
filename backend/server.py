@@ -101,6 +101,19 @@ class MushroomInfoCreate(BaseModel):
 async def root():
     return {"message": "Mushroom Finder API"}
 
+@api_router.get("/version")
+async def get_version_info():
+    """Get app version requirements"""
+    return {
+        "min_version": "1.8.2",  # Version minimale requise
+        "min_version_code": 31,   # versionCode minimum
+        "latest_version": "1.8.3",
+        "update_required": True,
+        "update_message_fr": "Une mise à jour est requise pour continuer à utiliser l'application. Veuillez télécharger la dernière version.",
+        "update_message_en": "An update is required to continue using the app. Please download the latest version.",
+        "play_store_url": "https://play.google.com/store/apps/details?id=com.skyrico.mycolocalisation"
+    }
+
 @api_router.post("/status", response_model=StatusCheck)
 async def create_status_check(input: StatusCheckCreate):
     status_dict = input.dict()
