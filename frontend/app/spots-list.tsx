@@ -151,7 +151,11 @@ function SpotsListContent() {
             text: 'OK', 
             onPress: async () => {
               await loadPendingCount();
-              await onRefresh();
+              
+              // Invalider le cache et rafraîchir depuis le réseau
+              const userId = await UserService.getUserId();
+              await CacheService.remove(`spots_${userId}`);
+              await fetchSpots(true);
             }
           }]
         );
