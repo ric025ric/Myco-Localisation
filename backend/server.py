@@ -129,6 +129,11 @@ async def create_mushroom_spot(mushroom_spot: MushroomSpotCreate):
 async def get_mushroom_spots(user_id: str = None, created_by: str = None):
     """Get mushroom spots filtered by user_id (preferred) or created_by (legacy)"""
     try:
+        # CRITICAL: Always require either user_id or created_by for data privacy
+        if not user_id and not created_by:
+            # Return empty list if no identifier provided (security measure)
+            return []
+        
         query = {}
         # Prioritize user_id over created_by
         if user_id:
