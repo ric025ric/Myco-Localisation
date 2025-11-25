@@ -199,6 +199,30 @@ async def delete_mushroom_spot(spot_id: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+@api_router.post("/admin/cleanup-legacy-spots")
+async def cleanup_legacy_spots(admin_pin: str = "1234"):
+    """
+    ADMIN ONLY: Clean up legacy spots without user_id field
+    This endpoint removes spots that were created before the UUID system
+    """
+    try:
+        # Simple PIN protection
+        if admin_pin != "1234":
+            raise HTTPException(status_code=403, detail="Invalid admin PIN")
+        
+        # Find and delete spots without user_id
+        result = await db.mushroom_spots.delete_many({"user_id": {"$exists": False}})
+        
+        return {
+            "message": "Legacy spots cleanup completed",
+            "deleted_count": result.deleted_count,
+            "status": "success"
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 @api_router.get("/mushroom-spots/nearby/{latitude}/{longitude}")
 async def get_nearby_mushroom_spots(latitude: float, longitude: float, radius_km: float = 5.0):
     """Get mushroom spots within a certain radius (in kilometers)"""
