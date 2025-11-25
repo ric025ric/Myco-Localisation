@@ -65,14 +65,40 @@ function SpotsListContent() {
     }
   };
 
-  const fetchSpots = async () => {
+  const fetchSpots = async (forceRefresh: boolean = false) => {
     try {
       // Récupérer le user_id unique
       const userId = await UserService.getUserId();
+      const cacheKey = `spots_${userId}`;
 
-      // Filter spots by user_id
+      // 1. Essayer de charger depuis le cache d'abord
+      if (!forceRefresh) {
+        const cachedSpots = await CacheService.get<any[]>(cacheKey);
+        if (cachedSpots) {
+          console.log('📦 Spots loaded from cache');
+          setSpots(cachedSpots);
+          setLoading(false);
+          // Charger en arrière-plan pour mettre à jour le cache
+          fetchSpotsFromNetwork(userId, cacheKey, true);
+          return;
+        }
+      }
+
+      // 2. Charger depuis le réseau
+      await fetchSpotsFromNetwork(userId, cacheKey, false);
+    } catch (error) {
+      console.error('Error fetching spots:', error);
+      Alert.alert(t('common.error'), t('error.loadSpots'));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchSpotsFromNetwork = async (userId: string, cacheKey: string, silent: boolean = false) => {
+    try {
+      // Exclure les photos pour accélérer le chargement
       const response = await fetch(
-        `${EXPO_PUBLIC_BACKEND_URL}/api/mushroom-spots?user_id=${encodeURIComponent(userId)}`
+        `${EXPO_PUBLIC_BACKEND_URL}/api/mushroom-spots?user_id=${encodeURIComponent(userId)}&include_photos=false`
       );
       
       if (!response.ok) {
@@ -81,11 +107,15 @@ function SpotsListContent() {
 
       const spots = await response.json();
       setSpots(spots);
+      
+      // Sauvegarder dans le cache
+      await CacheService.set(cacheKey, spots);
+      console.log('💾 Spots cached successfully');
     } catch (error) {
-      console.error('Error fetching spots:', error);
-      Alert.alert(t('common.error'), t('error.loadSpots'));
-    } finally {
-      setLoading(false);
+      if (!silent) {
+        console.error('Error fetching spots from network:', error);
+        Alert.alert(t('common.error'), t('error.loadSpots'));
+      }
     }
   };
 
