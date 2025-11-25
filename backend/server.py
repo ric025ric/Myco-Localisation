@@ -126,7 +126,7 @@ async def create_mushroom_spot(mushroom_spot: MushroomSpotCreate):
         raise HTTPException(status_code=400, detail=str(e))
 
 @api_router.get("/mushroom-spots", response_model=List[MushroomSpot])
-async def get_mushroom_spots(user_id: str = None, created_by: str = None):
+async def get_mushroom_spots(user_id: str = None, created_by: str = None, include_photos: bool = False):
     """Get mushroom spots filtered by user_id (preferred) or created_by (legacy)"""
     try:
         # CRITICAL: Always require either user_id or created_by for data privacy
@@ -142,7 +142,10 @@ async def get_mushroom_spots(user_id: str = None, created_by: str = None):
             # Legacy support for old clients
             query["created_by"] = created_by
         
-        spots = await db.mushroom_spots.find(query).sort("timestamp", -1).to_list(1000)
+        # Projection: exclude photos by default for faster loading
+        projection = {"photo_base64": 0} if not include_photos else {}
+        
+        spots = await db.mushroom_spots.find(query, projection).sort("timestamp", -1).to_list(1000)
         return [MushroomSpot(**spot) for spot in spots]
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
