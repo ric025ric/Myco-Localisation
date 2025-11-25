@@ -73,7 +73,7 @@ export class UserService {
   /**
    * Exporter le compte dans un fichier
    */
-  static async exportAccount(): Promise<{ success: boolean; error?: string }> {
+  static async exportAccount(): Promise<{ success: boolean; error?: string; filePath?: string }> {
     try {
       const account = await this.getUserAccount();
       
@@ -91,22 +91,42 @@ export class UserService {
 
       const jsonContent = JSON.stringify(exportData, null, 2);
       const fileName = `myco_account_${account.username}_${Date.now()}.myco`;
-      const fileUri = `${FileSystem.documentDirectory}${fileName}`;
 
-      // Écrire le fichier
-      await FileSystem.writeAsStringAsync(fileUri, jsonContent);
+      if (Platform.OS === 'android') {
+        // Sur Android, utiliser le Storage Access Framework pour sauvegarder où l'utilisateur veut
+        const permissions = await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
+        
+        if (!permissions.granted) {
+          return { success: false, error: 'Permission refusée' };
+        }
 
-      // Partager le fichier
-      const canShare = await Sharing.isAvailableAsync();
-      if (canShare) {
-        await Sharing.shareAsync(fileUri, {
-          mimeType: 'application/json',
-          dialogTitle: 'Sauvegarder mon compte Myco Localisation',
-        });
+        // Créer le fichier dans le dossier choisi par l'utilisateur
+        const fileUri = await FileSystem.StorageAccessFramework.createFileAsync(
+          permissions.directoryUri,
+          fileName,
+          'application/json'
+        );
+
+        await FileSystem.writeAsStringAsync(fileUri, jsonContent);
+        
+        console.log('✅ Account exported to:', fileUri);
+        return { success: true, filePath: 'Téléchargements ou dossier choisi' };
+      } else {
+        // Sur iOS/Web, utiliser le système de partage
+        const fileUri = `${FileSystem.documentDirectory}${fileName}`;
+        await FileSystem.writeAsStringAsync(fileUri, jsonContent);
+
+        const canShare = await Sharing.isAvailableAsync();
+        if (canShare) {
+          await Sharing.shareAsync(fileUri, {
+            mimeType: 'application/json',
+            dialogTitle: 'Sauvegarder mon compte Myco Localisation',
+          });
+        }
+
+        console.log('✅ Account exported:', fileName);
+        return { success: true };
       }
-
-      console.log('✅ Account exported:', fileName);
-      return { success: true };
     } catch (error: any) {
       console.error('❌ Export error:', error);
       return { success: false, error: error.message };
