@@ -45,7 +45,7 @@ class MushroomSpot(BaseModel):
     notes: str = ""
     photo_base64: Optional[str] = None
     timestamp: datetime = Field(default_factory=datetime.utcnow)
-    user_id: str  # UUID unique par appareil
+    user_id: Optional[str] = None  # UUID unique par appareil (Optional pour compatibilité avec anciens documents)
     created_by: Optional[str] = None  # Legacy field (pseudo) - kept for backwards compatibility
 
 class MushroomSpotCreate(BaseModel):
@@ -54,7 +54,7 @@ class MushroomSpotCreate(BaseModel):
     mushroom_type: str
     notes: str = ""
     photo_base64: Optional[str] = None
-    user_id: str  # UUID unique par appareil
+    user_id: str  # UUID unique par appareil - REQUIS pour nouveaux spots
     created_by: Optional[str] = None  # Legacy field (pseudo)
 
 class MushroomSpotUpdate(BaseModel):
