@@ -18,6 +18,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LanguageProvider, useLanguage } from '../contexts/LanguageContext';
 import { SyncService } from '../services/SyncService';
 import { UserService } from '../services/UserService';
+import { CacheService } from '../services/CacheService';
 
 const EXPO_PUBLIC_BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 const USERNAME_STORAGE_KEY = 'myco_username';
