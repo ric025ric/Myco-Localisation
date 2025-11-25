@@ -1,16 +1,15 @@
 #!/usr/bin/env python3
 """
-Comprehensive Backend Testing for UUID-based User Identification System
-Tests the secure UUID-based user identification system implementation
+URGENT PRIVACY REGRESSION TESTING
+Testing critical privacy issue where users see spots that aren't theirs
 """
 
 import requests
 import json
 import uuid
 from datetime import datetime
-import base64
 
-# Backend URL from frontend environment
+# Get backend URL from frontend .env
 BACKEND_URL = "https://mushroom-locator.preview.emergentagent.com/api"
 
 class BackendTester:
