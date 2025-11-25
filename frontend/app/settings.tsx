@@ -36,7 +36,10 @@ function SettingsContent() {
     try {
       const result = await UserService.exportAccount();
       if (result.success) {
-        Alert.alert('✅ ' + t('common.success'), t('settings.accountExported'));
+        const message = result.filePath 
+          ? `${t('settings.accountExported')}\n\nFichier sauvegardé dans : ${result.filePath}`
+          : t('settings.accountExported');
+        Alert.alert('✅ ' + t('common.success'), message);
       } else {
         Alert.alert('❌ ' + t('common.error'), result.error || t('settings.exportError'));
       }
