@@ -94,9 +94,7 @@ export class UserService {
       const fileUri = `${FileSystem.documentDirectory}${fileName}`;
 
       // Écrire le fichier
-      await FileSystem.writeAsStringAsync(fileUri, jsonContent, {
-        encoding: FileSystem.EncodingType.UTF8,
-      });
+      await FileSystem.writeAsStringAsync(fileUri, jsonContent);
 
       // Partager le fichier
       const canShare = await Sharing.isAvailableAsync();
