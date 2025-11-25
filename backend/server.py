@@ -200,10 +200,12 @@ async def delete_mushroom_spot(spot_id: str):
         raise HTTPException(status_code=500, detail=str(e))
 
 @api_router.post("/admin/cleanup-legacy-spots")
+@api_router.get("/admin/cleanup-legacy-spots")
 async def cleanup_legacy_spots(admin_pin: str = "1234"):
     """
     ADMIN ONLY: Clean up legacy spots without user_id field
     This endpoint removes spots that were created before the UUID system
+    Can be called via POST or GET (for browser access)
     """
     try:
         # Simple PIN protection
