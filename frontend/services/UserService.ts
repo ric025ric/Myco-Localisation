@@ -138,9 +138,7 @@ export class UserService {
         fileContent = await response.text();
       } else {
         // Utiliser expo-file-system pour mobile
-        fileContent = await FileSystem.readAsStringAsync(file.uri, {
-          encoding: FileSystem.EncodingType.UTF8,
-        });
+        fileContent = await FileSystem.readAsStringAsync(file.uri);
       }
 
       // Parser le JSON
