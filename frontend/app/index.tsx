@@ -21,6 +21,7 @@ import { LanguageProvider, useLanguage } from '../contexts/LanguageContext';
 import WelcomeModal from '../components/WelcomeModal';
 import SOSButton from '../components/SOSButton';
 import { UserService } from '../services/UserService';
+import { UpdateRequiredModal } from '../components/UpdateRequiredModal';
 
 // Platform-specific imports
 let Location: any = null;
