@@ -140,26 +140,31 @@ async def create_mushroom_spot(mushroom_spot: MushroomSpotCreate):
 
 @api_router.get("/mushroom-spots", response_model=List[MushroomSpot])
 async def get_mushroom_spots(user_id: str = None, created_by: str = None, include_photos: bool = False):
-    """Get mushroom spots filtered by user_id (preferred) or created_by (legacy)"""
+    """Get mushroom spots filtered by user_id (REQUIRED - old versions blocked)"""
     try:
-        # CRITICAL: Always require either user_id or created_by for data privacy
-        if not user_id and not created_by:
-            # Return empty list if no identifier provided (security measure)
-            return []
+        # CRITICAL: user_id is now REQUIRED - blocks old versions without UUID system
+        if not user_id:
+            raise HTTPException(
+                status_code=426,  # 426 Upgrade Required
+                detail={
+                    "error": "version_outdated",
+                    "message_fr": "Votre version de l'application est obsolète. Veuillez mettre à jour depuis le Play Store.",
+                    "message_en": "Your app version is outdated. Please update from the Play Store.",
+                    "min_version_required": "1.8.2",
+                    "play_store_url": "https://play.google.com/store/apps/details?id=com.skyrico.mycolocalisation"
+                }
+            )
         
-        query = {}
-        # Prioritize user_id over created_by
-        if user_id:
-            query["user_id"] = user_id
-        elif created_by:
-            # Legacy support for old clients
-            query["created_by"] = created_by
+        # Filter by user_id only
+        query = {"user_id": user_id}
         
         # Projection: exclude photos by default for faster loading
         projection = {"photo_base64": 0} if not include_photos else {}
         
         spots = await db.mushroom_spots.find(query, projection).sort("timestamp", -1).to_list(1000)
         return [MushroomSpot(**spot) for spot in spots]
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
