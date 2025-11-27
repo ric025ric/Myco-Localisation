@@ -16,6 +16,7 @@ import { router } from 'expo-router';
 import Constants from 'expo-constants';
 import { LanguageProvider, useLanguage } from '../contexts/LanguageContext';
 import { UserService } from '../services/UserService';
+import { CacheService } from '../services/CacheService';
 
 function SettingsContent() {
   const { language, setLanguage, t } = useLanguage();
