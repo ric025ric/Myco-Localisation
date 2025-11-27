@@ -71,7 +71,7 @@ export class UserService {
   }
 
   /**
-   * Exporter le compte dans un fichier
+   * Exporter le compte dans un fichier (avec les spots)
    */
   static async exportAccount(): Promise<{ success: boolean; error?: string; filePath?: string }> {
     try {
@@ -81,12 +81,17 @@ export class UserService {
         return { success: false, error: 'Aucun compte à exporter' };
       }
 
+      // Récupérer tous les spots de l'utilisateur
+      const spots = await this.getUserSpots();
+
       // Créer le contenu du fichier
       const exportData = {
-        version: '1.0',
+        version: '2.0',  // Version 2.0 avec spots inclus
         app: 'Myco Localisation',
         exported_at: new Date().toISOString(),
         account: account,
+        spots: spots,  // Ajout des spots
+        spots_count: spots.length,
       };
 
       const jsonContent = JSON.stringify(exportData, null, 2);
