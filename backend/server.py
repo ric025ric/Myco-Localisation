@@ -45,7 +45,8 @@ class MushroomSpot(BaseModel):
     notes: str = ""
     photo_base64: Optional[str] = None
     timestamp: datetime = Field(default_factory=datetime.utcnow)
-    created_by: str = "Utilisateur"  # Default if not provided
+    user_id: Optional[str] = None  # UUID unique par appareil (Optional pour compatibilité avec anciens documents)
+    created_by: Optional[str] = None  # Legacy field (pseudo) - kept for backwards compatibility
 
 class MushroomSpotCreate(BaseModel):
     latitude: float
@@ -53,7 +54,8 @@ class MushroomSpotCreate(BaseModel):
     mushroom_type: str
     notes: str = ""
     photo_base64: Optional[str] = None
-    created_by: str = "Utilisateur"
+    user_id: str  # UUID unique par appareil - REQUIS pour nouveaux spots
+    created_by: Optional[str] = None  # Legacy field (pseudo)
 
 class MushroomSpotUpdate(BaseModel):
     mushroom_type: Optional[str] = None
@@ -99,6 +101,19 @@ class MushroomInfoCreate(BaseModel):
 async def root():
     return {"message": "Mushroom Finder API"}
 
+@api_router.get("/version")
+async def get_version_info():
+    """Get app version requirements"""
+    return {
+        "min_version": "1.8.2",  # Version minimale requise
+        "min_version_code": 31,   # versionCode minimum
+        "latest_version": "1.8.3",
+        "update_required": True,
+        "update_message_fr": "Une mise à jour est requise pour continuer à utiliser l'application. Veuillez télécharger la dernière version.",
+        "update_message_en": "An update is required to continue using the app. Please download the latest version.",
+        "play_store_url": "https://play.google.com/store/apps/details?id=com.skyrico.mycolocalisation"
+    }
+
 @api_router.post("/status", response_model=StatusCheck)
 async def create_status_check(input: StatusCheckCreate):
     status_dict = input.dict()
@@ -124,16 +139,32 @@ async def create_mushroom_spot(mushroom_spot: MushroomSpotCreate):
         raise HTTPException(status_code=400, detail=str(e))
 
 @api_router.get("/mushroom-spots", response_model=List[MushroomSpot])
-async def get_mushroom_spots(created_by: str = None):
-    """Get mushroom spots filtered by user"""
+async def get_mushroom_spots(user_id: str = None, created_by: str = None, include_photos: bool = False):
+    """Get mushroom spots filtered by user_id (REQUIRED - old versions blocked)"""
     try:
-        # Filter by created_by if provided
-        query = {}
-        if created_by:
-            query["created_by"] = created_by
+        # CRITICAL: user_id is now REQUIRED - blocks old versions without UUID system
+        if not user_id:
+            raise HTTPException(
+                status_code=426,  # 426 Upgrade Required
+                detail={
+                    "error": "version_outdated",
+                    "message_fr": "Votre version de l'application est obsolète. Veuillez mettre à jour depuis le Play Store.",
+                    "message_en": "Your app version is outdated. Please update from the Play Store.",
+                    "min_version_required": "1.8.2",
+                    "play_store_url": "https://play.google.com/store/apps/details?id=com.skyrico.mycolocalisation"
+                }
+            )
         
-        spots = await db.mushroom_spots.find(query).sort("timestamp", -1).to_list(1000)
+        # Filter by user_id only
+        query = {"user_id": user_id}
+        
+        # Projection: exclude photos by default for faster loading
+        projection = {"photo_base64": 0} if not include_photos else {}
+        
+        spots = await db.mushroom_spots.find(query, projection).sort("timestamp", -1).to_list(1000)
         return [MushroomSpot(**spot) for spot in spots]
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -184,6 +215,32 @@ async def delete_mushroom_spot(spot_id: str):
         if result.deleted_count == 0:
             raise HTTPException(status_code=404, detail="Mushroom spot not found")
         return {"message": "Mushroom spot deleted successfully"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.post("/admin/cleanup-legacy-spots")
+@api_router.get("/admin/cleanup-legacy-spots")
+async def cleanup_legacy_spots(admin_pin: str = "1234"):
+    """
+    ADMIN ONLY: Clean up legacy spots without user_id field
+    This endpoint removes spots that were created before the UUID system
+    Can be called via POST or GET (for browser access)
+    """
+    try:
+        # Simple PIN protection
+        if admin_pin != "1234":
+            raise HTTPException(status_code=403, detail="Invalid admin PIN")
+        
+        # Find and delete spots without user_id
+        result = await db.mushroom_spots.delete_many({"user_id": {"$exists": False}})
+        
+        return {
+            "message": "Legacy spots cleanup completed",
+            "deleted_count": result.deleted_count,
+            "status": "success"
+        }
     except HTTPException:
         raise
     except Exception as e:
@@ -292,3 +349,4 @@ logger = logging.getLogger(__name__)
 @app.on_event("shutdown")
 async def shutdown_db_client():
     client.close()
+Fix: Backend security - Block old versions and add UUID enforcement
