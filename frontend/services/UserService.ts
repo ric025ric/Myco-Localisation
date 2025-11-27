@@ -201,17 +201,70 @@ export class UserService {
 
       const account: UserAccount = importData.account;
 
-      // Sauvegarder le compte
+      // Sauvegarder le compte importé
       await AsyncStorage.setItem(USER_ID_KEY, account.user_id);
       await AsyncStorage.setItem(USERNAME_KEY, account.username);
       await AsyncStorage.setItem(`${USER_ID_KEY}_created_at`, account.created_at);
 
-      console.log('✅ Account imported:', account.user_id);
+      // Restaurer les spots si présents dans l'export
+      if (importData.spots && Array.isArray(importData.spots) && importData.spots.length > 0) {
+        console.log(`📦 Restoring ${importData.spots.length} spots...`);
+        await this.restoreSpots(importData.spots);
+      }
+
+      console.log('✅ Account imported successfully');
       return { success: true, account };
     } catch (error: any) {
       console.error('❌ Import error:', error);
       return { success: false, error: error.message || 'Erreur lors de l\'import' };
     }
+  }
+
+  /**
+   * Restaurer les spots depuis un fichier d'import
+   */
+  static async restoreSpots(spots: any[]): Promise<{ success: number; failed: number }> {
+    let successCount = 0;
+    let failedCount = 0;
+
+    const EXPO_PUBLIC_BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
+
+    for (const spot of spots) {
+      try {
+        // Créer un nouveau spot avec les données importées
+        const spotData = {
+          latitude: spot.latitude,
+          longitude: spot.longitude,
+          mushroom_type: spot.mushroom_type,
+          notes: spot.notes || '',
+          photo_base64: spot.photo_base64 || null,
+          user_id: spot.user_id,
+          created_by: spot.created_by,
+        };
+
+        const response = await fetch(
+          `${EXPO_PUBLIC_BACKEND_URL}/api/mushroom-spots`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(spotData),
+          }
+        );
+
+        if (response.ok) {
+          successCount++;
+        } else {
+          failedCount++;
+          console.error('Failed to restore spot:', spot.mushroom_type);
+        }
+      } catch (error) {
+        failedCount++;
+        console.error('Error restoring spot:', error);
+      }
+    }
+
+    console.log(`✅ Restored ${successCount} spots, ${failedCount} failed`);
+    return { success: successCount, failed: failedCount };
   }
 
   /**
