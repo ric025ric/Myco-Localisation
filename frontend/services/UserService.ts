@@ -71,6 +71,31 @@ export class UserService {
   }
 
   /**
+   * Récupérer tous les spots de l'utilisateur depuis le serveur
+   */
+  static async getUserSpots(): Promise<any[]> {
+    try {
+      const userId = await this.getUserId();
+      const EXPO_PUBLIC_BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
+      
+      const response = await fetch(
+        `${EXPO_PUBLIC_BACKEND_URL}/api/mushroom-spots?user_id=${encodeURIComponent(userId)}&include_photos=true`
+      );
+
+      if (!response.ok) {
+        console.error('Error fetching spots for export:', response.status);
+        return [];
+      }
+
+      const spots = await response.json();
+      return spots;
+    } catch (error) {
+      console.error('Error getting user spots:', error);
+      return [];
+    }
+  }
+
+  /**
    * Exporter le compte dans un fichier (avec les spots)
    */
   static async exportAccount(): Promise<{ success: boolean; error?: string; filePath?: string }> {
