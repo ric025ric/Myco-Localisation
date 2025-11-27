@@ -55,6 +55,10 @@ function SettingsContent() {
     try {
       const result = await UserService.importAccount();
       if (result.success && result.account) {
+        // Invalider le cache pour forcer le rechargement
+        const userId = result.account.user_id;
+        await CacheService.remove(`spots_${userId}`);
+        
         Alert.alert(
           '✅ ' + t('common.success'),
           t('settings.accountImported'),
