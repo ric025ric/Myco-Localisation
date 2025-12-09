@@ -160,6 +160,8 @@ export class AdService {
    * Charger la rewarded ad
    */
   static loadRewarded() {
+    if (Platform.OS === 'web' || !RewardedAd) return;
+    
     this.rewarded = RewardedAd.createForAdRequest(AD_UNIT_IDS.rewarded);
 
     this.rewarded.addAdEventListener(RewardedAdEventType.LOADED, () => {
