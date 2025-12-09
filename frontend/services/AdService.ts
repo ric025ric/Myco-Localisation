@@ -127,6 +127,8 @@ export class AdService {
    * Afficher l'interstitiel après avoir sauvegardé des spots
    */
   static async showInterstitialAfterSpotSaved(): Promise<void> {
+    if (Platform.OS === 'web' || !InterstitialAd) return;
+    
     try {
       // Vérifier si l'utilisateur est en mode sans pub
       const isAdFree = await this.isAdFree();
