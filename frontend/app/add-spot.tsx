@@ -333,6 +333,9 @@ function AddSpotScreen() {
           const result = await response.json();
           console.log('✅ Spot saved online:', result);
 
+          // Afficher l'interstitiel après avoir sauvegardé (tous les 5 spots)
+          await AdService.showInterstitialAfterSpotSaved();
+
           Alert.alert(
             '✅ ' + t('addSpot.success'),
             t('addSpot.successMessage'),
