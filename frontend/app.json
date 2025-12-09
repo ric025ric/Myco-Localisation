@@ -20,7 +20,6 @@
       "versionCode": 37,
       "googleServicesFile": "./google-services.json",
       "config": {
-        "googleMobileAdsAppId": "ca-app-pub-6288945556818548~3126775060",
         "googleMaps": {
           "apiKey": "AIzaSyBDA7N8JVBfnyJLarJPsSGjPjQhq1tX3dc"
         }
