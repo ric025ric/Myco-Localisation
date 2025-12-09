@@ -106,6 +106,8 @@ export class AdService {
    * Charger l'interstitiel
    */
   static loadInterstitial() {
+    if (Platform.OS === 'web' || !InterstitialAd) return;
+    
     this.interstitial = InterstitialAd.createForAdRequest(AD_UNIT_IDS.interstitial);
     
     this.interstitial.addAdEventListener(AdEventType.LOADED, () => {
