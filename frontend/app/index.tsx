@@ -22,6 +22,7 @@ import WelcomeModal from '../components/WelcomeModal';
 import SOSButton from '../components/SOSButton';
 import { UserService } from '../services/UserService';
 import { UpdateRequiredModal } from '../components/UpdateRequiredModal';
+import { AdService } from '../services/AdService';
 
 // Platform-specific imports
 let Location: any = null;
