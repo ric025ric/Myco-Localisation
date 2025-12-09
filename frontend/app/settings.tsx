@@ -23,6 +23,17 @@ function SettingsContent() {
   const { language, setLanguage, t } = useLanguage();
   const [exporting, setExporting] = useState(false);
   const [importing, setImporting] = useState(false);
+  const [watchingAd, setWatchingAd] = useState(false);
+  const [isAdFree, setIsAdFree] = useState(false);
+
+  useEffect(() => {
+    checkAdFreeStatus();
+  }, []);
+
+  const checkAdFreeStatus = async () => {
+    const adFree = await AdService.isAdFree();
+    setIsAdFree(adFree);
+  };
 
   const languageOptions = [
     { key: 'fr' as const, label: t('settings.french') },
