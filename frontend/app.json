@@ -17,7 +17,7 @@
     },
     "android": {
       "package": "com.skyrico.mycolocalisation",
-      "versionCode": 36,
+      "versionCode": 37,
       "config": {
         "googleMobileAdsAppId": "ca-app-pub-6288945556818548~3126775060",
         "googleMaps": {
