@@ -55,6 +55,8 @@ function HomeScreenContent() {
     await loadCarLocation();
     await loadLastKnownLocation();
     await checkLocationPermission();
+    // Initialiser AdMob
+    await AdService.initialize();
   };
 
   const checkFirstLaunch = async () => {
