@@ -183,6 +183,10 @@ export class AdService {
    * Afficher la rewarded ad (mode sans pub 24h)
    */
   static async showRewardedAd(): Promise<{ success: boolean; rewarded: boolean }> {
+    if (Platform.OS === 'web' || !RewardedAd) {
+      return { success: false, rewarded: false };
+    }
+    
     try {
       if (this.rewarded && this.rewarded.loaded) {
         console.log('📺 Showing rewarded ad');
