@@ -364,6 +364,9 @@ function SpotsListContent() {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={spots.length === 0 ? styles.emptyList : styles.list}
       />
+      
+      {/* Bannière publicitaire en bas */}
+      <AdBanner />
     </SafeAreaView>
   );
 }
