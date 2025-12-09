@@ -10,7 +10,7 @@ import uuid
 from datetime import datetime
 
 # Get backend URL from frontend .env
-BACKEND_URL = "https://mushroom-locator.preview.emergentagent.com/api"
+BACKEND_URL = "https://myco-secure.preview.emergentagent.com/api"
 
 def test_privacy_regression():
     """
