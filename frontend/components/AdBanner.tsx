@@ -1,7 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet } from 'react-native';
-import { BannerAd, BannerAdSize } from 'react-native-google-mobile-ads';
+import { View, StyleSheet, Platform } from 'react-native';
 import { AdService } from '../services/AdService';
+
+// Import conditionnel pour éviter les erreurs sur web
+let BannerAd: any = null;
+let BannerAdSize: any = null;
+
+if (Platform.OS !== 'web') {
+  const GoogleAds = require('react-native-google-mobile-ads');
+  BannerAd = GoogleAds.BannerAd;
+  BannerAdSize = GoogleAds.BannerAdSize;
+}
 
 export function AdBanner() {
   const [isAdFree, setIsAdFree] = useState(false);
