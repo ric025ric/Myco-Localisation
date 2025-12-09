@@ -37,6 +37,12 @@ export class AdService {
    * Initialiser AdMob
    */
   static async initialize() {
+    // Ne pas initialiser sur web
+    if (Platform.OS === 'web' || !mobileAds) {
+      console.log('⚠️  AdMob not available on web platform');
+      return;
+    }
+
     try {
       await mobileAds().initialize();
       console.log('✅ AdMob initialized');
