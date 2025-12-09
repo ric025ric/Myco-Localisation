@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "436656426664",
+    "project_id": "myco-localiation",
+    "storage_bucket": "myco-localiation.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:436656426664:android:213e1bf9cbba376a1b3c9d",
+        "android_client_info": {
+          "package_name": "com.skyrico.mycolocalisation"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCF26nTcVVZLCgQW1SneMq4cHumP5f37ek"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
