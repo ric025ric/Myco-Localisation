@@ -209,6 +209,7 @@ export class AdService {
    * Vérifier si la rewarded ad est prête
    */
   static isRewardedAdReady(): boolean {
+    if (Platform.OS === 'web' || !RewardedAd) return false;
     return this.rewarded !== null && this.rewarded.loaded;
   }
 }
