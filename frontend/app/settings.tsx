@@ -17,6 +17,7 @@ import Constants from 'expo-constants';
 import { LanguageProvider, useLanguage } from '../contexts/LanguageContext';
 import { UserService } from '../services/UserService';
 import { CacheService } from '../services/CacheService';
+import { AdService } from '../services/AdService';
 
 function SettingsContent() {
   const { language, setLanguage, t } = useLanguage();
