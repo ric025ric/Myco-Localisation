@@ -24,6 +24,11 @@ export function AdBanner() {
     setIsAdFree(adFree);
   };
 
+  // Ne pas afficher de bannières sur web
+  if (Platform.OS === 'web' || !BannerAd) {
+    return null;
+  }
+
   if (isAdFree) {
     // L'utilisateur est en mode sans pub
     return null;
