@@ -21,6 +21,7 @@ import NetInfo from '@react-native-community/netinfo';
 import { LanguageProvider, useLanguage } from '../contexts/LanguageContext';
 import { SyncService } from '../services/SyncService';
 import { UserService } from '../services/UserService';
+import { AdService } from '../services/AdService';
 
 // Platform-specific imports
 let Location: any = null;
