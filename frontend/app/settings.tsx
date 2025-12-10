@@ -396,6 +396,9 @@ const styles = StyleSheet.create({
     padding: 16,
     marginBottom: 12,
   },
+  actionButtonDisabled: {
+    opacity: 0.5,
+  },
   actionButtonContent: {
     flexDirection: 'row',
     alignItems: 'center',
