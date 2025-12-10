@@ -143,15 +143,17 @@ export class AdService {
       const newCount = count + 1;
       await AsyncStorage.setItem(SPOTS_SAVED_KEY, newCount.toString());
 
-      // Afficher l'interstitiel tous les 5 spots
-      if (newCount % 5 === 0) {
+      // Afficher l'interstitiel tous les 3 spots
+      if (newCount % 3 === 0) {
         if (this.interstitial && this.interstitial.loaded) {
-          console.log('📺 Showing interstitial after 5 spots');
+          console.log('📺 Showing interstitial after 3 spots');
           await this.interstitial.show();
         } else {
-          console.log('⏳ Interstitial not ready yet');
+          console.log('⏳ Interstitial not ready yet, loading...');
           this.loadInterstitial();
         }
+      } else {
+        console.log(`📊 Spots count: ${newCount}/3`);
       }
     } catch (error) {
       console.error('❌ Error showing interstitial:', error);
