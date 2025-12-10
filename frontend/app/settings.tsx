@@ -155,6 +155,72 @@ function SettingsContent() {
           </TouchableOpacity>
         </View>
 
+        {/* Ads Section */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>📺 Publicités</Text>
+          <Text style={styles.sectionDescription}>
+            {isAdFree 
+              ? '🎉 Vous êtes en mode sans pub ! Profitez de l\'app sans interruption.'
+              : 'Regardez une pub pour profiter de 24h sans publicité.'}
+          </Text>
+          
+          <TouchableOpacity
+            style={[styles.actionButton, isAdFree && styles.actionButtonDisabled]}
+            onPress={async () => {
+              if (isAdFree) {
+                Alert.alert('ℹ️ Info', 'Vous êtes déjà en mode sans pub !');
+                return;
+              }
+              
+              setWatchingAd(true);
+              const result = await AdService.showRewardedAd();
+              setWatchingAd(false);
+              
+              if (result.success && result.rewarded) {
+                Alert.alert(
+                  '🎉 Bravo !',
+                  'Vous avez gagné 24h sans publicité !',
+                  [{ text: 'OK', onPress: () => checkAdFreeStatus() }]
+                );
+              } else if (!result.success) {
+                Alert.alert(
+                  '⏳ Patientez',
+                  'La publicité n\'est pas encore prête. Réessayez dans quelques secondes.',
+                  [{ text: 'OK' }]
+                );
+              }
+            }}
+            disabled={watchingAd || isAdFree}
+          >
+            <View style={styles.actionButtonContent}>
+              <View style={styles.actionButtonLeft}>
+                <View style={[styles.iconCircle, isAdFree && { backgroundColor: '#FFD700' }]}>
+                  <Ionicons 
+                    name={isAdFree ? "trophy" : "play-circle"} 
+                    size={24} 
+                    color={isAdFree ? "#FFD700" : "#4CAF50"} 
+                  />
+                </View>
+                <View>
+                  <Text style={styles.actionButtonTitle}>
+                    {isAdFree ? '✅ Mode sans pub actif' : '🎁 Mode sans pub 24h'}
+                  </Text>
+                  <Text style={styles.actionButtonSubtext}>
+                    {isAdFree 
+                      ? 'Aucune pub pendant 24h' 
+                      : 'Regardez une pub pour activer'}
+                  </Text>
+                </View>
+              </View>
+              {watchingAd ? (
+                <ActivityIndicator size="small" color="#4CAF50" />
+              ) : (
+                <Ionicons name="chevron-forward" size={24} color="#666" />
+              )}
+            </View>
+          </TouchableOpacity>
+        </View>
+
         {/* Language Section */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{t('settings.language')}</Text>
