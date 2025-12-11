@@ -320,6 +320,8 @@ function AddSpotScreen() {
         console.log('📦 Spot data:', { ...spotData, photo_base64: spotData.photo_base64 ? '[BASE64_DATA]' : null });
         
         try {
+          console.log('⏱️  Waiting for server response (may take up to 60s if server was sleeping)...');
+          
           // Timeout de 60s pour Render gratuit (cold start peut prendre 30-60s)
           const response = await fetch(`${backendUrl}/api/mushroom-spots`, {
             method: 'POST',
@@ -330,8 +332,12 @@ function AddSpotScreen() {
             signal: AbortSignal.timeout(60000), // 60s timeout pour cold start
           });
 
+          console.log('📥 Response received! Status:', response.status);
+
           if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            const errorText = await response.text();
+            console.error('❌ Server error:', errorText);
+            throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
           }
 
           const result = await response.json();
