@@ -19,12 +19,10 @@ const AD_UNIT_IDS = {
   interstitial: 'ca-app-pub-6288945556818548/9061628022',
 };
 
-const AD_FREE_KEY = 'ad_free_until';
 const SPOTS_SAVED_KEY = 'spots_saved_count';
 
 export class AdService {
   private static interstitial: InterstitialAd | null = null;
-  private static rewarded: RewardedAd | null = null;
 
   /**
    * Initialiser AdMob
