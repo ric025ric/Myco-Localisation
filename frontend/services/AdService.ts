@@ -40,49 +40,8 @@ export class AdService {
       
       // Précharger l'interstitiel
       this.loadInterstitial();
-      
-      // Précharger la rewarded ad
-      this.loadRewarded();
     } catch (error) {
       console.error('❌ AdMob initialization error:', error);
-    }
-  }
-
-  /**
-   * Vérifier si l'utilisateur est en mode sans pub
-   */
-  static async isAdFree(): Promise<boolean> {
-    try {
-      const adFreeUntil = await AsyncStorage.getItem(AD_FREE_KEY);
-      if (!adFreeUntil) return false;
-
-      const expiryDate = new Date(adFreeUntil);
-      const now = new Date();
-
-      if (now < expiryDate) {
-        console.log('🎉 User is ad-free until:', expiryDate);
-        return true;
-      } else {
-        // Expired, remove key
-        await AsyncStorage.removeItem(AD_FREE_KEY);
-        return false;
-      }
-    } catch (error) {
-      return false;
-    }
-  }
-
-  /**
-   * Activer le mode sans pub pour 24h
-   */
-  static async enableAdFree24h() {
-    try {
-      const expiryDate = new Date();
-      expiryDate.setHours(expiryDate.getHours() + 24);
-      await AsyncStorage.setItem(AD_FREE_KEY, expiryDate.toISOString());
-      console.log('✅ Ad-free mode enabled until:', expiryDate);
-    } catch (error) {
-      console.error('❌ Error enabling ad-free:', error);
     }
   }
 
