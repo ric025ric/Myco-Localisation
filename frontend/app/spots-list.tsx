@@ -97,25 +97,37 @@ function SpotsListContent() {
 
   const fetchSpotsFromNetwork = async (userId: string, cacheKey: string, silent: boolean = false) => {
     try {
+      const url = `${EXPO_PUBLIC_BACKEND_URL}/api/mushroom-spots?user_id=${encodeURIComponent(userId)}&include_photos=false`;
+      console.log('🌐 Fetching spots from:', url);
+      console.log('👤 User ID:', userId);
+      
       // Exclure les photos pour accélérer le chargement
-      const response = await fetch(
-        `${EXPO_PUBLIC_BACKEND_URL}/api/mushroom-spots?user_id=${encodeURIComponent(userId)}&include_photos=false`
-      );
+      const response = await fetch(url, {
+        signal: AbortSignal.timeout(15000), // 15s timeout
+      });
+      
+      console.log('📡 Response status:', response.status);
       
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const errorText = await response.text();
+        console.error('❌ Server error:', errorText);
+        throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
       }
 
       const spots = await response.json();
+      console.log(`✅ Loaded ${spots.length} spots from server`);
       setSpots(spots);
       
       // Sauvegarder dans le cache
       await CacheService.set(cacheKey, spots);
       console.log('💾 Spots cached successfully');
-    } catch (error) {
+    } catch (error: any) {
+      console.error('❌ Error fetching spots from network:', error);
       if (!silent) {
-        console.error('Error fetching spots from network:', error);
-        Alert.alert(t('common.error'), t('error.loadSpots'));
+        Alert.alert(
+          t('common.error'), 
+          `${t('error.loadSpots')}\n\nDétails: ${error.message || 'Unknown error'}`
+        );
       }
     }
   };
