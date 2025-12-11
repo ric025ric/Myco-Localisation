@@ -17,7 +17,7 @@
     },
     "android": {
       "package": "com.skyrico.mycolocalisation",
-      "versionCode": 41,
+      "versionCode": 42,
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyBDA7N8JVBfnyJLarJPsSGjPjQhq1tX3dc"
