@@ -322,16 +322,20 @@ function AddSpotScreen() {
         try {
           console.log('⏱️  Waiting for server response (may take up to 60s if server was sleeping)...');
           
-          // Timeout de 60s pour Render gratuit (cold start peut prendre 30-60s)
+          // Timeout manuel de 60s pour Render gratuit (cold start peut prendre 30-60s)
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 60000);
+          
           const response = await fetch(`${backendUrl}/api/mushroom-spots`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify(spotData),
-            signal: AbortSignal.timeout(60000), // 60s timeout pour cold start
+            signal: controller.signal,
           });
 
+          clearTimeout(timeoutId);
           console.log('📥 Response received! Status:', response.status);
 
           if (!response.ok) {
