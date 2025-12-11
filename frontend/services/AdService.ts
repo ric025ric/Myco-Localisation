@@ -3,20 +3,14 @@ import { Platform } from 'react-native';
 
 // Import conditionnel pour éviter les erreurs sur web
 let mobileAds: any = null;
-let TestIds: any = null;
 let InterstitialAd: any = null;
 let AdEventType: any = null;
-let RewardedAd: any = null;
-let RewardedAdEventType: any = null;
 
 if (Platform.OS !== 'web') {
   const GoogleAds = require('react-native-google-mobile-ads');
   mobileAds = GoogleAds.default;
-  TestIds = GoogleAds.TestIds;
   InterstitialAd = GoogleAds.InterstitialAd;
   AdEventType = GoogleAds.AdEventType;
-  RewardedAd = GoogleAds.RewardedAd;
-  RewardedAdEventType = GoogleAds.RewardedAdEventType;
 }
 
 // Configuration des IDs de production
