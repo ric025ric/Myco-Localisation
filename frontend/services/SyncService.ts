@@ -75,9 +75,17 @@ export class SyncService {
   static async isNetworkAvailable(): Promise<boolean> {
     try {
       const state = await NetInfo.fetch();
-      return state.isConnected === true && state.isInternetReachable === true;
+      console.log('📡 Network state:', {
+        isConnected: state.isConnected,
+        isInternetReachable: state.isInternetReachable,
+        type: state.type,
+      });
+      
+      // isInternetReachable peut être null sur certaines plateformes
+      // On vérifie seulement isConnected qui est plus fiable
+      return state.isConnected === true;
     } catch (error) {
-      console.error('Error checking network:', error);
+      console.error('❌ Error checking network:', error);
       return false;
     }
   }
