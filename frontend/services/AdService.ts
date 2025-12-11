@@ -80,13 +80,6 @@ export class AdService {
     if (Platform.OS === 'web' || !InterstitialAd) return;
     
     try {
-      // Vérifier si l'utilisateur est en mode sans pub
-      const isAdFree = await this.isAdFree();
-      if (isAdFree) {
-        console.log('🎉 User is ad-free, skipping interstitial');
-        return;
-      }
-
       // Incrémenter le compteur de spots sauvegardés
       const countStr = await AsyncStorage.getItem(SPOTS_SAVED_KEY);
       const count = countStr ? parseInt(countStr, 10) : 0;
