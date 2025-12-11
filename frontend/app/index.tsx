@@ -506,14 +506,14 @@ function HomeScreenContent() {
           </TouchableOpacity>
         </View>
 
-        {/* Troisième rangée - Guide */}
-        <TouchableOpacity
+        {/* Troisième rangée - Guide (Caché temporairement - Premium à venir) */}
+        {/* <TouchableOpacity
           style={[styles.fullWidthButton, styles.guideButton]}
           onPress={() => router.push('/mushroom-guide')}
         >
           <Ionicons name="book" size={24} color="#fff" />
           <Text style={styles.gridButtonText}>{t('home.mushroomGuide')}</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
 
           <View style={styles.footer}>
