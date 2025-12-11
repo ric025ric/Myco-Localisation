@@ -101,27 +101,38 @@ function SpotsListContent() {
       console.log('🌐 Fetching spots from:', url);
       console.log('👤 User ID:', userId);
       
-      // Exclure les photos pour accélérer le chargement
-      // Timeout de 60s pour Render gratuit (cold start)
-      const response = await fetch(url, {
-        signal: AbortSignal.timeout(60000), // 60s timeout
-      });
+      // Timeout manuel de 60s pour Render gratuit (cold start)
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 60000);
       
-      console.log('📡 Response status:', response.status);
-      
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('❌ Server error:', errorText);
-        throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
-      }
+      try {
+        const response = await fetch(url, {
+          signal: controller.signal,
+        });
+        
+        clearTimeout(timeoutId);
+        console.log('📡 Response status:', response.status);
+        
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error('❌ Server error:', errorText);
+          throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
+        }
 
-      const spots = await response.json();
-      console.log(`✅ Loaded ${spots.length} spots from server`);
-      setSpots(spots);
-      
-      // Sauvegarder dans le cache
-      await CacheService.set(cacheKey, spots);
-      console.log('💾 Spots cached successfully');
+        const spots = await response.json();
+        console.log(`✅ Loaded ${spots.length} spots from server`);
+        setSpots(spots);
+        
+        // Sauvegarder dans le cache
+        await CacheService.set(cacheKey, spots);
+        console.log('💾 Spots cached successfully');
+      } catch (fetchError: any) {
+        clearTimeout(timeoutId);
+        if (fetchError.name === 'AbortError') {
+          throw new Error('Le serveur met trop de temps à répondre (timeout 60s)');
+        }
+        throw fetchError;
+      }
     } catch (error: any) {
       console.error('❌ Error fetching spots from network:', error);
       if (!silent) {
