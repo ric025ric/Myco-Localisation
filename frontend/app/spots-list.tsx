@@ -102,8 +102,9 @@ function SpotsListContent() {
       console.log('👤 User ID:', userId);
       
       // Exclure les photos pour accélérer le chargement
+      // Timeout de 60s pour Render gratuit (cold start)
       const response = await fetch(url, {
-        signal: AbortSignal.timeout(15000), // 15s timeout
+        signal: AbortSignal.timeout(60000), // 60s timeout
       });
       
       console.log('📡 Response status:', response.status);
