@@ -320,13 +320,14 @@ function AddSpotScreen() {
         console.log('📦 Spot data:', { ...spotData, photo_base64: spotData.photo_base64 ? '[BASE64_DATA]' : null });
         
         try {
+          // Timeout de 60s pour Render gratuit (cold start peut prendre 30-60s)
           const response = await fetch(`${backendUrl}/api/mushroom-spots`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify(spotData),
-            signal: AbortSignal.timeout(10000), // 10s timeout
+            signal: AbortSignal.timeout(60000), // 60s timeout pour cold start
           });
 
           if (!response.ok) {
