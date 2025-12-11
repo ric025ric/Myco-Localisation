@@ -19,15 +19,10 @@ if (Platform.OS !== 'web') {
   RewardedAdEventType = GoogleAds.RewardedAdEventType;
 }
 
-// Configuration des IDs
-// NOTE: Utilise les Test IDs pour le moment (pour tester les pubs)
-// Passer en mode production une fois les pubs testées et validées
-const USE_TEST_ADS = true; // ← Mettre à false pour utiliser les vrais Ad IDs
-
+// Configuration des IDs de production
 const AD_UNIT_IDS = {
-  banner: USE_TEST_ADS && TestIds ? TestIds.BANNER : 'ca-app-pub-6288945556818548/1575403137',
-  interstitial: USE_TEST_ADS && TestIds ? TestIds.INTERSTITIAL : 'ca-app-pub-6288945556818548/9061628022',
-  rewarded: USE_TEST_ADS && TestIds ? TestIds.REWARDED : 'ca-app-pub-6288945556818548/4930811323',
+  banner: 'ca-app-pub-6288945556818548/1575403137',
+  interstitial: 'ca-app-pub-6288945556818548/9061628022',
 };
 
 const AD_FREE_KEY = 'ad_free_until';
