@@ -20,10 +20,14 @@ if (Platform.OS !== 'web') {
 }
 
 // Configuration des IDs
+// NOTE: Utilise les Test IDs pour le moment (pour tester les pubs)
+// Passer en mode production une fois les pubs testées et validées
+const USE_TEST_ADS = true; // ← Mettre à false pour utiliser les vrais Ad IDs
+
 const AD_UNIT_IDS = {
-  banner: __DEV__ && TestIds ? TestIds.BANNER : 'ca-app-pub-6288945556818548/1575403137',
-  interstitial: __DEV__ && TestIds ? TestIds.INTERSTITIAL : 'ca-app-pub-6288945556818548/9061628022',
-  rewarded: __DEV__ && TestIds ? TestIds.REWARDED : 'ca-app-pub-6288945556818548/4930811323',
+  banner: USE_TEST_ADS && TestIds ? TestIds.BANNER : 'ca-app-pub-6288945556818548/1575403137',
+  interstitial: USE_TEST_ADS && TestIds ? TestIds.INTERSTITIAL : 'ca-app-pub-6288945556818548/9061628022',
+  rewarded: USE_TEST_ADS && TestIds ? TestIds.REWARDED : 'ca-app-pub-6288945556818548/4930811323',
 };
 
 const AD_FREE_KEY = 'ad_free_until';
