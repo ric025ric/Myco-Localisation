@@ -314,10 +314,13 @@ function AddSpotScreen() {
 
       if (isOnline) {
         // Mode ONLINE : Envoi direct au serveur
+        const backendUrl = EXPO_PUBLIC_BACKEND_URL;
         console.log('📡 Network available, saving online...');
+        console.log('🌐 Backend URL:', backendUrl);
+        console.log('📦 Spot data:', { ...spotData, photo_base64: spotData.photo_base64 ? '[BASE64_DATA]' : null });
         
         try {
-          const response = await fetch(`${EXPO_PUBLIC_BACKEND_URL}/api/mushroom-spots`, {
+          const response = await fetch(`${backendUrl}/api/mushroom-spots`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
